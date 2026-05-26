@@ -385,10 +385,15 @@ canvas{display:none;}
     <button class="ctrlbtn c-grey" id="btnNew" style="display:none;">Start New Stepathon</button>
   </div>
   <div class="card" style="border-top:3px solid var(--purple);">
-    <div class="card-title" style="color:var(--purple);">Cloud Sync ID</div>
-    <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.65rem;">Share this ID with your group so everyone sees live data on their phone.</div>
+    <div class="card-title" style="color:var(--purple);">Cloud Sync Setup</div>
+    <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.65rem;">Step 1: Paste your GitHub token below (saved only on this device, never uploaded).</div>
+    <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;">
+      <input type="password" id="tokenInput" placeholder="Paste GitHub token here" style="flex:1;font-size:0.75rem;">
+      <button class="addbtn" id="saveTokenBtn">Save</button>
+    </div>
+    <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.65rem;">Step 2: Generate your Sync ID to share with the group.</div>
     <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
-      <input type="text" id="binDisplay" readonly style="flex:1;font-size:0.75rem;" placeholder="Tap Generate below">
+      <input type="text" id="binDisplay" readonly style="flex:1;font-size:0.75rem;" placeholder="Sync ID appears here">
       <button class="addbtn" onclick="copySyncId()">Copy</button>
     </div>
     <button class="ctrlbtn c-test" id="genSyncBtn" style="margin-bottom:0;">Generate / Refresh Sync ID</button>
@@ -420,7 +425,7 @@ var MEDALS=["1st","2nd","3rd"];
 var MPOD=["&#127945;","&#127946;","&#127947;"];
 var COLORS=["#c8f135","#7c5cfc","#ff4d6d","#ffd166","#06d6a0","#ff9f1c","#a8dadc","#e9c46a"];
 var DPIN="1234";
-var GIST_TOKEN=atob("Z2hwX21MZ2VEenpSMWs5Sm1SVXhqdTlVR1JTenhia05HYTJyQlBKWg==");
+var GIST_TOKEN=localStorage.getItem("sf_tok")||"";
 var GIST_API="https://api.github.com/gists";
 var GIST_FILE="squadfit_data.json";
 var gistId=localStorage.getItem("sf_gistid")||"";
@@ -458,7 +463,7 @@ async function cloudPush(){
 }
 
 async function cloudPull(){
-  if(!gistId)return false;setSyncBar(true);
+  if(!gistId||!GIST_TOKEN)return false;setSyncBar(true);
   try{
     var r=await fetch(GIST_API+"/"+gistId,{headers:{"Authorization":"token "+GIST_TOKEN}});
     var d=await r.json();
@@ -687,7 +692,14 @@ document.getElementById("genImgBtn").addEventListener("click",function(){
 });
 document.getElementById("saveImgBtn").addEventListener("click",function(){var a=document.createElement("a");a.download="squadfit-week"+(S.weekNum||1)+".png";a.href=document.getElementById("shareImg").src;a.click();});
 
-function renderSettings(){document.getElementById("grpName").value=S.groupName||"";document.getElementById("capInp").value=S.weekCap||0;document.getElementById("sName").value=S.stepathon.name||"";updateBinDisplay();renderSControls();var ml=document.getElementById("memList");if(S.members.length===0){ml.innerHTML="<div style=\"font-size:0.8rem;color:var(--muted)\">No members yet.</div>";return;}ml.innerHTML=S.members.map(function(m){return"<div style=\"display:flex;justify-content:space-between;align-items:center;background:var(--surface);border-radius:8px;padding:0.5rem 0.75rem\"><span style=\"font-size:0.875rem\">"+m+"</span><button onclick=\"remMem('"+m+"')\" style=\"background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.8rem\">Remove</button></div>";}).join("");}
+function renderSettings(){
+  document.getElementById("grpName").value=S.groupName||"";
+  var tok=localStorage.getItem("sf_tok")||"";
+  var status=document.getElementById("syncStatus");
+  if(status){
+    if(tok){status.textContent="Token saved on this device. Tap Generate Sync ID.";}
+    else{status.textContent="No token yet. Paste your GitHub token above.";}
+  }document.getElementById("capInp").value=S.weekCap||0;document.getElementById("sName").value=S.stepathon.name||"";updateBinDisplay();renderSControls();var ml=document.getElementById("memList");if(S.members.length===0){ml.innerHTML="<div style=\"font-size:0.8rem;color:var(--muted)\">No members yet.</div>";return;}ml.innerHTML=S.members.map(function(m){return"<div style=\"display:flex;justify-content:space-between;align-items:center;background:var(--surface);border-radius:8px;padding:0.5rem 0.75rem\"><span style=\"font-size:0.875rem\">"+m+"</span><button onclick=\"remMem('"+m+"')\" style=\"background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.8rem\">Remove</button></div>";}).join("");}
 function remMem(name){if(!confirm("Remove "+name+"?"))return;S.members=S.members.filter(function(m){return m!==name;});if(selM===name){selM=null;updateLogSum();}if(aMember===name){aMember=null;updateASum();}save();renderSettings();renderLogGrid();renderAGrid();fillMemberDrop();showToast(name+" removed.");}
 document.getElementById("grpName").addEventListener("input",function(){S.groupName=this.value.trim();save();});
 document.getElementById("capInp").addEventListener("input",function(){S.weekCap=parseInt(this.value)||0;save();});
@@ -711,6 +723,27 @@ document.getElementById("btnNew").addEventListener("click",function(){if(!confir
 
 function autoBackup(){try{var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:"application/json"}));a.download="squadfit-AUTO-"+Date.now()+".json";a.click();}catch(e){}}
 function chkBackup(){var n=S.workouts.length,last=parseInt(lsGet("sf8_lb")||"0");if(n>0&&n%10===0&&n!==last){lsSet("sf8_lb",String(n));autoBackup();showToast("Auto-backup saved!");}}
+document.getElementById("saveTokenBtn").addEventListener("click",function(){
+  var tok=document.getElementById("tokenInput").value.trim();
+  if(!tok){showToast("Paste your token first");return;}
+  localStorage.setItem("sf_tok",tok);
+  GIST_TOKEN=tok;
+  document.getElementById("tokenInput").value="";
+  document.getElementById("syncStatus").textContent="Token saved on this device only.";
+  showToast("Token saved! Now tap Generate Sync ID.");
+});
+
+document.getElementById("saveTokenBtn").addEventListener("click",function(){
+  var t=document.getElementById("tokenInput").value.trim();
+  if(!t){showToast("Paste your token first");return;}
+  GIST_TOKEN=t;
+  lsSet("sf_gtoken",t);
+  document.getElementById("tokenInput").value="";
+  document.getElementById("tokenStatus").textContent="Token saved on this device.";
+  document.getElementById("tokenStatus").style.color="var(--green)";
+  showToast("Token saved! Now tap Generate Sync ID.");
+});
+
 document.getElementById("genSyncBtn").addEventListener("click",async function(){
   this.textContent="Saving to cloud...";
   this.disabled=true;
