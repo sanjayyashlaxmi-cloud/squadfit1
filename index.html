@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>SquadFit</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a0a0f; --surface:#13131a; --card:#1a1a24; --border:#2a2a3a;
+  --accent:#c8f135; --purple:#7c5cfc; --red:#ff4d6d; --green:#06d6a0;
+  --text:#e8e8f0; --muted:#6b6b80;
+  --gold:#ffd166; --silver:#b0b7c3; --bronze:#cd7c54;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
+
+/* LOCK SCREEN */
+#lockScreen{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;}
+#lockScreen .logo{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;letter-spacing:4px;color:var(--accent);margin-bottom:0.25rem;}
+#lockScreen .logo span{color:var(--text);}
+#lockScreen p{color:var(--muted);font-size:0.85rem;margin-bottom:2rem;text-align:center;}
+.pin-dots{display:flex;gap:0.75rem;margin-bottom:1.5rem;}
+.pin-dot{width:14px;height:14px;border-radius:50%;background:var(--border);transition:background 0.15s;}
+.pin-dot.filled{background:var(--accent);}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;width:240px;}
+.pin-key{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;font-size:1.2rem;font-weight:600;cursor:pointer;text-align:center;transition:all 0.15s;color:var(--text);}
+.pin-key:active{background:var(--purple);border-color:var(--purple);color:#fff;}
+.pin-error{color:var(--red);font-size:0.8rem;margin-top:0.75rem;min-height:1.2rem;}
+.view-only-btn{margin-top:1.25rem;background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:0.6rem 1.25rem;font-size:0.8rem;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.view-only-btn:active{border-color:var(--accent);color:var(--accent);}
+
+/* ADMIN BADGE */
+.admin-badge{background:rgba(200,241,53,0.1);border:1px solid rgba(200,241,53,0.3);color:var(--accent);border-radius:6px;padding:0.25rem 0.6rem;font-size:0.68rem;font-weight:600;letter-spacing:1px;cursor:pointer;}
+.member-badge{background:rgba(124,92,252,0.1);border:1px solid rgba(124,92,252,0.3);color:var(--purple);border-radius:6px;padding:0.25rem 0.6rem;font-size:0.68rem;font-weight:600;letter-spacing:1px;cursor:pointer;}
+
+header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,10,15,0.97);backdrop-filter:blur(10px);z-index:100;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:3px;color:var(--accent);}
+.logo span{color:var(--text);}
+.week-pill{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:0.3rem 0.85rem;font-size:0.7rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.new-week-btn{background:rgba(200,241,53,0.08);border:1px solid rgba(200,241,53,0.25);color:var(--accent);border-radius:8px;padding:0.35rem 0.75rem;font-size:0.7rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;}
+
+.tabs{display:flex;border-bottom:1px solid var(--border);overflow-x:auto;background:var(--bg);}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{padding:0.65rem 1rem;font-size:0.8rem;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500;transition:all 0.2s;}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab.hidden{display:none;}
+
+.page{display:none;padding:1.25rem;max-width:680px;margin:0 auto;}
+.page.active{display:block;}
+
+.section-title{font-size:0.68rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:0.65rem;padding-bottom:0.45rem;border-bottom:1px solid var(--border);}
+.step-title{font-size:0.68rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:0.5rem;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.1rem;margin-bottom:0.85rem;}
+.card-title{font-size:0.68rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
+
+/* TOGGLE */
+.toggle-row{display:flex;gap:0.4rem;margin-bottom:1rem;}
+.toggle-btn{flex:1;padding:0.45rem;border-radius:8px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+.toggle-btn.active{background:rgba(200,241,53,0.12);border-color:var(--accent);color:var(--accent);}
+.toggle-btn.active-green{background:rgba(6,214,160,0.12);border-color:var(--green);color:var(--green);}
+
+/* CHIPS */
+.member-grid{display:flex;flex-wrap:wrap;gap:0.5rem;}
+.m-chip{padding:0.55rem 1rem;border-radius:30px;background:var(--card);border:2px solid var(--border);font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.15s;color:var(--text);user-select:none;}
+.m-chip.sel-purple{background:var(--purple);border-color:var(--purple);color:#fff;}
+.m-chip.sel-green{background:var(--green);border-color:var(--green);color:#000;}
+.m-chip:active{transform:scale(0.95);}
+
+.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;}
+.t-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0.75rem 0.5rem;border-radius:12px;background:var(--card);border:2px solid var(--border);cursor:pointer;transition:all 0.15s;gap:0.3rem;}
+.t-chip.selected{border-color:var(--accent);background:rgba(200,241,53,0.08);}
+.t-chip:active{transform:scale(0.95);}
+.t-emoji{font-size:1.5rem;line-height:1;}
+.t-label{font-size:0.7rem;color:var(--muted);font-weight:500;}
+.t-chip.selected .t-label{color:var(--accent);}
+
+/* SLIDER */
+.big-num{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;line-height:1;text-align:center;}
+.big-unit{font-size:0.82rem;color:var(--muted);text-align:center;margin-top:0.2rem;margin-bottom:0.75rem;}
+.slider{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:var(--border);outline:none;cursor:pointer;}
+.slider.a::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 10px rgba(200,241,53,0.4);}
+.slider.a::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--accent);cursor:pointer;border:none;}
+.slider.g::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:var(--green);cursor:pointer;box-shadow:0 0 10px rgba(6,214,160,0.4);}
+.slider.g::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--green);cursor:pointer;border:none;}
+
+.presets{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.75rem;justify-content:center;}
+.preset{padding:0.3rem 0.75rem;border-radius:20px;background:var(--surface);border:1px solid var(--border);font-size:0.75rem;color:var(--muted);cursor:pointer;transition:all 0.15s;}
+.preset:active{background:var(--card);color:var(--text);}
+
+.log-summary{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0.75rem 1rem;font-size:0.82rem;color:var(--muted);text-align:center;margin-bottom:0.75rem;}
+.log-btn{width:100%;padding:1rem;border-radius:14px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:1rem;border:none;cursor:pointer;transition:all 0.2s;letter-spacing:0.5px;}
+.log-btn:active{transform:scale(0.98);}
+.log-btn:disabled{opacity:0.35;cursor:not-allowed;transform:none;}
+.btn-accent{background:var(--accent);color:#0a0a0f;}
+.btn-green-lg{background:var(--green);color:#000;}
+
+.add-row{display:flex;gap:0.5rem;align-items:center;margin-top:0.75rem;}
+.add-row input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.875rem;padding:0.55rem 0.7rem;outline:none;}
+.add-row input:focus{border-color:var(--purple);}
+.add-btn{padding:0.55rem 1rem;border-radius:8px;background:var(--purple);color:#fff;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.82rem;border:none;cursor:pointer;}
+
+/* BOARD */
+.podium{display:grid;gap:0.6rem;margin-bottom:1rem;align-items:flex-end;}
+.p-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:0.85rem 0.5rem;text-align:center;}
+.p1{border-color:var(--gold);box-shadow:0 0 18px rgba(255,209,102,0.13);}
+.p2{border-color:rgba(176,183,195,0.35);}
+.p3{border-color:rgba(205,124,84,0.35);}
+.p-medal{font-size:1.3rem;display:block;margin-bottom:0.2rem;}
+.p-name{font-size:0.75rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.p-pts{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;}
+.p1 .p-pts{color:var(--gold);}.p2 .p-pts{color:var(--silver);}.p3 .p-pts{color:var(--bronze);}
+.p-sub{font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.board-rows{display:flex;flex-direction:column;gap:0.45rem;}
+.brow{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.75rem 0.9rem;display:grid;grid-template-columns:2rem 1fr auto auto;align-items:center;gap:0.6rem;}
+.brow-rank{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--muted);text-align:center;}
+.brow-name{font-weight:500;font-size:0.875rem;}
+.brow-sub{font-size:0.7rem;color:var(--muted);margin-top:0.1rem;}
+.brow-badge{font-size:0.7rem;background:rgba(200,241,53,0.1);color:var(--accent);border-radius:20px;padding:0.15rem 0.5rem;}
+.brow-pts{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;color:var(--accent);text-align:right;}
+.brow-ptslabel{font-size:0.6rem;color:var(--muted);text-align:right;letter-spacing:1px;text-transform:uppercase;}
+
+/* STEPS */
+.step-row{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.75rem 0.9rem;display:grid;grid-template-columns:2rem 1fr auto auto;align-items:center;gap:0.6rem;margin-bottom:0.45rem;}
+.step-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-top:0.35rem;overflow:hidden;}
+.step-bar{height:100%;border-radius:2px;background:var(--green);}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1rem;}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:0.9rem;text-align:center;}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;line-height:1;}
+.stat-label{font-size:0.65rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:0.25rem;}
+
+/* HISTORY */
+.hist-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.75rem 0.9rem;margin-bottom:0.45rem;}
+.hist-top{display:flex;justify-content:space-between;align-items:center;}
+.hist-name{font-weight:600;font-size:0.875rem;}
+.hist-pts{color:var(--accent);font-weight:700;font-size:0.85rem;}
+.hist-detail{font-size:0.75rem;color:var(--muted);margin-top:0.2rem;}
+.hist-time{font-size:0.68rem;color:var(--muted);margin-top:0.15rem;}
+.hist-actions{display:flex;gap:0.4rem;margin-top:0.5rem;}
+.hist-del{background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.3);color:var(--red);border-radius:6px;padding:0.25rem 0.7rem;font-size:0.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;}
+
+/* SHARE */
+.wa-preview{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0.9rem;font-size:0.82rem;line-height:1.75;white-space:pre-wrap;color:var(--text);max-height:260px;overflow-y:auto;margin-bottom:0.75rem;font-family:monospace;}
+.share-img{width:100%;border-radius:10px;border:1px solid var(--border);margin-bottom:0.75rem;display:none;}
+.improved-row{display:flex;align-items:center;gap:0.75rem;background:rgba(200,241,53,0.06);border:1px solid rgba(200,241,53,0.2);border-radius:12px;padding:0.9rem 1rem;margin-bottom:0.85rem;}
+
+/* FEED */
+.feed{display:flex;flex-direction:column;gap:0.45rem;}
+.feed-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.8rem 0.9rem;display:flex;gap:0.65rem;}
+.feed-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:#fff;flex-shrink:0;}
+.feed-name{font-weight:600;font-size:0.85rem;}
+.feed-pts{color:var(--accent);font-weight:700;font-size:0.82rem;}
+.feed-time{font-size:0.68rem;color:var(--muted);margin-top:0.3rem;}
+.pills{display:flex;flex-wrap:wrap;gap:0.35rem;margin-top:0.35rem;}
+.pill{font-size:0.67rem;padding:0.15rem 0.5rem;border-radius:20px;background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid var(--border);}
+.pill.hi{background:rgba(200,241,53,0.08);color:var(--accent);border-color:rgba(200,241,53,0.2);}
+
+/* BUTTONS */
+.btn{padding:0.7rem 1.1rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.82rem;cursor:pointer;border:none;transition:all 0.2s;}
+.btn-ghost{background:var(--surface);color:var(--text);border:1px solid var(--border);flex:1;}
+.btn-wa{background:#25D366;color:#fff;flex:1;}
+.btn-purple{background:var(--purple);color:#fff;width:100%;margin-top:0.6rem;}
+.btn-purple:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-outline-p{background:var(--surface);color:var(--purple);border:1px solid var(--purple);width:100%;margin-top:0.5rem;}
+.btn-red{background:rgba(255,77,109,0.1);color:var(--red);border:1px solid rgba(255,77,109,0.3);width:100%;}
+.btn-row{display:flex;gap:0.6rem;}
+
+input,select{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.875rem;padding:0.55rem 0.7rem;outline:none;width:100%;transition:border-color 0.2s;}
+input:focus,select:focus{border-color:var(--purple);}
+
+.empty{text-align:center;padding:2.5rem 1rem;color:var(--muted);}
+.empty .eicon{font-size:2.2rem;display:block;margin-bottom:0.5rem;}
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:0.35rem;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.toast{position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%) translateY(120px);background:var(--accent);color:#0a0a0f;font-weight:600;font-size:0.82rem;padding:0.65rem 1.4rem;border-radius:30px;transition:transform 0.3s;z-index:9999;white-space:nowrap;pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+canvas{display:none;}
+.cap-warn{background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.3);border-radius:8px;padding:0.6rem 0.8rem;font-size:0.78rem;color:var(--red);margin-bottom:0.75rem;display:none;}
+@media(max-width:380px){.type-grid{grid-template-columns:repeat(3,1fr);}.p-name{font-size:0.68rem;}}
+</style>
+</head>
+<body>
+
+<!-- LOCK SCREEN -->
+<div id="lockScreen">
+  <div class="logo">SQUAD<span>FIT</span></div>
+  <p id="lockMsg">Enter admin PIN to manage<br>or view as member</p>
+  <div class="pin-dots" id="pinDots">
+    <div class="pin-dot" id="d0"></div>
+    <div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div>
+    <div class="pin-dot" id="d3"></div>
+  </div>
+  <div class="pin-pad">
+    <div class="pin-key" data-k="1">1</div>
+    <div class="pin-key" data-k="2">2</div>
+    <div class="pin-key" data-k="3">3</div>
+    <div class="pin-key" data-k="4">4</div>
+    <div class="pin-key" data-k="5">5</div>
+    <div class="pin-key" data-k="6">6</div>
+    <div class="pin-key" data-k="7">7</div>
+    <div class="pin-key" data-k="8">8</div>
+    <div class="pin-key" data-k="9">9</div>
+    <div class="pin-key" data-k="del" style="font-size:1rem;">⌫</div>
+    <div class="pin-key" data-k="0">0</div>
+    <div class="pin-key" data-k="ok" style="background:rgba(200,241,53,0.1);color:var(--accent);font-size:0.9rem;">OK</div>
+  </div>
+  <div class="pin-error" id="pinError"></div>
+  <button class="view-only-btn" id="viewOnlyBtn">👁️ View as member (read only)</button>
+</div>
+
+<!-- MAIN APP -->
+<div id="appWrap" style="display:none;">
+<header>
+  <div class="logo">SQUAD<span>FIT</span></div>
+  <div style="display:flex;gap:0.5rem;align-items:center;">
+    <button class="new-week-btn" id="newWeekBtn" style="display:none;">+ New Week</button>
+    <div class="week-pill" id="weekPill">Week 1</div>
+    <div id="modeBadge" class="member-badge">MEMBER</div>
+  </div>
+</header>
+
+<div class="tabs" id="tabBar">
+  <div class="tab active" data-page="board">🏆 Board</div>
+  <div class="tab" data-page="steps">👟 Steps</div>
+  <div class="tab hidden" data-page="log">⚡ Log</div>
+  <div class="tab hidden" data-page="history">📜 History</div>
+  <div class="tab hidden" data-page="share">📤 Share</div>
+  <div class="tab hidden" data-page="settings">⚙️ Settings</div>
+</div>
+
+<!-- BOARD -->
+<div class="page active" id="page-board">
+  <div class="toggle-row">
+    <button class="toggle-btn active" id="boardWeekBtn">This Week</button>
+    <button class="toggle-btn" id="boardAllBtn">All Time</button>
+  </div>
+  <div id="podiumWrap"></div>
+  <div class="section-title" id="boardSectionTitle">THIS WEEK</div>
+  <div class="board-rows" id="boardRows"></div>
+</div>
+
+<!-- STEPS -->
+<div class="page" id="page-steps">
+  <div class="toggle-row">
+    <button class="toggle-btn active-green active" id="stepsWeekBtn" style="border-color:var(--green);color:var(--green);background:rgba(6,214,160,0.12);">This Week</button>
+    <button class="toggle-btn" id="stepsAllBtn">All Time</button>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-box">
+      <div class="stat-num" id="statTodaySteps" style="color:var(--green);">0</div>
+      <div class="stat-label">Squad Steps Today</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="statChallengeDays" style="color:var(--purple);">0</div>
+      <div class="stat-label">Active Days</div>
+    </div>
+  </div>
+  <div class="section-title" id="stepsSectionTitle">THIS WEEK</div>
+  <div id="stepsBoard"></div>
+
+  <!-- Log steps — admin only -->
+  <div id="stepsLogCard" class="card" style="border-top:3px solid var(--green);display:none;margin-top:1rem;">
+    <div class="card-title" style="color:var(--green);border-color:rgba(6,214,160,0.25);">👟 Log Today's Steps</div>
+    <div class="step-title">Who?</div>
+    <div class="member-grid" id="stepMemberGrid"></div>
+    <div style="margin-top:1rem;">
+      <div class="step-title">Steps count</div>
+      <div class="big-num" id="stepsNum" style="color:var(--green);">5,000</div>
+      <div class="big-unit">≈ <span id="stepsKm">4.0</span> km</div>
+      <input type="range" class="slider g" id="stepsSlider" min="1000" max="30000" step="500" value="5000">
+      <div class="presets">
+        <div class="preset" data-steps="3000">3k</div>
+        <div class="preset" data-steps="5000">5k</div>
+        <div class="preset" data-steps="7500">7.5k</div>
+        <div class="preset" data-steps="10000">10k</div>
+        <div class="preset" data-steps="12000">12k</div>
+        <div class="preset" data-steps="15000">15k</div>
+        <div class="preset" data-steps="20000">20k</div>
+      </div>
+      <div style="margin-top:0.75rem;">
+        <input type="number" id="stepsManual" placeholder="Or type exact steps e.g. 8432">
+      </div>
+    </div>
+    <div class="log-summary" id="stepsSummary" style="margin-top:0.75rem;">Select a member above</div>
+    <button class="log-btn btn-green-lg" id="stepsLogBtn" disabled>Log Steps</button>
+  </div>
+</div>
+
+<!-- LOG (admin only) -->
+<div class="page" id="page-log">
+  <div style="display:flex;flex-direction:column;gap:1rem;">
+    <div>
+      <div class="step-title">① Who worked out?</div>
+      <div class="member-grid" id="logMemberGrid"></div>
+      <div class="add-row">
+        <input type="text" id="newMemberInput" placeholder="Add new member…">
+        <button class="add-btn" id="addMemberBtn">+ Add</button>
+      </div>
+    </div>
+    <div>
+      <div class="step-title">② What workout?</div>
+      <div class="type-grid">
+        <div class="t-chip" data-type="Running">  <span class="t-emoji">🏃</span><span class="t-label">Running</span></div>
+        <div class="t-chip" data-type="Cycling">  <span class="t-emoji">🚴</span><span class="t-label">Cycling</span></div>
+        <div class="t-chip" data-type="Strength"> <span class="t-emoji">💪</span><span class="t-label">Strength</span></div>
+        <div class="t-chip" data-type="HIIT">     <span class="t-emoji">⚡</span><span class="t-label">HIIT</span></div>
+        <div class="t-chip" data-type="Yoga">     <span class="t-emoji">🧘</span><span class="t-label">Yoga</span></div>
+        <div class="t-chip" data-type="Swimming"> <span class="t-emoji">🏊</span><span class="t-label">Swimming</span></div>
+        <div class="t-chip" data-type="Sports">   <span class="t-emoji">🏸</span><span class="t-label">Sports</span></div>
+        <div class="t-chip" data-type="Walking">  <span class="t-emoji">🚶</span><span class="t-label">Walking</span></div>
+        <div class="t-chip" data-type="Other">    <span class="t-emoji">🔥</span><span class="t-label">Other</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="step-title">③ How long?</div>
+      <div class="big-num" id="durNum" style="color:var(--accent);">30</div>
+      <div class="big-unit">minutes</div>
+      <input type="range" class="slider a" id="durSlider" min="5" max="120" step="5" value="30">
+      <div class="presets">
+        <div class="preset" data-dur="15">15 min</div>
+        <div class="preset" data-dur="20">20 min</div>
+        <div class="preset" data-dur="30">30 min</div>
+        <div class="preset" data-dur="45">45 min</div>
+        <div class="preset" data-dur="60">1 hr</div>
+        <div class="preset" data-dur="90">90 min</div>
+      </div>
+    </div>
+    <div class="cap-warn" id="capWarn"></div>
+    <div class="log-summary" id="logSummary">Select member and workout above</div>
+    <button class="log-btn btn-accent" id="logBtn" disabled>Log Workout</button>
+  </div>
+</div>
+
+<!-- HISTORY (admin only) -->
+<div class="page" id="page-history">
+  <div class="toggle-row">
+    <button class="toggle-btn active" id="histWorkoutBtn">💪 Workouts</button>
+    <button class="toggle-btn" id="histStepsBtn">👟 Steps</button>
+  </div>
+  <div id="histFilter" style="margin-bottom:0.75rem;">
+    <select id="histMemberFilter"><option value="">All members</option></select>
+  </div>
+  <div id="histList"></div>
+</div>
+
+<!-- SHARE (admin only) -->
+<div class="page" id="page-share">
+  <div class="improved-row" id="improvedRow" style="display:none;">
+    <div style="font-size:1.6rem;">📈</div>
+    <div>
+      <div style="font-size:0.65rem;color:var(--accent);letter-spacing:1px;text-transform:uppercase;">Most Improved</div>
+      <div style="font-size:0.95rem;font-weight:600;" id="improvedName"></div>
+      <div style="font-size:0.75rem;color:var(--muted);" id="improvedStat"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📱 Weekly WhatsApp Post</div>
+    <div class="wa-preview" id="waPreview">Tap Generate below...</div>
+    <div class="btn-row" style="margin-bottom:0.6rem;">
+      <button class="btn btn-ghost" id="copyBtn">📋 Copy</button>
+      <button class="btn btn-wa"    id="waBtn">💬 WhatsApp</button>
+    </div>
+    <button class="btn btn-purple" id="genPostBtn">✨ Generate with AI</button>
+  </div>
+  <div class="card">
+    <div class="card-title">🖼️ Shareable Image</div>
+    <img class="share-img" id="shareImg">
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="genImgBtn">🎨 Generate Image</button>
+      <button class="btn btn-ghost" id="saveImgBtn" style="display:none;">⬇️ Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS (admin only) -->
+<div class="page" id="page-settings">
+  <div class="card">
+    <div class="card-title">Group Name</div>
+    <input type="text" id="groupNameInput" placeholder="e.g. SquadFit 💪">
+  </div>
+  <div class="card">
+    <div class="card-title">Weekly Points Cap</div>
+    <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.65rem;">Max points any member can earn per week. 0 = no cap.</div>
+    <input type="number" id="capInput" placeholder="e.g. 300" min="0">
+  </div>
+  <div class="card">
+    <div class="card-title">Admin PIN</div>
+    <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.65rem;">Change your 4-digit admin PIN.</div>
+    <div style="display:flex;gap:0.5rem;">
+      <input type="password" id="newPinInput" placeholder="New 4-digit PIN" maxlength="4" style="flex:1;">
+      <button class="add-btn" id="changePinBtn">Save</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Manage Members</div>
+    <div id="memberManageList" style="display:flex;flex-direction:column;gap:0.4rem;"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Data &amp; Backup</div>
+    <div style="display:flex;flex-direction:column;gap:0.6rem;">
+      <button class="btn btn-ghost" id="exportBtn" style="width:100%;">📤 Export JSON backup</button>
+      <button class="btn btn-outline-p" id="restoreBtn">📥 Restore from backup</button>
+      <input type="file" id="restoreFile" accept=".json" style="display:none;">
+      <button class="btn btn-red" id="resetWeekBtn">🔄 Reset this week's scores</button>
+      <button class="btn btn-red" id="resetAllBtn" style="margin-top:0;">🗑️ Reset ALL data</button>
+    </div>
+    <div style="margin-top:0.9rem;padding:0.75rem;background:var(--surface);border-radius:8px;font-size:0.75rem;color:var(--muted);line-height:1.75;">
+      🛡️ <strong style="color:var(--accent)">Auto-backup every 10 workouts.</strong> Reset requires typing to confirm.
+    </div>
+  </div>
+  <div style="padding:0.75rem;text-align:center;">
+    <button class="btn btn-ghost" id="lockBtn" style="width:100%;">🔒 Lock &amp; go to member view</button>
+  </div>
+</div>
+</div><!-- end appWrap -->
+
+<canvas id="cvs"></canvas>
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONSTANTS ─────────────────────────────────────────────
+var PTS={Running:{base:15,min:0.5,km:2},Cycling:{base:10,min:0.4,km:1},Strength:{base:12,min:0.6,km:0},HIIT:{base:15,min:0.8,km:0},Yoga:{base:8,min:0.4,km:0},Swimming:{base:15,min:0.6,km:3},Sports:{base:12,min:0.5,km:0},Walking:{base:5,min:0.3,km:1},Other:{base:10,min:0.5,km:0}};
+var MEDALS=['🥇','🥈','🥉'];
+var COLORS=['#c8f135','#7c5cfc','#ff4d6d','#ffd166','#06d6a0','#ff9f1c','#a8dadc','#e9c46a'];
+var DEFAULT_PIN='1234';
+
+// ── STATE ─────────────────────────────────────────────────
+function loadState(){try{var d=localStorage.getItem('sf6');return d?JSON.parse(d):null;}catch(e){return null;}}
+var S=loadState()||{members:[],workouts:[],steps:[],weekStart:new Date().toISOString(),weekNum:1,groupName:'',prevStats:{},pin:DEFAULT_PIN,weekCap:0};
+if(!S.steps)S.steps=[];
+if(!S.pin)S.pin=DEFAULT_PIN;
+if(S.weekCap===undefined)S.weekCap=0;
+function save(){try{localStorage.setItem('sf6',JSON.stringify(S));}catch(e){showToast('Storage error!');}}
+
+var isAdmin=false;
+var boardMode='week'; // week | all
+var stepsMode='week';
+var histMode='workouts';
+
+function calcPts(type,dur,dist){var p=PTS[type]||PTS.Other;return Math.round(p.base+(dur||0)*p.min+(dist||0)*p.km);}
+function weekWorkouts(){var ws=new Date(S.weekStart).getTime();return S.workouts.filter(function(w){return new Date(w.date).getTime()>=ws;});}
+function weekSteps(){var ws=new Date(S.weekStart).getTime();return S.steps.filter(function(s){return new Date(s.date).getTime()>=ws;});}
+
+function getStats(list){
+  var wl=list!==undefined?list:weekWorkouts();
+  var map={};
+  S.members.forEach(function(m){map[m]={name:m,pts:0,count:0};});
+  wl.forEach(function(w){
+    if(!map[w.member])map[w.member]={name:w.member,pts:0,count:0};
+    map[w.member].pts+=w.points;
+    map[w.member].count+=1;
+  });
+  return Object.values(map).sort(function(a,b){return b.pts-a.pts;});
+}
+
+function getStepsStats(list){
+  var sl=list!==undefined?list:weekSteps();
+  var map={};
+  S.members.forEach(function(m){map[m]={name:m,total:0,days:0,best:0};});
+  sl.forEach(function(s){
+    if(!map[s.member])map[s.member]={name:s.member,total:0,days:0,best:0};
+    map[s.member].total+=s.steps;
+    map[s.member].days+=1;
+    if(s.steps>map[s.member].best)map[s.member].best=s.steps;
+  });
+  return Object.values(map).sort(function(a,b){return b.total-a.total;});
+}
+
+function getMemberWeekPts(member){
+  return weekWorkouts().filter(function(w){return w.member===member;}).reduce(function(a,w){return a+w.points;},0);
+}
+
+function timeAgo(d){var s=(Date.now()-d)/1000;if(s<60)return'Just now';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
+
+// ── PIN / LOCK ─────────────────────────────────────────────
+var pinEntry='';
+
+function updatePinDots(){
+  for(var i=0;i<4;i++){
+    var d=document.getElementById('d'+i);
+    if(d)d.className='pin-dot'+(i<pinEntry.length?' filled':'');
+  }
+}
+
+document.querySelectorAll('.pin-key').forEach(function(k){
+  k.addEventListener('click',function(){
+    var v=this.dataset.k;
+    if(v==='del'){pinEntry=pinEntry.slice(0,-1);}
+    else if(v==='ok'){checkPin();}
+    else if(pinEntry.length<4){pinEntry+=v;}
+    updatePinDots();
+    if(pinEntry.length===4&&v!=='ok')checkPin();
+  });
+});
+
+function checkPin(){
+  if(pinEntry===S.pin){
+    enterAdmin();
+  } else {
+    document.getElementById('pinError').textContent='Wrong PIN. Try again.';
+    pinEntry='';
+    updatePinDots();
+    setTimeout(function(){document.getElementById('pinError').textContent='';},2000);
+  }
+}
+
+function enterAdmin(){
+  isAdmin=true;
+  document.getElementById('lockScreen').style.display='none';
+  document.getElementById('appWrap').style.display='block';
+  document.getElementById('modeBadge').textContent='ADMIN';
+  document.getElementById('modeBadge').className='admin-badge';
+  document.getElementById('newWeekBtn').style.display='block';
+  // show admin tabs
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('hidden');});
+  updateWeekPill();
+  renderBoard();
+}
+
+document.getElementById('viewOnlyBtn').addEventListener('click',function(){
+  isAdmin=false;
+  document.getElementById('lockScreen').style.display='none';
+  document.getElementById('appWrap').style.display='block';
+  document.getElementById('modeBadge').textContent='MEMBER';
+  document.getElementById('modeBadge').className='member-badge';
+  document.getElementById('newWeekBtn').style.display='none';
+  // hide admin tabs
+  ['log','history','share','settings'].forEach(function(p){
+    var t=document.querySelector('.tab[data-page="'+p+'"]');
+    if(t)t.classList.add('hidden');
+  });
+  document.getElementById('stepsLogCard').style.display='none';
+  updateWeekPill();
+  renderBoard();
+});
+
+document.getElementById('modeBadge').addEventListener('click',function(){
+  // clicking badge relocks
+  document.getElementById('appWrap').style.display='none';
+  document.getElementById('lockScreen').style.display='flex';
+  pinEntry=''; updatePinDots();
+});
+
+document.getElementById('lockBtn').addEventListener('click',function(){
+  document.getElementById('appWrap').style.display='none';
+  document.getElementById('lockScreen').style.display='flex';
+  pinEntry=''; updatePinDots();
+});
+
+// ── TABS ──────────────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(function(tab){
+  tab.addEventListener('click',function(){
+    if(tab.classList.contains('hidden'))return;
+    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+    document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+    tab.classList.add('active');
+    var pg=document.getElementById('page-'+tab.dataset.page);
+    if(pg)pg.classList.add('active');
+    if(tab.dataset.page==='board')renderBoard();
+    if(tab.dataset.page==='steps')renderStepsPage();
+    if(tab.dataset.page==='history')renderHistory();
+    if(tab.dataset.page==='share')renderShare();
+    if(tab.dataset.page==='settings')renderSettings();
+  });
+});
+
+// ── BOARD TOGGLES ─────────────────────────────────────────
+document.getElementById('boardWeekBtn').addEventListener('click',function(){
+  boardMode='week';
+  this.classList.add('active');document.getElementById('boardAllBtn').classList.remove('active');
+  document.getElementById('boardSectionTitle').textContent='THIS WEEK';
+  renderBoard();
+});
+document.getElementById('boardAllBtn').addEventListener('click',function(){
+  boardMode='all';
+  this.classList.add('active');document.getElementById('boardWeekBtn').classList.remove('active');
+  document.getElementById('boardSectionTitle').textContent='ALL TIME';
+  renderBoard();
+});
+
+function renderBoard(){
+  var stats=getStats(boardMode==='all'?S.workouts:undefined);
+  var podWrap=document.getElementById('podiumWrap');
+  var rows=document.getElementById('boardRows');
+  if(stats.length===0){
+    podWrap.innerHTML='';
+    rows.innerHTML='<div class="empty"><span class="eicon">🏋️</span>No data yet!</div>';
+    return;
+  }
+  var top=stats.slice(0,3);
+  var order,rclass,medals;
+  if(top.length>=3){order=[top[1],top[0],top[2]];rclass=['p2','p1','p3'];medals=['🥈','🥇','🥉'];}
+  else if(top.length===2){order=[top[1],top[0]];rclass=['p2','p1'];medals=['🥈','🥇'];}
+  else{order=[top[0]];rclass=['p1'];medals=['🥇'];}
+  podWrap.innerHTML='<div class="podium" style="grid-template-columns:repeat('+order.length+',1fr)">'+
+    order.map(function(m,i){return '<div class="p-item '+rclass[i]+'"><span class="p-medal">'+medals[i]+'</span><div class="p-name">'+m.name+'</div><div class="p-pts">'+m.pts+'</div><div class="p-sub">pts · '+m.count+'x</div></div>';}).join('')+'</div>';
+  rows.innerHTML=stats.map(function(m,i){
+    return '<div class="brow"><div class="brow-rank">'+(i<3?MEDALS[i]:(i+1))+'</div><div><div class="brow-name">'+m.name+'</div><div class="brow-sub">'+m.count+' session'+(m.count!==1?'s':'')+' · '+(boardMode==='week'?'this week':'all time')+'</div></div>'+(m.count>0?'<div class="brow-badge">🔥 '+m.count+'x</div>':'<div></div>')+'<div><div class="brow-pts">'+m.pts+'</div><div class="brow-ptslabel">PTS</div></div></div>';
+  }).join('');
+}
+
+// ── STEPS PAGE ────────────────────────────────────────────
+document.getElementById('stepsWeekBtn').addEventListener('click',function(){
+  stepsMode='week';
+  this.classList.add('active');document.getElementById('stepsAllBtn').classList.remove('active');
+  document.getElementById('stepsSectionTitle').textContent='THIS WEEK';
+  renderStepsBoard();
+});
+document.getElementById('stepsAllBtn').addEventListener('click',function(){
+  stepsMode='all';
+  this.classList.add('active');document.getElementById('stepsWeekBtn').classList.remove('active');
+  document.getElementById('stepsSectionTitle').textContent='ALL TIME';
+  renderStepsBoard();
+});
+
+function renderStepsPage(){
+  if(isAdmin)document.getElementById('stepsLogCard').style.display='block';
+  renderStepMemberGrid();
+  renderStepsBoard();
+  renderStepsStats();
+}
+
+function renderStepsStats(){
+  var today=new Date().toISOString().slice(0,10);
+  var todayTotal=0;var dates={};
+  S.steps.forEach(function(s){if(s.date.slice(0,10)===today)todayTotal+=s.steps;dates[s.date.slice(0,10)]=1;});
+  var e1=document.getElementById('statTodaySteps'),e2=document.getElementById('statChallengeDays');
+  if(e1)e1.textContent=todayTotal.toLocaleString();
+  if(e2)e2.textContent=Object.keys(dates).length;
+}
+
+function renderStepsBoard(){
+  var board=document.getElementById('stepsBoard');
+  if(!board)return;
+  var stats=getStepsStats(stepsMode==='all'?S.steps:undefined);
+  var hasData=stats.some(function(s){return s.total>0;});
+  if(!hasData){board.innerHTML='<div class="empty"><span class="eicon">👟</span>No steps logged yet!</div>';return;}
+  var maxSteps=stats[0].total||1;
+  var rc=['var(--gold)','var(--silver)','var(--bronze)','var(--green)','var(--green)','var(--green)','var(--green)','var(--green)','var(--green)','var(--green)'];
+  board.innerHTML=stats.map(function(m,i){
+    var km=(m.total*0.0008).toFixed(1);
+    var pct=Math.max((m.total/maxSteps)*100,2);
+    var col=rc[i]||'var(--green)';
+    return '<div class="step-row"><div class="brow-rank">'+(i<3?MEDALS[i]:(i+1))+'</div><div><div class="brow-name">'+m.name+'</div><div class="step-bar-wrap"><div class="step-bar" style="width:'+pct+'%;background:'+col+'"></div></div><div class="brow-sub">'+m.days+' day'+(m.days!==1?'s':'')+' · best '+m.best.toLocaleString()+'/day</div></div><div style="text-align:right;"><div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.1rem;color:'+col+';">'+Math.round(m.total/1000)+'k</div><div style="font-size:0.6rem;color:var(--muted);letter-spacing:1px;">STEPS</div></div><div style="text-align:right;"><div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.1rem;color:var(--muted);">'+km+'</div><div style="font-size:0.6rem;color:var(--muted);letter-spacing:1px;">KM</div></div></div>';
+  }).join('');
+}
+
+// Steps logging
+var selStepMember=null,selSteps=5000;
+
+function renderStepMemberGrid(){
+  var grid=document.getElementById('stepMemberGrid');
+  if(!grid)return;
+  if(S.members.length===0){grid.innerHTML='<div style="font-size:0.8rem;color:var(--muted);">Add members in Log tab first</div>';return;}
+  grid.innerHTML=S.members.map(function(m){return '<div class="m-chip'+(m===selStepMember?' sel-green':'')+'" data-sm="'+m+'">'+m+'</div>';}).join('');
+  grid.querySelectorAll('.m-chip').forEach(function(c){c.addEventListener('click',function(){selStepMember=this.dataset.sm;renderStepMemberGrid();updateStepSummary();});});
+}
+
+function updateStepSummary(){
+  var sum=document.getElementById('stepsSummary'),btn=document.getElementById('stepsLogBtn');
+  if(!sum||!btn)return;
+  if(selStepMember){sum.innerHTML='<strong>'+selStepMember+'</strong> · '+selSteps.toLocaleString()+' steps · '+(selSteps*0.0008).toFixed(1)+' km';btn.disabled=false;}
+  else{sum.textContent='Select a member above';btn.disabled=true;}
+}
+
+var stepsSlider=document.getElementById('stepsSlider');
+stepsSlider.addEventListener('input',function(){
+  selSteps=parseInt(this.value);
+  document.getElementById('stepsNum').textContent=selSteps.toLocaleString();
+  document.getElementById('stepsKm').textContent=(selSteps*0.0008).toFixed(1);
+  document.getElementById('stepsManual').value='';
+  updateStepSummary();
+});
+document.getElementById('stepsManual').addEventListener('input',function(){
+  var v=parseInt(this.value);
+  if(v>0){selSteps=v;document.getElementById('stepsNum').textContent=v.toLocaleString();document.getElementById('stepsKm').textContent=(v*0.0008).toFixed(1);stepsSlider.value=Math.min(v,30000);updateStepSummary();}
+});
+document.querySelectorAll('.preset[data-steps]').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    selSteps=parseInt(this.dataset.steps);
+    document.getElementById('stepsNum').textContent=selSteps.toLocaleString();
+    document.getElementById('stepsKm').textContent=(selSteps*0.0008).toFixed(1);
+    stepsSlider.value=selSteps;document.getElementById('stepsManual').value='';
+    updateStepSummary();
+  });
+});
+document.getElementById('stepsLogBtn').addEventListener('click',function(){
+  if(!selStepMember)return;
+  var today=new Date().toISOString().slice(0,10);
+  var idx=-1;
+  for(var i=0;i<S.steps.length;i++){if(S.steps[i].member===selStepMember&&S.steps[i].date.slice(0,10)===today){idx=i;break;}}
+  if(idx>=0){S.steps[idx].steps=selSteps;S.steps[idx].km=parseFloat((selSteps*0.0008).toFixed(1));showToast('✅ Updated '+selStepMember+"'s steps!");}
+  else{S.steps.push({member:selStepMember,steps:selSteps,km:parseFloat((selSteps*0.0008).toFixed(1)),date:new Date().toISOString()});showToast('👟 '+selSteps.toLocaleString()+' steps for '+selStepMember+'!');}
+  save();renderStepsBoard();renderStepsStats();
+});
+
+// ── QUICK LOG ─────────────────────────────────────────────
+var selMember=null,selType=null,selDur=30;
+
+function renderLogMemberGrid(){
+  var grid=document.getElementById('logMemberGrid');if(!grid)return;
+  if(S.members.length===0){grid.innerHTML='<div style="font-size:0.8rem;color:var(--muted);padding:0.25rem 0;">Add a member below 👇</div>';return;}
+  grid.innerHTML=S.members.map(function(m){return '<div class="m-chip'+(m===selMember?' sel-purple':'')+'" data-lm="'+m+'">'+m+'</div>';}).join('');
+  grid.querySelectorAll('.m-chip').forEach(function(c){c.addEventListener('click',function(){selMember=this.dataset.lm;renderLogMemberGrid();updateLogSummary();});});
+}
+
+document.querySelectorAll('.t-chip').forEach(function(chip){
+  chip.addEventListener('click',function(){
+    document.querySelectorAll('.t-chip').forEach(function(c){c.classList.remove('selected');});
+    chip.classList.add('selected');selType=chip.dataset.type;updateLogSummary();
+  });
+});
+
+var durSlider=document.getElementById('durSlider');
+durSlider.addEventListener('input',function(){selDur=parseInt(this.value);document.getElementById('durNum').textContent=selDur;updateLogSummary();});
+document.querySelectorAll('.preset[data-dur]').forEach(function(btn){
+  btn.addEventListener('click',function(){selDur=parseInt(this.dataset.dur);durSlider.value=selDur;document.getElementById('durNum').textContent=selDur;updateLogSummary();});
+});
+
+function updateLogSummary(){
+  var sum=document.getElementById('logSummary'),btn=document.getElementById('logBtn');
+  var capWarn=document.getElementById('capWarn');
+  if(selMember&&selType){
+    var pts=calcPts(selType,selDur,0);
+    var weekPts=getMemberWeekPts(selMember);
+    var cap=parseInt(S.weekCap)||0;
+    if(cap>0&&weekPts>=cap){
+      capWarn.style.display='block';
+      capWarn.textContent='⚠️ '+selMember+' has hit the weekly cap of '+cap+' pts ('+weekPts+' pts this week)';
+      sum.innerHTML='<strong>'+selMember+'</strong> · '+selType+' · '+selDur+' min → <strong style="color:var(--red)">+'+pts+' pts (capped)</strong>';
+      btn.disabled=true;
+    } else {
+      capWarn.style.display='none';
+      sum.innerHTML='<strong>'+selMember+'</strong> · '+selType+' · '+selDur+' min → <strong style="color:var(--accent)">+'+pts+' pts</strong>'+(cap>0?' ('+weekPts+'/'+cap+' this week)':'');
+      btn.disabled=false;
+    }
+  } else if(selMember){sum.textContent='Now pick a workout type ☝️';btn.disabled=true;capWarn.style.display='none';}
+  else{sum.textContent='Select member and workout above';btn.disabled=true;capWarn.style.display='none';}
+}
+
+document.getElementById('logBtn').addEventListener('click',function(){
+  if(!selMember||!selType)return;
+  var points=calcPts(selType,selDur,0);
+  S.workouts.push({member:selMember,type:selType,duration:selDur,distance:0,calories:0,notes:'',points:points,date:new Date().toISOString(),loggedBy:'admin'});
+  save();checkAutoBackup();
+  showToast('🔥 +'+points+' pts for '+selMember+'!');
+  document.querySelectorAll('.t-chip').forEach(function(c){c.classList.remove('selected');});
+  selType=null;updateLogSummary();
+});
+
+document.getElementById('addMemberBtn').addEventListener('click',addMember);
+document.getElementById('newMemberInput').addEventListener('keydown',function(e){if(e.key==='Enter')addMember();});
+function addMember(){
+  var name=document.getElementById('newMemberInput').value.trim();
+  if(!name){showToast('Enter a name');return;}
+  if(S.members.indexOf(name)>=0){showToast('Already in squad');return;}
+  S.members.push(name);save();
+  document.getElementById('newMemberInput').value='';
+  selMember=name;renderLogMemberGrid();renderStepMemberGrid();updateLogSummary();
+  showToast('✅ '+name+' added!');
+}
+
+// ── HISTORY ───────────────────────────────────────────────
+document.getElementById('histWorkoutBtn').addEventListener('click',function(){
+  histMode='workouts';this.classList.add('active');document.getElementById('histStepsBtn').classList.remove('active');
+  renderHistory();
+});
+document.getElementById('histStepsBtn').addEventListener('click',function(){
+  histMode='steps';this.classList.add('active');document.getElementById('histWorkoutBtn').classList.remove('active');
+  renderHistory();
+});
+document.getElementById('histMemberFilter').addEventListener('change',function(){renderHistory();});
+
+function renderHistFilter(){
+  var sel=document.getElementById('histMemberFilter');
+  var cur=sel.value;
+  sel.innerHTML='<option value="">All members</option>'+S.members.map(function(m){return '<option value="'+m+'">'+m+'</option>';}).join('');
+  sel.value=cur;
+}
+
+function renderHistory(){
+  renderHistFilter();
+  var filterMember=document.getElementById('histMemberFilter').value;
+  var list=document.getElementById('histList');
+  if(histMode==='workouts'){
+    var items=S.workouts.slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);});
+    if(filterMember)items=items.filter(function(w){return w.member===filterMember;});
+    if(items.length===0){list.innerHTML='<div class="empty"><span class="eicon">📋</span>No workouts logged.</div>';return;}
+    list.innerHTML=items.map(function(w,idx){
+      var realIdx=S.workouts.indexOf(w);
+      return '<div class="hist-item">'+
+        '<div class="hist-top"><div class="hist-name">'+w.member+'</div><div class="hist-pts">+'+w.points+' pts</div></div>'+
+        '<div class="hist-detail">'+w.type+' · '+w.duration+' min'+(w.distance?' · '+w.distance+' km':'')+'</div>'+
+        '<div class="hist-time">'+new Date(w.date).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})+'</div>'+
+        (isAdmin?'<div class="hist-actions"><button class="hist-del" onclick="deleteWorkout('+realIdx+')">🗑️ Delete</button></div>':'')+
+      '</div>';
+    }).join('');
+  } else {
+    var sitems=S.steps.slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);});
+    if(filterMember)sitems=sitems.filter(function(s){return s.member===filterMember;});
+    if(sitems.length===0){list.innerHTML='<div class="empty"><span class="eicon">👟</span>No steps logged.</div>';return;}
+    list.innerHTML=sitems.map(function(s){
+      var realIdx=S.steps.indexOf(s);
+      return '<div class="hist-item">'+
+        '<div class="hist-top"><div class="hist-name">'+s.member+'</div><div class="hist-pts" style="color:var(--green);">'+s.steps.toLocaleString()+' steps</div></div>'+
+        '<div class="hist-detail">'+s.km+' km equivalent</div>'+
+        '<div class="hist-time">'+new Date(s.date).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})+'</div>'+
+        (isAdmin?'<div class="hist-actions"><button class="hist-del" onclick="deleteStep('+realIdx+')">🗑️ Delete</button></div>':'')+
+      '</div>';
+    }).join('');
+  }
+}
+
+function deleteWorkout(idx){
+  if(!confirm('Delete this entry?'))return;
+  S.workouts.splice(idx,1);save();renderHistory();renderBoard();showToast('Entry deleted.');
+}
+function deleteStep(idx){
+  if(!confirm('Delete this step entry?'))return;
+  S.steps.splice(idx,1);save();renderHistory();renderStepsBoard();renderStepsStats();showToast('Step entry deleted.');
+}
+
+// ── SHARE ─────────────────────────────────────────────────
+function renderShare(){
+  var prev=S.prevStats||{},curr=getStats(),best=null,bd=-Infinity;
+  curr.forEach(function(m){var d=m.pts-(prev[m.name]||0);if(d>bd){bd=d;best={name:m.name,diff:d,pts:m.pts};}});
+  var row=document.getElementById('improvedRow');
+  if(best&&bd>0){row.style.display='flex';document.getElementById('improvedName').textContent=best.name;document.getElementById('improvedStat').textContent='+'+best.diff+' pts this week · '+best.pts+' total';}
+  else{row.style.display='none';}
+}
+
+document.getElementById('genPostBtn').addEventListener('click',async function(){
+  var stats=getStats();if(stats.length===0){showToast('Log some workouts first!');return;}
+  this.disabled=true;this.innerHTML='<span class="spinner"></span>Generating…';
+  var gname=S.groupName||'SquadFit',wnum=S.weekNum||1;
+  var txt=stats.map(function(m,i){return(i+1)+'. '+m.name+' — '+m.pts+' pts ('+m.count+' sessions)';}).join('\n');
+  var prev=S.prevStats||{},imp=null,bd=-Infinity;
+  stats.forEach(function(m){var d=m.pts-(prev[m.name]||0);if(d>bd){bd=d;imp={name:m.name,diff:d};}});
+  // steps top 3
+  var stepsTop=getStepsStats(S.steps).slice(0,3).filter(function(s){return s.total>0;});
+  var stepsLine=stepsTop.length>0?'\n\n👟 Stepathon Top 3:\n'+stepsTop.map(function(m,i){return(i+1)+'. '+m.name+' — '+Math.round(m.total/1000)+'k steps';}).join('\n'):'';
+  try{
+    var res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,
+        messages:[{role:'user',content:'Write a hype WhatsApp message for fitness group "'+gname+'" Week '+wnum+' results. Fun, motivating, emojis, max 200 words. Plain text only.\n\nWorkout Rankings:\n'+txt+(imp&&bd>0?'\n\nMost Improved: '+imp.name+' (+'+bd+' pts)':'')+stepsLine+'\n\nEnd with motivation for next week.'}]})});
+    var data=await res.json();
+    document.getElementById('waPreview').textContent=data.content[0].text;
+  } catch(e){
+    var t='🏆 '+gname+' — Week '+wnum+' Results 🏆\n\n';
+    stats.forEach(function(m,i){t+=(MEDALS[i]||((i+1)+'.'))+' '+m.name+' — '+m.pts+' pts ('+m.count+' sessions)\n';});
+    if(imp&&bd>0)t+='\n📈 Most Improved: '+imp.name+' (+'+bd+' pts)';
+    if(stepsLine)t+=stepsLine;
+    t+='\n\n💪 Keep pushing next week!';
+    document.getElementById('waPreview').textContent=t;
+  }
+  this.disabled=false;this.innerHTML='✨ Generate with AI';
+});
+
+document.getElementById('copyBtn').addEventListener('click',function(){
+  var txt=document.getElementById('waPreview').textContent;
+  if(txt==='Tap Generate below...'){showToast('Generate the post first');return;}
+  navigator.clipboard.writeText(txt).then(function(){showToast('📋 Copied!');}).catch(function(){var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('📋 Copied!');});
+});
+document.getElementById('waBtn').addEventListener('click',function(){
+  var txt=document.getElementById('waPreview').textContent;
+  if(txt==='Tap Generate below...'){showToast('Generate the post first');return;}
+  window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+});
+document.getElementById('genImgBtn').addEventListener('click',function(){
+  var stats=getStats().slice(0,8);if(stats.length===0){showToast('No data yet');return;}
+  var cvs=document.getElementById('cvs'),ctx=cvs.getContext('2d');
+  var W=800,H=Math.max(480,170+stats.length*62+60);
+  cvs.width=W;cvs.height=H;
+  ctx.fillStyle='#0a0a0f';ctx.fillRect(0,0,W,H);
+  var g=ctx.createRadialGradient(160,H/2,20,160,H/2,320);
+  g.addColorStop(0,'rgba(124,92,252,0.15)');g.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  ctx.font='52px "Bebas Neue",sans-serif';ctx.fillStyle='#c8f135';ctx.fillText('SQUAD',44,76);
+  var sw=ctx.measureText('SQUAD').width;ctx.fillStyle='#e8e8f0';ctx.fillText('FIT',44+sw+6,76);
+  ctx.font='500 17px "DM Sans",sans-serif';ctx.fillStyle='#6b6b80';
+  ctx.fillText((S.groupName||'SquadFit')+'  ·  Week '+(S.weekNum||1)+' Leaderboard',44,102);
+  ctx.strokeStyle='#2a2a3a';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(44,118);ctx.lineTo(W-44,118);ctx.stroke();
+  var maxPts=stats[0].pts||1;
+  var rc=['#ffd166','#b0b7c3','#cd7c54','#c8f135','#7c5cfc','#ff4d6d','#06d6a0','#ff9f1c'];
+  stats.forEach(function(m,i){
+    var y=142+i*62;
+    ctx.font='bold 26px "Bebas Neue",sans-serif';ctx.fillStyle=rc[i]||'#6b6b80';ctx.fillText(i<3?MEDALS[i]:(i+1)+'',44,y+28);
+    ctx.font='600 21px "DM Sans",sans-serif';ctx.fillStyle='#e8e8f0';ctx.fillText(m.name,94,y+28);
+    var bx=290,bw=W-bx-90,bh=13;
+    ctx.fillStyle='#1a1a24';ctx.beginPath();ctx.roundRect(bx,y+14,bw,bh,6);ctx.fill();
+    ctx.fillStyle=rc[i]||'#c8f135';ctx.globalAlpha=0.85;
+    ctx.beginPath();ctx.roundRect(bx,y+14,Math.max((m.pts/maxPts)*bw,8),bh,6);ctx.fill();ctx.globalAlpha=1;
+    ctx.font='700 21px "DM Sans",sans-serif';ctx.fillStyle=rc[i]||'#c8f135';
+    ctx.textAlign='right';ctx.fillText(m.pts+' pts',W-44,y+28);ctx.textAlign='left';
+    ctx.font='400 12px "DM Sans",sans-serif';ctx.fillStyle='#6b6b80';ctx.fillText(m.count+' session'+(m.count!==1?'s':''),94,y+46);
+  });
+  ctx.fillStyle='#2a2a3a';ctx.fillRect(0,H-40,W,1);
+  ctx.font='400 13px "DM Sans",sans-serif';ctx.fillStyle='#6b6b80';ctx.fillText('SquadFit Leaderboard',44,H-12);
+  ctx.textAlign='right';ctx.fillText(new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}),W-44,H-12);ctx.textAlign='left';
+  var img=document.getElementById('shareImg');img.src=cvs.toDataURL('image/png');img.style.display='block';
+  document.getElementById('saveImgBtn').style.display='inline-block';showToast('🎨 Image ready!');
+});
+document.getElementById('saveImgBtn').addEventListener('click',function(){
+  var a=document.createElement('a');a.download='squadfit-week'+(S.weekNum||1)+'.png';a.href=document.getElementById('shareImg').src;a.click();
+});
+
+// ── SETTINGS ──────────────────────────────────────────────
+function renderSettings(){
+  document.getElementById('groupNameInput').value=S.groupName||'';
+  document.getElementById('capInput').value=S.weekCap||0;
+  var ml=document.getElementById('memberManageList');
+  if(S.members.length===0){ml.innerHTML='<div style="font-size:0.8rem;color:var(--muted);">No members yet.</div>';return;}
+  ml.innerHTML=S.members.map(function(m){
+    return '<div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border-radius:8px;padding:0.5rem 0.75rem;">'+
+      '<span style="font-size:0.875rem;">'+m+'</span>'+
+      '<button onclick="removeMember(\''+m+'\')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.8rem;">✕</button>'+
+    '</div>';
+  }).join('');
+}
+
+function removeMember(name){
+  if(!confirm('Remove '+name+'?'))return;
+  S.members=S.members.filter(function(m){return m!==name;});
+  if(selMember===name){selMember=null;updateLogSummary();}
+  if(selStepMember===name){selStepMember=null;updateStepSummary();}
+  save();renderSettings();renderLogMemberGrid();renderStepMemberGrid();showToast(name+' removed.');
+}
+
+document.getElementById('groupNameInput').addEventListener('input',function(){S.groupName=this.value.trim();save();});
+document.getElementById('capInput').addEventListener('input',function(){S.weekCap=parseInt(this.value)||0;save();});
+document.getElementById('changePinBtn').addEventListener('click',function(){
+  var np=document.getElementById('newPinInput').value.trim();
+  if(np.length!==4||isNaN(np)){showToast('PIN must be 4 digits');return;}
+  S.pin=np;save();document.getElementById('newPinInput').value='';showToast('✅ PIN changed!');
+});
+
+document.getElementById('newWeekBtn').addEventListener('click',function(){
+  if(!confirm('Start Week '+((S.weekNum||1)+1)+'?'))return;
+  var curr=getStats();S.prevStats={};
+  curr.forEach(function(m){S.prevStats[m.name]=m.pts;});
+  S.weekStart=new Date().toISOString();S.weekNum=(S.weekNum||1)+1;
+  save();updateWeekPill();renderBoard();showToast('🗓️ Week '+S.weekNum+' started!');
+});
+
+document.getElementById('exportBtn').addEventListener('click',function(){
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));
+  a.download='squadfit-backup.json';a.click();
+});
+document.getElementById('restoreBtn').addEventListener('click',function(){document.getElementById('restoreFile').click();});
+document.getElementById('restoreFile').addEventListener('change',function(){
+  var file=this.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var r=JSON.parse(e.target.result);
+      if(!r.members||!r.workouts)throw new Error('bad');
+      S=r;if(!S.steps)S.steps=[];if(!S.pin)S.pin=DEFAULT_PIN;if(S.weekCap===undefined)S.weekCap=0;
+      save();selMember=null;selStepMember=null;
+      updateWeekPill();renderLogMemberGrid();renderStepMemberGrid();updateLogSummary();renderSettings();renderBoard();
+      showToast('✅ Restored! '+S.workouts.length+' workouts loaded.');
+    }catch(err){showToast('❌ Invalid backup file.');}
+  };
+  reader.readAsText(file);this.value='';
+});
+document.getElementById('resetWeekBtn').addEventListener('click',function(){
+  autoBackup();
+  if(prompt('Type RESET to confirm:')==='RESET'){
+    var ws=new Date(S.weekStart).getTime();
+    S.workouts=S.workouts.filter(function(w){return new Date(w.date).getTime()<ws;});
+    save();renderBoard();showToast('Week reset. Backup saved.');
+  }else{showToast('Cancelled.');}
+});
+document.getElementById('resetAllBtn').addEventListener('click',function(){
+  autoBackup();
+  if(prompt('Type DELETE to confirm ALL data wipe:')==='DELETE'){
+    var pin=S.pin;
+    S={members:[],workouts:[],steps:[],weekStart:new Date().toISOString(),weekNum:1,groupName:'',prevStats:{},pin:pin,weekCap:0};
+    selMember=null;selStepMember=null;
+    save();updateWeekPill();renderLogMemberGrid();renderStepMemberGrid();updateLogSummary();renderBoard();
+    showToast('All data cleared.');
+  }else{showToast('Cancelled.');}
+});
+
+// ── BACKUP ────────────────────────────────────────────────
+function autoBackup(){
+  try{var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));a.download='squadfit-AUTO-'+Date.now()+'.json';a.click();}catch(e){}
+}
+function checkAutoBackup(){
+  var n=S.workouts.length,last=parseInt(localStorage.getItem('sf6_lb')||'0');
+  if(n>0&&n%10===0&&n!==last){localStorage.setItem('sf6_lb',n);autoBackup();showToast('💾 Auto-backup! ('+n+' workouts)');}
+}
+
+// ── TOAST + INIT ──────────────────────────────────────────
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2600);}
+function updateWeekPill(){document.getElementById('weekPill').textContent='Week '+(S.weekNum||1);}
+</script>
+</body>
+</html>
