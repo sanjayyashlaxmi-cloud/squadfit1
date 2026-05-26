@@ -206,7 +206,7 @@ canvas{display:none;}
     <div class="pin-key" data-k="ok" style="background:rgba(200,241,53,0.1);color:var(--accent);font-size:0.9rem;">OK</div>
   </div>
   <div class="pin-error" id="pinError"></div>
-  <button class="view-only-btn" id="viewOnlyBtn">👁️ View as member (read only)</button>
+  <button class="view-only-btn" id="viewOnlyBtn" onclick="enterMemberView()">👁️ View as member (read only)</button>
 </div>
 
 <!-- MAIN APP -->
@@ -264,6 +264,11 @@ canvas{display:none;}
     <div class="card-title" style="color:var(--green);border-color:rgba(6,214,160,0.25);">👟 Log Today's Steps</div>
     <div class="step-title">Who?</div>
     <div class="member-grid" id="stepMemberGrid"></div>
+    <div id="memberStepNameWrap" style="display:none;">
+      <select id="memberStepSelect" style="width:100%;margin-bottom:0.25rem;">
+        <option value="">Select your name...</option>
+      </select>
+    </div>
     <div style="margin-top:1rem;">
       <div class="step-title">Steps count</div>
       <div class="big-num" id="stepsNum" style="color:var(--green);">5,000</div>
@@ -518,22 +523,34 @@ function enterAdmin(){
   renderBoard();
 }
 
-document.getElementById('viewOnlyBtn').addEventListener('click',function(){
+function enterMemberView(){
   isAdmin=false;
   document.getElementById('lockScreen').style.display='none';
   document.getElementById('appWrap').style.display='block';
   document.getElementById('modeBadge').textContent='MEMBER';
   document.getElementById('modeBadge').className='member-badge';
   document.getElementById('newWeekBtn').style.display='none';
-  // hide admin tabs
+  // hide all tabs except board and steps
   ['log','history','share','settings'].forEach(function(p){
     var t=document.querySelector('.tab[data-page="'+p+'"]');
     if(t)t.classList.add('hidden');
   });
-  document.getElementById('stepsLogCard').style.display='none';
+  // in steps tab: show log card for members (they log own steps)
+  document.getElementById('stepsLogCard').style.display='block';
+  // but hide the member selector — show a name input instead
+  document.getElementById('stepMemberGrid').style.display='none';
+  document.getElementById('memberStepNameWrap').style.display='block';
+  // switch to board first
   updateWeekPill();
   renderBoard();
-});
+  // make sure board tab is active
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  var bt=document.querySelector('.tab[data-page="board"]');
+  if(bt)bt.classList.add('active');
+  document.getElementById('page-board').classList.add('active');
+}
+document.getElementById('viewOnlyBtn').addEventListener('click', enterMemberView);
 
 document.getElementById('modeBadge').addEventListener('click',function(){
   // clicking badge relocks
@@ -615,7 +632,22 @@ document.getElementById('stepsAllBtn').addEventListener('click',function(){
 });
 
 function renderStepsPage(){
-  if(isAdmin)document.getElementById('stepsLogCard').style.display='block';
+  if(isAdmin){
+    document.getElementById('stepsLogCard').style.display='block';
+    document.getElementById('stepMemberGrid').style.display='flex';
+    document.getElementById('memberStepNameWrap').style.display='none';
+  } else {
+    document.getElementById('stepsLogCard').style.display='block';
+    document.getElementById('stepMemberGrid').style.display='none';
+    document.getElementById('memberStepNameWrap').style.display='block';
+    // populate dropdown
+    var sel=document.getElementById('memberStepSelect');
+    var cur=sel.value;
+    sel.innerHTML='<option value="">Select your name...</option>'+
+      S.members.map(function(m){return '<option value="'+m+'">'+m+'</option>';}).join('');
+    sel.value=cur;
+    if(cur)selStepMember=cur;
+  }
   renderStepMemberGrid();
   renderStepsBoard();
   renderStepsStats();
@@ -670,6 +702,10 @@ stepsSlider.addEventListener('input',function(){
   document.getElementById('stepsNum').textContent=selSteps.toLocaleString();
   document.getElementById('stepsKm').textContent=(selSteps*0.0008).toFixed(1);
   document.getElementById('stepsManual').value='';
+  updateStepSummary();
+});
+document.getElementById('memberStepSelect').addEventListener('change',function(){
+  selStepMember=this.value||null;
   updateStepSummary();
 });
 document.getElementById('stepsManual').addEventListener('input',function(){
