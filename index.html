@@ -12,7 +12,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 #lockScreen{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;}
 .lock-logo{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;letter-spacing:4px;color:var(--accent);}
 .lock-logo span{color:var(--text);}
-.lock-sub{color:var(--muted);font-size:0.85rem;margin-bottom:2rem;text-align:center;line-height:1.6;margin-top:0.25rem;}
+.lock-sub{color:var(--muted);font-size:0.85rem;margin-bottom:1.5rem;text-align:center;line-height:1.6;margin-top:0.25rem;}
 .pin-dots{display:flex;gap:0.75rem;margin-bottom:1.5rem;}
 .pin-dot{width:14px;height:14px;border-radius:50%;background:var(--border);transition:background 0.15s;}
 .pin-dot.filled{background:var(--accent);}
@@ -20,14 +20,18 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .pin-key{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;font-size:1.2rem;font-weight:600;cursor:pointer;text-align:center;color:var(--text);}
 .pin-key:active{background:var(--purple);border-color:var(--purple);color:#fff;}
 .pin-error{color:var(--red);font-size:0.8rem;margin-top:0.75rem;min-height:1.2rem;text-align:center;}
-.view-only-btn{margin-top:1.25rem;background:rgba(6,214,160,0.08);border:1px solid rgba(6,214,160,0.3);color:var(--green);border-radius:10px;padding:0.75rem 1.5rem;font-size:0.85rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;width:240px;text-align:center;}
+.lock-btn{margin-top:0.75rem;background:rgba(6,214,160,0.08);border:1px solid rgba(6,214,160,0.3);color:var(--green);border-radius:10px;padding:0.75rem 1.5rem;font-size:0.85rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;width:240px;text-align:center;}
+.lock-btn.purple{background:rgba(124,92,252,0.08);border-color:rgba(124,92,252,0.3);color:var(--purple);margin-top:0.4rem;}
+.sync-entry{display:none;margin-top:0.6rem;width:240px;}
+.sync-entry input{width:100%;text-align:center;font-size:0.85rem;margin-bottom:0.4rem;background:var(--surface);border:1px solid var(--purple);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;padding:0.6rem;outline:none;}
 header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,10,15,0.97);backdrop-filter:blur(10px);z-index:100;}
 .logo{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:3px;color:var(--accent);}
 .logo span{color:var(--text);}
 .week-pill{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:0.3rem 0.85rem;font-size:0.7rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
 .new-week-btn{background:rgba(200,241,53,0.08);border:1px solid rgba(200,241,53,0.25);color:var(--accent);border-radius:8px;padding:0.35rem 0.75rem;font-size:0.7rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;}
-.admin-badge{background:rgba(200,241,53,0.1);border:1px solid rgba(200,241,53,0.3);color:var(--accent);border-radius:6px;padding:0.25rem 0.6rem;font-size:0.68rem;font-weight:600;letter-spacing:1px;cursor:pointer;}
-.member-badge{background:rgba(6,214,160,0.1);border:1px solid rgba(6,214,160,0.3);color:var(--green);border-radius:6px;padding:0.25rem 0.6rem;font-size:0.68rem;font-weight:600;letter-spacing:1px;cursor:pointer;}
+.badge{border-radius:6px;padding:0.25rem 0.6rem;font-size:0.68rem;font-weight:600;letter-spacing:1px;cursor:pointer;}
+.badge-admin{background:rgba(200,241,53,0.1);border:1px solid rgba(200,241,53,0.3);color:var(--accent);}
+.badge-member{background:rgba(6,214,160,0.1);border:1px solid rgba(6,214,160,0.3);color:var(--green);}
 .tabs{display:flex;border-bottom:1px solid var(--border);overflow-x:auto;background:var(--bg);}
 .tabs::-webkit-scrollbar{display:none;}
 .tab{padding:0.65rem 1rem;font-size:0.8rem;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500;transition:all 0.2s;}
@@ -38,25 +42,25 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.1rem;margin-bottom:0.85rem;}
 .card-title{font-size:0.68rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
 .sec-title{font-size:0.68rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:0.65rem;padding-bottom:0.45rem;border-bottom:1px solid var(--border);}
-.step-title{font-size:0.68rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:0.5rem;}
-.toggle-row{display:flex;gap:0.4rem;margin-bottom:1rem;}
+.step-label{font-size:0.68rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:0.5rem;}
+.tog-row{display:flex;gap:0.4rem;margin-bottom:1rem;}
 .tog{flex:1;padding:0.45rem;border-radius:8px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:'DM Sans',sans-serif;transition:all 0.2s;}
 .tog.on{background:rgba(200,241,53,0.12);border-color:var(--accent);color:var(--accent);}
 .tog.on-g{background:rgba(6,214,160,0.12);border-color:var(--green);color:var(--green);}
-.member-grid{display:flex;flex-wrap:wrap;gap:0.5rem;}
-.m-chip{padding:0.55rem 1rem;border-radius:30px;background:var(--card);border:2px solid var(--border);font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.15s;color:var(--text);user-select:none;}
-.m-chip.sel-p{background:var(--purple);border-color:var(--purple);color:#fff;}
-.m-chip.sel-g{background:var(--green);border-color:var(--green);color:#000;}
-.m-chip:active{transform:scale(0.95);}
-.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;}
-.t-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0.75rem 0.5rem;border-radius:12px;background:var(--card);border:2px solid var(--border);cursor:pointer;transition:all 0.15s;gap:0.3rem;}
-.t-chip.sel{border-color:var(--accent);background:rgba(200,241,53,0.08);}
-.t-chip:active{transform:scale(0.95);}
-.t-emoji{font-size:1.5rem;line-height:1;}
-.t-label{font-size:0.7rem;color:var(--muted);font-weight:500;}
-.t-chip.sel .t-label{color:var(--accent);}
-.big-num{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;line-height:1;text-align:center;}
-.big-unit{font-size:0.82rem;color:var(--muted);text-align:center;margin-top:0.2rem;margin-bottom:0.75rem;}
+.mgrid{display:flex;flex-wrap:wrap;gap:0.5rem;}
+.mchip{padding:0.55rem 1rem;border-radius:30px;background:var(--card);border:2px solid var(--border);font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.15s;color:var(--text);user-select:none;}
+.mchip.sp{background:var(--purple);border-color:var(--purple);color:#fff;}
+.mchip.sg{background:var(--green);border-color:var(--green);color:#000;}
+.mchip:active{transform:scale(0.95);}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;}
+.tchip{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0.75rem 0.5rem;border-radius:12px;background:var(--card);border:2px solid var(--border);cursor:pointer;transition:all 0.15s;gap:0.3rem;}
+.tchip.sel{border-color:var(--accent);background:rgba(200,241,53,0.08);}
+.tchip:active{transform:scale(0.95);}
+.temoji{font-size:1.5rem;line-height:1;}
+.tlabel{font-size:0.7rem;color:var(--muted);font-weight:500;}
+.tchip.sel .tlabel{color:var(--accent);}
+.bignum{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;line-height:1;text-align:center;}
+.bigunit{font-size:0.82rem;color:var(--muted);text-align:center;margin-top:0.2rem;margin-bottom:0.75rem;}
 .slider{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:var(--border);outline:none;cursor:pointer;}
 .slider.a::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:var(--accent);cursor:pointer;}
 .slider.a::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--accent);cursor:pointer;border:none;}
@@ -65,105 +69,109 @@ header{display:flex;align-items:center;justify-content:space-between;padding:1re
 .presets{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.75rem;justify-content:center;}
 .preset{padding:0.3rem 0.75rem;border-radius:20px;background:var(--surface);border:1px solid var(--border);font-size:0.75rem;color:var(--muted);cursor:pointer;}
 .preset:active{background:var(--card);color:var(--text);}
-.log-summary{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0.75rem 1rem;font-size:0.82rem;color:var(--muted);text-align:center;margin-bottom:0.75rem;line-height:1.5;}
-.log-btn{width:100%;padding:1rem;border-radius:14px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:1rem;border:none;cursor:pointer;transition:all 0.2s;}
-.log-btn:active{transform:scale(0.98);}
-.log-btn:disabled{opacity:0.35;cursor:not-allowed;transform:none;}
+.logsummary{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0.75rem 1rem;font-size:0.82rem;color:var(--muted);text-align:center;margin-bottom:0.75rem;line-height:1.5;}
+.logbtn{width:100%;padding:1rem;border-radius:14px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:1rem;border:none;cursor:pointer;transition:all 0.2s;}
+.logbtn:active{transform:scale(0.98);}
+.logbtn:disabled{opacity:0.35;cursor:not-allowed;transform:none;}
 .btn-a{background:var(--accent);color:#0a0a0f;}
 .btn-g{background:var(--green);color:#000;}
 .add-row{display:flex;gap:0.5rem;align-items:center;margin-top:0.75rem;}
 .add-row input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.875rem;padding:0.55rem 0.7rem;outline:none;}
 .add-row input:focus{border-color:var(--purple);}
-.add-btn{padding:0.55rem 1rem;border-radius:8px;background:var(--purple);color:#fff;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.82rem;border:none;cursor:pointer;white-space:nowrap;}
+.addbtn{padding:0.55rem 1rem;border-radius:8px;background:var(--purple);color:#fff;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.82rem;border:none;cursor:pointer;white-space:nowrap;}
 .podium{display:grid;gap:0.6rem;margin-bottom:1rem;align-items:flex-end;}
-.p-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:0.85rem 0.5rem;text-align:center;}
+.pitem{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:0.85rem 0.5rem;text-align:center;}
 .p1{border-color:var(--gold);box-shadow:0 0 18px rgba(255,209,102,0.13);}
 .p2{border-color:rgba(176,183,195,0.35);}
 .p3{border-color:rgba(205,124,84,0.35);}
-.p-medal{font-size:1.3rem;display:block;margin-bottom:0.2rem;}
-.p-name{font-size:0.75rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.p-pts{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;}
-.p1 .p-pts{color:var(--gold);}.p2 .p-pts{color:var(--silver);}.p3 .p-pts{color:var(--bronze);}
-.p-sub{font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.pmedal{font-size:1.3rem;display:block;margin-bottom:0.2rem;}
+.pname{font-size:0.75rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ppts{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;}
+.p1 .ppts{color:var(--gold);}.p2 .ppts{color:var(--silver);}.p3 .ppts{color:var(--bronze);}
+.psub{font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
 .brows{display:flex;flex-direction:column;gap:0.45rem;}
-.brow{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.75rem 0.9rem;display:grid;grid-template-columns:2rem 1fr auto auto;align-items:center;gap:0.6rem;}
-.brow-rank{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--muted);text-align:center;}
-.brow-name{font-weight:500;font-size:0.875rem;}
-.brow-sub{font-size:0.7rem;color:var(--muted);margin-top:0.1rem;}
-.brow-badge{font-size:0.7rem;background:rgba(200,241,53,0.1);color:var(--accent);border-radius:20px;padding:0.15rem 0.5rem;}
-.brow-pts{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;color:var(--accent);text-align:right;}
-.brow-ptslabel{font-size:0.6rem;color:var(--muted);text-align:right;letter-spacing:1px;text-transform:uppercase;}
-.step-row{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.75rem 0.9rem;display:grid;grid-template-columns:2rem 1fr auto auto;align-items:center;gap:0.6rem;margin-bottom:0.45rem;}
-.bar-wrap{height:5px;background:var(--border);border-radius:3px;margin-top:0.35rem;overflow:hidden;}
-.bar-fill{height:100%;border-radius:3px;}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1rem;}
-.stat-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:0.9rem;text-align:center;}
-.stat-num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;line-height:1;}
-.stat-label{font-size:0.65rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:0.25rem;}
-.stepathon-header{background:linear-gradient(135deg,rgba(6,214,160,0.1),rgba(124,92,252,0.1));border:1px solid rgba(6,214,160,0.2);border-radius:14px;padding:1rem 1.1rem;margin-bottom:1rem;text-align:center;}
-.stepathon-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2px;color:var(--green);}
-.stepathon-sub{font-size:0.75rem;color:var(--muted);margin-top:0.35rem;}
-.status-live{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(6,214,160,0.12);border:1px solid rgba(6,214,160,0.3);color:var(--green);border-radius:20px;padding:0.3rem 0.85rem;font-size:0.75rem;font-weight:700;}
-.status-paused{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(255,209,102,0.12);border:1px solid rgba(255,209,102,0.3);color:var(--gold);border-radius:20px;padding:0.3rem 0.85rem;font-size:0.75rem;font-weight:700;}
-.status-idle{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(107,107,128,0.12);border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:0.3rem 0.85rem;font-size:0.75rem;font-weight:700;}
-.status-ended{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(255,77,109,0.12);border:1px solid rgba(255,77,109,0.3);color:var(--red);border-radius:20px;padding:0.3rem 0.85rem;font-size:0.75rem;font-weight:700;}
-.status-testing{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(124,92,252,0.12);border:1px solid rgba(124,92,252,0.3);color:var(--purple);border-radius:20px;padding:0.3rem 0.85rem;font-size:0.75rem;font-weight:700;}
-.locked-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:2rem 1.25rem;text-align:center;margin-bottom:1rem;}
-.testing-banner{background:rgba(124,92,252,0.08);border:1px solid rgba(124,92,252,0.25);border-radius:10px;padding:0.65rem 0.9rem;margin-bottom:0.85rem;font-size:0.78rem;color:var(--purple);text-align:center;line-height:1.5;}
-.ctrl-btn{width:100%;padding:0.85rem;border-radius:12px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.9rem;border:none;cursor:pointer;transition:all 0.2s;margin-bottom:0.5rem;}
-.ctrl-btn:active{transform:scale(0.98);}
-.ctrl-start{background:var(--green);color:#000;}
-.ctrl-test{background:rgba(124,92,252,0.15);border:1px solid var(--purple);color:var(--purple);}
-.ctrl-pause{background:rgba(255,209,102,0.15);border:1px solid var(--gold);color:var(--gold);}
-.ctrl-resume{background:rgba(6,214,160,0.15);border:1px solid var(--green);color:var(--green);}
-.ctrl-end{background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.3);color:var(--red);}
-.upload-zone{border:2px dashed var(--border);border-radius:10px;padding:1rem;text-align:center;cursor:pointer;position:relative;background:var(--surface);transition:all 0.2s;margin-bottom:0.75rem;}
-.upload-zone:hover{border-color:var(--green);}
-.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-.img-wrap{position:relative;display:none;margin-bottom:0.75rem;}
-.img-wrap.show{display:block;}
-.img-wrap img{width:100%;max-height:160px;object-fit:contain;border-radius:8px;border:1px solid var(--border);}
-.img-remove{position:absolute;top:0.35rem;right:0.35rem;background:rgba(0,0,0,0.75);border:none;color:#fff;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:0.7rem;display:flex;align-items:center;justify-content:center;}
-.verify-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0.85rem;margin-bottom:0.75rem;display:none;}
-.verify-box.show{display:block;}
-.verify-ok{color:var(--green);font-weight:600;font-size:0.85rem;margin-bottom:0.3rem;}
-.verify-warn{color:var(--gold);font-weight:600;font-size:0.85rem;margin-bottom:0.3rem;}
-.verify-err{color:var(--red);font-weight:600;font-size:0.85rem;margin-bottom:0.3rem;}
-.verify-detail{font-size:0.75rem;color:var(--muted);line-height:1.5;}
-.scanning{height:3px;background:linear-gradient(90deg,transparent,var(--green),transparent);border-radius:3px;animation:scan 1.2s linear infinite;display:none;margin-bottom:0.5rem;background-size:200% auto;}
-.scanning.show{display:block;}
-@keyframes scan{0%{background-position:-200% 0;}100%{background-position:200% 0;}}
-.hist-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.75rem 0.9rem;margin-bottom:0.45rem;}
-.hist-del{background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.3);color:var(--red);border-radius:6px;padding:0.25rem 0.7rem;font-size:0.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:0.5rem;display:inline-block;}
-.wa-preview{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0.9rem;font-size:0.82rem;line-height:1.75;white-space:pre-wrap;color:var(--text);max-height:260px;overflow-y:auto;margin-bottom:0.75rem;font-family:monospace;}
-.share-img{width:100%;border-radius:10px;border:1px solid var(--border);margin-bottom:0.75rem;display:none;}
+.brow{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.75rem 0.9rem;display:grid;grid-template-columns:2.5rem 1fr auto auto;align-items:center;gap:0.6rem;}
+.brank{font-size:1.1rem;text-align:center;}
+.bname{font-weight:500;font-size:0.875rem;}
+.bsub{font-size:0.7rem;color:var(--muted);margin-top:0.1rem;}
+.bbadge{font-size:0.7rem;background:rgba(200,241,53,0.1);color:var(--accent);border-radius:20px;padding:0.15rem 0.5rem;}
+.bpts{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;color:var(--accent);text-align:right;}
+.bptsl{font-size:0.6rem;color:var(--muted);text-align:right;letter-spacing:1px;text-transform:uppercase;}
+.srow{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.75rem 0.9rem;display:grid;grid-template-columns:2.5rem 1fr auto auto;align-items:center;gap:0.6rem;margin-bottom:0.45rem;}
+.barwrap{height:5px;background:var(--border);border-radius:3px;margin-top:0.35rem;overflow:hidden;}
+.barfill{height:100%;border-radius:3px;}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1rem;}
+.sbox{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:0.9rem;text-align:center;}
+.snum{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;line-height:1;}
+.slabel{font-size:0.65rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:0.25rem;}
+.shead{background:linear-gradient(135deg,rgba(6,214,160,0.1),rgba(124,92,252,0.1));border:1px solid rgba(6,214,160,0.2);border-radius:14px;padding:1rem 1.1rem;margin-bottom:1rem;text-align:center;}
+.stitle{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2px;color:var(--green);}
+.ssub{font-size:0.75rem;color:var(--muted);margin-top:0.35rem;}
+.sbadge{display:inline-flex;align-items:center;gap:0.4rem;border-radius:20px;padding:0.3rem 0.85rem;font-size:0.75rem;font-weight:700;margin-top:0.4rem;}
+.sb-live{background:rgba(6,214,160,0.12);border:1px solid rgba(6,214,160,0.3);color:var(--green);}
+.sb-test{background:rgba(124,92,252,0.12);border:1px solid rgba(124,92,252,0.3);color:var(--purple);}
+.sb-pause{background:rgba(255,209,102,0.12);border:1px solid rgba(255,209,102,0.3);color:var(--gold);}
+.sb-idle{background:rgba(107,107,128,0.12);border:1px solid var(--border);color:var(--muted);}
+.sb-end{background:rgba(255,77,109,0.12);border:1px solid rgba(255,77,109,0.3);color:var(--red);}
+.lockbox{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:2rem 1.25rem;text-align:center;margin-bottom:1rem;}
+.tban{background:rgba(124,92,252,0.08);border:1px solid rgba(124,92,252,0.25);border-radius:10px;padding:0.65rem 0.9rem;margin-bottom:0.85rem;font-size:0.78rem;color:var(--purple);text-align:center;line-height:1.5;display:none;}
+.ctrlbtn{width:100%;padding:0.85rem;border-radius:12px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.9rem;border:none;cursor:pointer;transition:all 0.2s;margin-bottom:0.5rem;}
+.ctrlbtn:active{transform:scale(0.98);}
+.c-start{background:var(--green);color:#000;}
+.c-test{background:rgba(124,92,252,0.15);border:1px solid var(--purple);color:var(--purple);}
+.c-pause{background:rgba(255,209,102,0.15);border:1px solid var(--gold);color:var(--gold);}
+.c-resume{background:rgba(6,214,160,0.15);border:1px solid var(--green);color:var(--green);}
+.c-end{background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.3);color:var(--red);}
+.c-grey{background:var(--surface);border:1px solid var(--border);color:var(--muted);}
+.uzone{border:2px dashed var(--border);border-radius:10px;padding:1rem;text-align:center;cursor:pointer;position:relative;background:var(--surface);transition:all 0.2s;margin-bottom:0.75rem;}
+.uzone:hover{border-color:var(--green);}
+.uzone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.imgwrap{position:relative;display:none;margin-bottom:0.75rem;}
+.imgwrap.show{display:block;}
+.imgwrap img{width:100%;max-height:160px;object-fit:contain;border-radius:8px;border:1px solid var(--border);}
+.imgrem{position:absolute;top:0.35rem;right:0.35rem;background:rgba(0,0,0,0.75);border:none;color:#fff;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:0.7rem;display:flex;align-items:center;justify-content:center;}
+.vbox{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0.85rem;margin-bottom:0.75rem;display:none;}
+.vbox.show{display:block;}
+.vok{color:var(--green);font-weight:600;font-size:0.85rem;margin-bottom:0.3rem;}
+.vwarn{color:var(--gold);font-weight:600;font-size:0.85rem;margin-bottom:0.3rem;}
+.verr{color:var(--red);font-weight:600;font-size:0.85rem;margin-bottom:0.3rem;}
+.vdetail{font-size:0.75rem;color:var(--muted);line-height:1.5;}
+.scanbar{height:3px;background:var(--green);border-radius:3px;display:none;margin-bottom:0.5rem;animation:scanpulse 1s ease-in-out infinite;}
+.scanbar.show{display:block;}
+@keyframes scanpulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
+.hitem{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.75rem 0.9rem;margin-bottom:0.45rem;}
+.hdel{background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.3);color:var(--red);border-radius:6px;padding:0.25rem 0.7rem;font-size:0.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:0.5rem;display:inline-block;}
+.wabox{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0.9rem;font-size:0.82rem;line-height:1.75;white-space:pre-wrap;color:var(--text);max-height:260px;overflow-y:auto;margin-bottom:0.75rem;font-family:monospace;}
+.shareimg{width:100%;border-radius:10px;border:1px solid var(--border);margin-bottom:0.75rem;display:none;}
 .btn{padding:0.7rem 1.1rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.82rem;cursor:pointer;border:none;transition:all 0.2s;}
 .btn-ghost{background:var(--surface);color:var(--text);border:1px solid var(--border);flex:1;}
 .btn-wa{background:#25D366;color:#fff;flex:1;}
 .btn-purple{background:var(--purple);color:#fff;width:100%;margin-top:0.6rem;}
 .btn-purple:disabled{opacity:0.5;cursor:not-allowed;}
-.btn-outline-p{background:var(--surface);color:var(--purple);border:1px solid var(--purple);width:100%;margin-top:0.5rem;}
+.btn-op{background:var(--surface);color:var(--purple);border:1px solid var(--purple);width:100%;margin-top:0.5rem;}
 .btn-red{background:rgba(255,77,109,0.1);color:var(--red);border:1px solid rgba(255,77,109,0.3);width:100%;}
 .btn-row{display:flex;gap:0.6rem;}
 input,select{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.875rem;padding:0.55rem 0.7rem;outline:none;width:100%;transition:border-color 0.2s;}
 input:focus,select:focus{border-color:var(--purple);}
+.nsel{width:100%;padding:0.75rem;border-radius:10px;background:var(--card);border:2px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;outline:none;margin-bottom:0.75rem;cursor:pointer;}
+.nsel:focus{border-color:var(--green);}
 .empty{text-align:center;padding:2.5rem 1rem;color:var(--muted);}
-.empty .eicon{font-size:2.2rem;display:block;margin-bottom:0.5rem;}
+.empty .ei{font-size:2.2rem;display:block;margin-bottom:0.5rem;}
 .spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:0.35rem;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .toast{position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%) translateY(120px);background:var(--accent);color:#0a0a0f;font-weight:600;font-size:0.82rem;padding:0.65rem 1.4rem;border-radius:30px;transition:transform 0.3s;z-index:9999;white-space:nowrap;pointer-events:none;}
 .toast.show{transform:translateX(-50%) translateY(0);}
+.syncbar{position:fixed;top:0;left:0;right:0;height:3px;background:var(--purple);display:none;z-index:9998;}
+.syncbar.show{display:block;animation:scanpulse 1s ease-in-out infinite;}
+.capwarn{background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.3);border-radius:8px;padding:0.6rem 0.8rem;font-size:0.78rem;color:var(--red);margin-bottom:0.75rem;display:none;}
 canvas{display:none;}
-.cap-warn{background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.3);border-radius:8px;padding:0.6rem 0.8rem;font-size:0.78rem;color:var(--red);margin-bottom:0.75rem;display:none;}
-.name-select{width:100%;padding:0.75rem;border-radius:10px;background:var(--card);border:2px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;outline:none;margin-bottom:0.75rem;cursor:pointer;}
-.name-select:focus{border-color:var(--green);}
-@media(max-width:380px){.type-grid{grid-template-columns:repeat(3,1fr);}.p-name{font-size:0.68rem;}}
+@media(max-width:380px){.tgrid{grid-template-columns:repeat(3,1fr);}.pname{font-size:0.68rem;}}
 </style>
 </head>
 <body>
 <div id="lockScreen">
   <div class="lock-logo">SQUAD<span>FIT</span></div>
-  <p class="lock-sub">Enter admin PIN to manage<br>or tap below to view as member</p>
+  <p class="lock-sub">Enter admin PIN to manage<br>or tap below as a member</p>
   <div class="pin-dots">
     <div class="pin-dot" id="d0"></div><div class="pin-dot" id="d1"></div>
     <div class="pin-dot" id="d2"></div><div class="pin-dot" id="d3"></div>
@@ -172,139 +180,139 @@ canvas{display:none;}
     <div class="pin-key" data-k="1">1</div><div class="pin-key" data-k="2">2</div><div class="pin-key" data-k="3">3</div>
     <div class="pin-key" data-k="4">4</div><div class="pin-key" data-k="5">5</div><div class="pin-key" data-k="6">6</div>
     <div class="pin-key" data-k="7">7</div><div class="pin-key" data-k="8">8</div><div class="pin-key" data-k="9">9</div>
-    <div class="pin-key" data-k="del">&#9003;</div><div class="pin-key" data-k="0">0</div>
+    <div class="pin-key" data-k="del">DEL</div><div class="pin-key" data-k="0">0</div>
     <div class="pin-key" data-k="ok" style="background:rgba(200,241,53,0.1);color:var(--accent);">OK</div>
   </div>
   <div class="pin-error" id="pinError"></div>
-  <button class="view-only-btn" id="viewOnlyBtn">&#128249; Log my steps / View leaderboard</button>
+  <button class="lock-btn" id="memberBtn">Log my steps / View Stepathon</button>
+  <button class="lock-btn purple" id="syncBtn">Enter Sync ID (first time)</button>
+  <div class="sync-entry" id="syncEntry">
+    <input type="text" id="syncInput" placeholder="Paste Sync ID here">
+    <button class="lock-btn purple" onclick="doSync()" style="width:100%;margin-top:0;">Connect</button>
+  </div>
 </div>
+<div class="syncbar" id="syncBar"></div>
 <div id="appWrap" style="display:none;">
 <header>
   <div class="logo">SQUAD<span>FIT</span></div>
   <div style="display:flex;gap:0.5rem;align-items:center;">
     <button class="new-week-btn" id="newWeekBtn" style="display:none;">+ New Week</button>
     <div class="week-pill" id="weekPill">Week 1</div>
-    <div id="modeBadge" class="member-badge" onclick="relockApp()">MEMBER</div>
+    <div id="modeBadge" class="badge badge-member" onclick="relockApp()">MEMBER</div>
   </div>
 </header>
 <div class="tabs">
-  <div class="tab active" data-page="board">&#127942; Board</div>
-  <div class="tab" data-page="steps">&#128249; Stepathon</div>
-  <div class="tab hidden" data-page="log">&#9889; Log</div>
-  <div class="tab hidden" data-page="history">&#128220; History</div>
-  <div class="tab hidden" data-page="share">&#128228; Share</div>
-  <div class="tab hidden" data-page="settings">&#9881; Settings</div>
+  <div class="tab hidden" data-page="board">Board</div>
+  <div class="tab active" data-page="steps">Stepathon</div>
+  <div class="tab hidden" data-page="log">Log</div>
+  <div class="tab hidden" data-page="history">History</div>
+  <div class="tab hidden" data-page="share">Share</div>
+  <div class="tab hidden" data-page="settings">Settings</div>
 </div>
-<div class="page active" id="page-board">
-  <div class="toggle-row">
-    <button class="tog on" id="bWeekBtn">This Week</button>
-    <button class="tog" id="bAllBtn">All Time</button>
-  </div>
-  <div id="podiumWrap"></div>
-  <div class="sec-title" id="bSecTitle">THIS WEEK</div>
+<div class="page" id="page-board">
+  <div class="tog-row"><button class="tog on" id="bWk">This Week</button><button class="tog" id="bAll">All Time</button></div>
+  <div id="podWrap"></div>
+  <div class="sec-title" id="bSec">THIS WEEK</div>
   <div class="brows" id="boardRows"></div>
 </div>
-<div class="page" id="page-steps">
-  <div class="stepathon-header">
-    <div class="stepathon-title" id="sTitle">&#127942; Stepathon</div>
-    <div style="margin-top:0.5rem;" id="sStatusBadge"></div>
-    <div class="stepathon-sub" id="sDates"></div>
+<div class="page active" id="page-steps">
+  <div class="shead">
+    <div class="stitle" id="sTitle">Stepathon</div>
+    <div id="sBadge"></div>
+    <div class="ssub" id="sDates"></div>
   </div>
-  <div id="testingBanner" class="testing-banner" style="display:none;">&#128521; Testing phase is active. Try logging your steps. This data will be cleared when the real challenge goes live.</div>
-  <div class="stats-grid">
-    <div class="stat-box"><div class="stat-num" id="statToday" style="color:var(--green);">0</div><div class="stat-label">Squad Steps Today</div></div>
-    <div class="stat-box"><div class="stat-num" id="statDays" style="color:var(--purple);">0</div><div class="stat-label">Active Days</div></div>
+  <div class="tban" id="testBan">Testing phase is active. Try logging your steps. This data will be cleared when the real challenge begins.</div>
+  <div class="sgrid">
+    <div class="sbox"><div class="snum" id="statToday" style="color:var(--green);">0</div><div class="slabel">Squad Steps Today</div></div>
+    <div class="sbox"><div class="snum" id="statDays" style="color:var(--purple);">0</div><div class="slabel">Active Days</div></div>
   </div>
-  <div id="memberStepForm" style="display:none;">
+  <div id="mForm" style="display:none;">
     <div class="card" style="border-top:3px solid var(--green);">
-      <div class="card-title" style="color:var(--green);border-color:rgba(6,214,160,0.25);">&#128249; Log Your Steps</div>
-      <div class="step-title">Select your name</div>
-      <select class="name-select" id="memberNameSelect"><option value="">-- Tap to select your name --</option></select>
-      <div class="step-title">&#128247; Upload screenshot <span style="color:var(--green);font-size:0.65rem;">RECOMMENDED</span></div>
-      <div class="upload-zone" id="verifyZone">
-        <input type="file" id="verifyFile" accept="image/*">
+      <div class="card-title" style="color:var(--green);border-color:rgba(6,214,160,0.25);">Log Your Steps</div>
+      <div class="step-label">Select your name</div>
+      <select class="nsel" id="mNameSel"><option value="">-- Select your name --</option></select>
+      <div class="step-label">Upload screenshot (recommended)</div>
+      <div class="uzone" id="uZone">
+        <input type="file" id="uFile" accept="image/*">
         <div style="font-size:1.4rem;margin-bottom:0.3rem;">&#128247;</div>
         <div style="font-size:0.8rem;color:var(--muted);"><strong style="color:var(--green);">Tap to upload</strong> your steps screenshot</div>
       </div>
-      <div class="img-wrap" id="verifyImgWrap">
-        <img id="verifyImgPreview" src="" alt="">
-        <button class="img-remove" id="verifyImgRemove">&#10005;</button>
-      </div>
-      <div class="scanning" id="scanBar"></div>
-      <div class="verify-box" id="verifyBox"></div>
-      <div class="step-title">Steps today</div>
-      <div class="big-num" id="mStepsNum" style="color:var(--green);">5,000</div>
-      <div class="big-unit">approx <span id="mStepsKm">4.0</span> km</div>
-      <input type="range" class="slider g" id="mStepsSlider" min="1000" max="30000" step="500" value="5000">
+      <div class="imgwrap" id="imgWrap"><img id="imgPrev" src="" alt=""><button class="imgrem" id="imgRem">X</button></div>
+      <div class="scanbar" id="scanBar"></div>
+      <div class="vbox" id="vBox"></div>
+      <div class="step-label">Steps today</div>
+      <div class="bignum" id="mStepsNum" style="color:var(--green);">5,000</div>
+      <div class="bigunit">approx <span id="mStepsKm">4.0</span> km</div>
+      <input type="range" class="slider g" id="mSlider" min="1000" max="30000" step="500" value="5000">
       <div class="presets">
         <div class="preset" data-ms="3000">3k</div><div class="preset" data-ms="5000">5k</div>
         <div class="preset" data-ms="7500">7.5k</div><div class="preset" data-ms="10000">10k</div>
         <div class="preset" data-ms="12000">12k</div><div class="preset" data-ms="15000">15k</div>
         <div class="preset" data-ms="20000">20k</div>
       </div>
-      <div style="margin-top:0.75rem;"><input type="number" id="mStepsManual" placeholder="Or type exact steps e.g. 8432"></div>
-      <div class="log-summary" id="mStepsSummary" style="margin-top:0.75rem;">Select your name above</div>
-      <button class="log-btn btn-g" id="mStepsLogBtn" disabled>Log My Steps</button>
+      <div style="margin-top:0.75rem;"><input type="number" id="mManual" placeholder="Or type exact steps"></div>
+      <div class="logsummary" id="mSum" style="margin-top:0.75rem;">Select your name above</div>
+      <button class="logbtn btn-g" id="mLogBtn" disabled>Log My Steps</button>
     </div>
   </div>
-  <div id="stepLockedBox" class="locked-box" style="display:none;"></div>
-  <div id="adminStepForm" style="display:none;">
+  <div class="lockbox" id="lockBox" style="display:none;"></div>
+  <div id="aForm" style="display:none;">
     <div class="card" style="border-top:3px solid var(--green);">
-      <div class="card-title" style="color:var(--green);border-color:rgba(6,214,160,0.25);">Log Steps (Admin)</div>
-      <div class="step-title">Who?</div>
-      <div class="member-grid" id="adminStepGrid"></div>
+      <div class="card-title" style="color:var(--green);">Log Steps (Admin)</div>
+      <div class="step-label">Who?</div>
+      <div class="mgrid" id="aGrid"></div>
       <div style="margin-top:1rem;">
-        <div class="step-title">Steps count</div>
-        <div class="big-num" id="aStepsNum" style="color:var(--green);">5,000</div>
-        <div class="big-unit">approx <span id="aStepsKm">4.0</span> km</div>
-        <input type="range" class="slider g" id="aStepsSlider" min="1000" max="30000" step="500" value="5000">
+        <div class="step-label">Steps count</div>
+        <div class="bignum" id="aStepsNum" style="color:var(--green);">5,000</div>
+        <div class="bigunit">approx <span id="aStepsKm">4.0</span> km</div>
+        <input type="range" class="slider g" id="aSlider" min="1000" max="30000" step="500" value="5000">
         <div class="presets">
           <div class="preset" data-as="3000">3k</div><div class="preset" data-as="5000">5k</div>
           <div class="preset" data-as="7500">7.5k</div><div class="preset" data-as="10000">10k</div>
           <div class="preset" data-as="12000">12k</div><div class="preset" data-as="15000">15k</div>
           <div class="preset" data-as="20000">20k</div>
         </div>
-        <div style="margin-top:0.75rem;"><input type="number" id="aStepsManual" placeholder="Type exact steps"></div>
+        <div style="margin-top:0.75rem;"><input type="number" id="aManual" placeholder="Type exact steps"></div>
       </div>
-      <div class="log-summary" id="aStepsSummary" style="margin-top:0.75rem;">Select a member above</div>
-      <button class="log-btn btn-g" id="aStepsLogBtn" disabled>Log Steps</button>
+      <div class="logsummary" id="aSum" style="margin-top:0.75rem;">Select a member above</div>
+      <button class="logbtn btn-g" id="aLogBtn" disabled>Log Steps</button>
     </div>
   </div>
-  <div class="toggle-row" style="margin-top:0.5rem;">
-    <button class="tog on-g on" id="sWeekBtn">This Week</button>
-    <button class="tog" id="sAllBtn">All Time</button>
+  <div class="tog-row" style="margin-top:0.5rem;">
+    <button class="tog on-g on" id="sWk">This Week</button>
+    <button class="tog" id="sAll">All Time</button>
   </div>
-  <div class="sec-title" id="sSecTitle">THIS WEEK</div>
+  <div class="sec-title" id="sSec">THIS WEEK</div>
   <div id="stepsBoard"></div>
 </div>
 <div class="page" id="page-log">
   <div style="display:flex;flex-direction:column;gap:1rem;">
     <div>
-      <div class="step-title">1. Who worked out?</div>
-      <div class="member-grid" id="logMemberGrid"></div>
+      <div class="step-label">1. Who worked out?</div>
+      <div class="mgrid" id="logGrid"></div>
       <div class="add-row">
-        <input type="text" id="newMemberInput" placeholder="Add new member...">
-        <button class="add-btn" id="addMemberBtn">+ Add</button>
+        <input type="text" id="newMem" placeholder="Add new member...">
+        <button class="addbtn" id="addMemBtn">+ Add</button>
       </div>
     </div>
     <div>
-      <div class="step-title">2. What workout?</div>
-      <div class="type-grid">
-        <div class="t-chip" data-type="Running"><span class="t-emoji">&#127939;</span><span class="t-label">Running</span></div>
-        <div class="t-chip" data-type="Cycling"><span class="t-emoji">&#128692;</span><span class="t-label">Cycling</span></div>
-        <div class="t-chip" data-type="Strength"><span class="t-emoji">&#128170;</span><span class="t-label">Strength</span></div>
-        <div class="t-chip" data-type="HIIT"><span class="t-emoji">&#9889;</span><span class="t-label">HIIT</span></div>
-        <div class="t-chip" data-type="Yoga"><span class="t-emoji">&#129496;</span><span class="t-label">Yoga</span></div>
-        <div class="t-chip" data-type="Swimming"><span class="t-emoji">&#127944;</span><span class="t-label">Swimming</span></div>
-        <div class="t-chip" data-type="Sports"><span class="t-emoji">&#127953;</span><span class="t-label">Sports</span></div>
-        <div class="t-chip" data-type="Walking"><span class="t-emoji">&#128694;</span><span class="t-label">Walking</span></div>
-        <div class="t-chip" data-type="Other"><span class="t-emoji">&#128293;</span><span class="t-label">Other</span></div>
+      <div class="step-label">2. What workout?</div>
+      <div class="tgrid">
+        <div class="tchip" data-type="Running"><span class="temoji">&#127939;</span><span class="tlabel">Running</span></div>
+        <div class="tchip" data-type="Cycling"><span class="temoji">&#128692;</span><span class="tlabel">Cycling</span></div>
+        <div class="tchip" data-type="Strength"><span class="temoji">&#128170;</span><span class="tlabel">Strength</span></div>
+        <div class="tchip" data-type="HIIT"><span class="temoji">&#9889;</span><span class="tlabel">HIIT</span></div>
+        <div class="tchip" data-type="Yoga"><span class="temoji">&#129496;</span><span class="tlabel">Yoga</span></div>
+        <div class="tchip" data-type="Swimming"><span class="temoji">&#127944;</span><span class="tlabel">Swimming</span></div>
+        <div class="tchip" data-type="Sports"><span class="temoji">&#127953;</span><span class="tlabel">Sports</span></div>
+        <div class="tchip" data-type="Walking"><span class="temoji">&#128694;</span><span class="tlabel">Walking</span></div>
+        <div class="tchip" data-type="Other"><span class="temoji">&#128293;</span><span class="tlabel">Other</span></div>
       </div>
     </div>
     <div>
-      <div class="step-title">3. How long?</div>
-      <div class="big-num" id="durNum" style="color:var(--accent);">30</div>
-      <div class="big-unit">minutes</div>
+      <div class="step-label">3. How long?</div>
+      <div class="bignum" id="durNum" style="color:var(--accent);">30</div>
+      <div class="bigunit">minutes</div>
       <input type="range" class="slider a" id="durSlider" min="5" max="120" step="5" value="30">
       <div class="presets">
         <div class="preset" data-dur="15">15 min</div><div class="preset" data-dur="20">20 min</div>
@@ -312,40 +320,40 @@ canvas{display:none;}
         <div class="preset" data-dur="60">1 hr</div><div class="preset" data-dur="90">90 min</div>
       </div>
     </div>
-    <div class="cap-warn" id="capWarn"></div>
-    <div class="log-summary" id="logSummary">Select member and workout above</div>
-    <button class="log-btn btn-a" id="logBtn" disabled>Log Workout</button>
+    <div class="capwarn" id="capWarn"></div>
+    <div class="logsummary" id="logSum">Select member and workout above</div>
+    <button class="logbtn btn-a" id="logBtn" disabled>Log Workout</button>
   </div>
 </div>
 <div class="page" id="page-history">
-  <div class="toggle-row">
-    <button class="tog on" id="hWorkoutBtn">Workouts</button>
-    <button class="tog" id="hStepsBtn">Steps</button>
+  <div class="tog-row">
+    <button class="tog on" id="hWBtn">Workouts</button>
+    <button class="tog" id="hSBtn">Steps</button>
   </div>
-  <div style="margin-bottom:0.75rem;"><select id="histFilter"><option value="">All members</option></select></div>
+  <div style="margin-bottom:0.75rem;"><select id="hFilter"><option value="">All members</option></select></div>
   <div id="histList"></div>
 </div>
 <div class="page" id="page-share">
-  <div id="improvedRow" style="display:none;flex-direction:row;align-items:center;gap:0.75rem;background:rgba(200,241,53,0.06);border:1px solid rgba(200,241,53,0.2);border-radius:12px;padding:0.9rem 1rem;margin-bottom:0.85rem;">
+  <div id="impRow" style="display:none;flex-direction:row;align-items:center;gap:0.75rem;background:rgba(200,241,53,0.06);border:1px solid rgba(200,241,53,0.2);border-radius:12px;padding:0.9rem 1rem;margin-bottom:0.85rem;">
     <div style="font-size:1.6rem;">&#128200;</div>
     <div>
       <div style="font-size:0.65rem;color:var(--accent);letter-spacing:1px;text-transform:uppercase;">Most Improved</div>
-      <div style="font-size:0.95rem;font-weight:600;" id="improvedName"></div>
-      <div style="font-size:0.75rem;color:var(--muted);" id="improvedStat"></div>
+      <div style="font-size:0.95rem;font-weight:600;" id="impName"></div>
+      <div style="font-size:0.75rem;color:var(--muted);" id="impStat"></div>
     </div>
   </div>
   <div class="card">
     <div class="card-title">Weekly WhatsApp Post</div>
-    <div class="wa-preview" id="waPreview">Tap Generate below...</div>
+    <div class="wabox" id="waBox">Tap Generate below...</div>
     <div class="btn-row" style="margin-bottom:0.6rem;">
       <button class="btn btn-ghost" id="copyBtn">Copy</button>
       <button class="btn btn-wa" id="waBtn">WhatsApp</button>
     </div>
-    <button class="btn btn-purple" id="genPostBtn">Generate with AI</button>
+    <button class="btn btn-purple" id="genBtn">Generate with AI</button>
   </div>
   <div class="card">
     <div class="card-title">Shareable Image</div>
-    <img class="share-img" id="shareImg">
+    <img class="shareimg" id="shareImg">
     <div class="btn-row">
       <button class="btn btn-ghost" id="genImgBtn">Generate Image</button>
       <button class="btn btn-ghost" id="saveImgBtn" style="display:none;">Save</button>
@@ -353,41 +361,49 @@ canvas{display:none;}
   </div>
 </div>
 <div class="page" id="page-settings">
-  <div class="card"><div class="card-title">Group Name</div><input type="text" id="groupNameInput" placeholder="e.g. SquadFit"></div>
-  <div class="card"><div class="card-title">Weekly Points Cap (0 = no cap)</div><input type="number" id="capInput" placeholder="300" min="0"></div>
+  <div class="card"><div class="card-title">Group Name</div><input type="text" id="grpName" placeholder="e.g. SquadFit"></div>
+  <div class="card"><div class="card-title">Weekly Points Cap (0 = no cap)</div><input type="number" id="capInp" placeholder="300" min="0"></div>
   <div class="card">
     <div class="card-title">Admin PIN</div>
     <div style="display:flex;gap:0.5rem;">
-      <input type="password" id="newPinInput" placeholder="New 4-digit PIN" maxlength="4" style="flex:1;">
-      <button class="add-btn" id="changePinBtn">Save</button>
+      <input type="password" id="pinInp" placeholder="New 4-digit PIN" maxlength="4" style="flex:1;">
+      <button class="addbtn" id="pinBtn">Save</button>
     </div>
   </div>
   <div class="card" style="border-top:3px solid var(--green);">
     <div class="card-title" style="color:var(--green);border-color:rgba(6,214,160,0.25);">Stepathon Controls</div>
     <div style="margin-bottom:0.75rem;">
       <label style="font-size:0.7rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:0.35rem;">Challenge Name</label>
-      <input type="text" id="stepathonNameInput" placeholder="e.g. May Stepathon">
+      <input type="text" id="sName" placeholder="e.g. May Stepathon">
     </div>
-    <div id="stepathonStatusInfo" style="margin-bottom:0.75rem;font-size:0.8rem;color:var(--muted);padding:0.6rem 0.75rem;background:var(--surface);border-radius:8px;"></div>
-    <button class="ctrl-btn ctrl-test" id="btnTesting">Start Testing Phase (5 days)</button>
-    <button class="ctrl-btn ctrl-start" id="btnStart" style="display:none;">Go Live - Start Real Stepathon</button>
-    <button class="ctrl-btn ctrl-pause" id="btnPause" style="display:none;">Pause Stepathon</button>
-    <button class="ctrl-btn ctrl-resume" id="btnResume" style="display:none;">Resume Stepathon</button>
-    <button class="ctrl-btn ctrl-end" id="btnEnd" style="display:none;">End Stepathon</button>
-    <button class="ctrl-btn" id="btnRestart" style="display:none;background:var(--surface);border:1px solid var(--border);color:var(--muted);">Start New Stepathon</button>
+    <div id="sInfo" style="margin-bottom:0.75rem;font-size:0.8rem;color:var(--muted);padding:0.6rem 0.75rem;background:var(--surface);border-radius:8px;"></div>
+    <button class="ctrlbtn c-test" id="btnTest">Start Testing Phase (5 days)</button>
+    <button class="ctrlbtn c-start" id="btnGo" style="display:none;">Go Live - Start Real Stepathon</button>
+    <button class="ctrlbtn c-pause" id="btnPause" style="display:none;">Pause Stepathon</button>
+    <button class="ctrlbtn c-resume" id="btnResume" style="display:none;">Resume Stepathon</button>
+    <button class="ctrlbtn c-end" id="btnEnd" style="display:none;">End Stepathon</button>
+    <button class="ctrlbtn c-grey" id="btnNew" style="display:none;">Start New Stepathon</button>
+  </div>
+  <div class="card" style="border-top:3px solid var(--purple);">
+    <div class="card-title" style="color:var(--purple);">Cloud Sync ID</div>
+    <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.65rem;">Share this ID with your group so everyone sees live data.</div>
+    <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
+      <input type="text" id="binDisplay" readonly style="flex:1;font-size:0.75rem;" placeholder="Log something to generate Sync ID">
+      <button class="addbtn" onclick="copySyncId()">Copy</button>
+    </div>
   </div>
   <div class="card">
     <div class="card-title">Manage Members</div>
-    <div id="memberManageList" style="display:flex;flex-direction:column;gap:0.4rem;"></div>
+    <div id="memList" style="display:flex;flex-direction:column;gap:0.4rem;"></div>
   </div>
   <div class="card">
     <div class="card-title">Data and Backup</div>
     <div style="display:flex;flex-direction:column;gap:0.6rem;">
-      <button class="btn btn-ghost" id="exportBtn" style="width:100%;">Export JSON backup</button>
-      <button class="btn btn-outline-p" id="restoreBtn">Restore from backup</button>
-      <input type="file" id="restoreFile" accept=".json" style="display:none;">
-      <button class="btn btn-red" id="resetWeekBtn">Reset this week scores</button>
-      <button class="btn btn-red" id="resetAllBtn" style="margin-top:0;">Reset ALL data</button>
+      <button class="btn btn-ghost" id="expBtn" style="width:100%;">Export JSON backup</button>
+      <button class="btn btn-op" id="impBtn">Restore from backup</button>
+      <input type="file" id="impFile" accept=".json" style="display:none;">
+      <button class="btn btn-red" id="rstWkBtn">Reset this week scores</button>
+      <button class="btn btn-red" id="rstAllBtn" style="margin-top:0;">Reset ALL data</button>
     </div>
     <div style="margin-top:0.9rem;padding:0.75rem;background:var(--surface);border-radius:8px;font-size:0.75rem;color:var(--muted);line-height:1.75;">Auto-backup every 10 workouts. Reset requires typing to confirm.</div>
   </div>
@@ -398,139 +414,293 @@ canvas{display:none;}
 <div class="toast" id="toast"></div>
 <script>
 var PTS={Running:{base:15,mn:0.5,km:2},Cycling:{base:10,mn:0.4,km:1},Strength:{base:12,mn:0.6,km:0},HIIT:{base:15,mn:0.8,km:0},Yoga:{base:8,mn:0.4,km:0},Swimming:{base:15,mn:0.6,km:3},Sports:{base:12,mn:0.5,km:0},Walking:{base:5,mn:0.3,km:1},Other:{base:10,mn:0.5,km:0}};
-var MEDALS=['🥇','🥈','🥉'];
-var COLORS=['#c8f135','#7c5cfc','#ff4d6d','#ffd166','#06d6a0','#ff9f1c','#a8dadc','#e9c46a'];
-var DPIN='1234';
-function loadS(){try{var d=localStorage.getItem('sf8');return d?JSON.parse(d):null;}catch(e){return null;}}
-var S=loadS()||{members:[],workouts:[],steps:[],weekStart:new Date().toISOString(),weekNum:1,groupName:'',prevStats:{},pin:DPIN,weekCap:0,stepathon:{status:'idle',name:'Stepathon',startDate:null,testStart:null,endDate:null}};
-if(!S.steps)S.steps=[];
-if(!S.pin)S.pin=DPIN;
-if(S.weekCap===undefined)S.weekCap=0;
-if(!S.stepathon)S.stepathon={status:'idle',name:'Stepathon',startDate:null,testStart:null,endDate:null};
-function save(){try{localStorage.setItem('sf8',JSON.stringify(S));}catch(e){showToast('Storage error!');}}
-var isAdmin=false,boardMode='week',stepsMode='week',histMode='workouts';
+var MEDALS=["1st","2nd","3rd"];
+var MPOD=["&#127945;","&#127946;","&#127947;"];
+var COLORS=["#c8f135","#7c5cfc","#ff4d6d","#ffd166","#06d6a0","#ff9f1c","#a8dadc","#e9c46a"];
+var DPIN="1234";
+var BIN_URL="https://api.jsonbin.io/v3/b";
+var BIN_KEY="squadfit2026";
+var binId=localStorage.getItem("sf_binid")||"";
+var syncing=false;
+
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+
+function defState(){
+  return {members:[],workouts:[],steps:[],weekStart:new Date().toISOString(),weekNum:1,groupName:"",prevStats:{},pin:DPIN,weekCap:0,stepathon:{status:"idle",name:"Stepathon",startDate:null,testStart:null,endDate:null}};
+}
+var S=(function(){try{var d=lsGet("sf8");return d?JSON.parse(d):defState();}catch(e){return defState();}})();
+function fixState(){if(!S.steps)S.steps=[];if(!S.pin)S.pin=DPIN;if(S.weekCap===undefined)S.weekCap=0;if(!S.stepathon)S.stepathon={status:"idle",name:"Stepathon",startDate:null,testStart:null,endDate:null};}
+fixState();
+
+function saveLocal(){try{lsSet("sf8",JSON.stringify(S));}catch(e){}}
+function save(){saveLocal();cloudPush();}
+
+async function cloudPush(){
+  if(syncing)return;syncing=true;setSyncBar(true);
+  try{
+    if(!binId){
+      var r=await fetch(BIN_URL,{method:"POST",headers:{"Content-Type":"application/json","X-Master-Key":BIN_KEY,"X-Bin-Name":"squadfit","X-Bin-Private":"false"},body:JSON.stringify(S)});
+      var d=await r.json();
+      if(d.metadata&&d.metadata.id){binId=d.metadata.id;lsSet("sf_binid",binId);updateBinDisplay();}
+    }else{
+      await fetch(BIN_URL+"/"+binId,{method:"PUT",headers:{"Content-Type":"application/json","X-Master-Key":BIN_KEY},body:JSON.stringify(S)});
+    }
+  }catch(e){}
+  syncing=false;setSyncBar(false);
+}
+
+async function cloudPull(){
+  if(!binId)return false;setSyncBar(true);
+  try{
+    var r=await fetch(BIN_URL+"/"+binId+"/latest",{headers:{"X-Master-Key":BIN_KEY}});
+    var d=await r.json();
+    if(d.record){S=d.record;fixState();saveLocal();setSyncBar(false);return true;}
+  }catch(e){}
+  setSyncBar(false);return false;
+}
+
+async function connectBin(id){binId=id.trim();lsSet("sf_binid",binId);return await cloudPull();}
+function setSyncBar(on){var el=document.getElementById("syncBar");if(el)el.className="syncbar"+(on?" show":"");}
+function updateBinDisplay(){var el=document.getElementById("binDisplay");if(el)el.value=binId||"";}
+function copySyncId(){if(!binId){showToast("No Sync ID yet. Log something first.");return;}navigator.clipboard.writeText(binId).then(function(){showToast("Sync ID copied!");}).catch(function(){showToast("Your Sync ID: "+binId);});}
+
+var isAdmin=false,boardMode="week",stepsMode="week",histMode="w";
+
 function calcPts(t,d,k){var p=PTS[t]||PTS.Other;return Math.round(p.base+d*p.mn+k*p.km);}
 function weekW(){var ws=new Date(S.weekStart).getTime();return S.workouts.filter(function(w){return new Date(w.date).getTime()>=ws;});}
 function weekSt(){var ws=new Date(S.weekStart).getTime();return S.steps.filter(function(s){return new Date(s.date).getTime()>=ws;});}
-function getWStats(list){var wl=list!==undefined?list:weekW();var map={};S.members.forEach(function(m){map[m]={name:m,pts:0,count:0};});wl.forEach(function(w){if(!map[w.member])map[w.member]={name:w.member,pts:0,count:0};map[w.member].pts+=w.points;map[w.member].count+=1;});return Object.values(map).sort(function(a,b){return b.pts-a.pts;});}
-function getSStats(list){var sl=list!==undefined?list:weekSt();var map={};S.members.forEach(function(m){map[m]={name:m,total:0,days:0,best:0};});sl.forEach(function(s){if(!map[s.member])map[s.member]={name:s.member,total:0,days:0,best:0};map[s.member].total+=s.steps;map[s.member].days+=1;if(s.steps>map[s.member].best)map[s.member].best=s.steps;});return Object.values(map).sort(function(a,b){return b.total-a.total;});}
-function getMWPts(m){return weekW().filter(function(w){return w.member===m;}).reduce(function(a,w){return a+w.points;},0);}
-function timeAgo(d){var s=(Date.now()-d)/1000;if(s<60)return'Just now';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
-var pinEntry='';
-function updateDots(){for(var i=0;i<4;i++){var d=document.getElementById('d'+i);if(d)d.className='pin-dot'+(i<pinEntry.length?' filled':'');}}
-document.querySelectorAll('.pin-key').forEach(function(k){k.addEventListener('click',function(){var v=this.dataset.k;if(v==='del')pinEntry=pinEntry.slice(0,-1);else if(v==='ok')tryPin();else if(pinEntry.length<4)pinEntry+=v;updateDots();if(pinEntry.length===4&&v!=='ok')tryPin();});});
-function tryPin(){if(pinEntry===S.pin){enterAdmin();}else{document.getElementById('pinError').textContent='Wrong PIN. Try again.';pinEntry='';updateDots();setTimeout(function(){document.getElementById('pinError').textContent='';},2000);}}
-function enterAdmin(){isAdmin=true;document.getElementById('lockScreen').style.display='none';document.getElementById('appWrap').style.display='block';document.getElementById('modeBadge').textContent='ADMIN';document.getElementById('modeBadge').className='admin-badge';document.getElementById('newWeekBtn').style.display='block';document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('hidden');});updateWeekPill();renderBoard();}
-document.getElementById('viewOnlyBtn').addEventListener('click',function(){isAdmin=false;document.getElementById('lockScreen').style.display='none';document.getElementById('appWrap').style.display='block';document.getElementById('modeBadge').textContent='MEMBER';document.getElementById('modeBadge').className='member-badge';document.getElementById('newWeekBtn').style.display='none';['board','log','history','share','settings'].forEach(function(p){var t=document.querySelector('.tab[data-page="'+p+'"]');if(t)t.classList.add('hidden');});populateMemberDropdown();switchPage('steps');renderStepsPage();});
-function relockApp(){document.getElementById('appWrap').style.display='none';document.getElementById('lockScreen').style.display='flex';pinEntry='';updateDots();}
-document.getElementById('lockBtn').addEventListener('click',relockApp);
-function switchPage(name){document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});var t=document.querySelector('.tab[data-page="'+name+'"]');var p=document.getElementById('page-'+name);if(t&&!t.classList.contains('hidden'))t.classList.add('active');if(p)p.classList.add('active');}
-document.querySelectorAll('.tab').forEach(function(tab){tab.addEventListener('click',function(){if(this.classList.contains('hidden'))return;switchPage(this.dataset.page);if(this.dataset.page==='board')renderBoard();if(this.dataset.page==='steps')renderStepsPage();if(this.dataset.page==='history')renderHistory();if(this.dataset.page==='share')renderShare();if(this.dataset.page==='settings')renderSettings();});});
-document.getElementById('bWeekBtn').addEventListener('click',function(){boardMode='week';this.classList.add('on');document.getElementById('bAllBtn').classList.remove('on');document.getElementById('bSecTitle').textContent='THIS WEEK';renderBoard();});
-document.getElementById('bAllBtn').addEventListener('click',function(){boardMode='all';this.classList.add('on');document.getElementById('bWeekBtn').classList.remove('on');document.getElementById('bSecTitle').textContent='ALL TIME';renderBoard();});
-function renderBoard(){var stats=getWStats(boardMode==='all'?S.workouts:undefined);var pw=document.getElementById('podiumWrap'),rows=document.getElementById('boardRows');if(stats.length===0){pw.innerHTML='';rows.innerHTML='<div class="empty"><span class="eicon">\🏋️</span>No data yet!</div>';return;}var top=stats.slice(0,3),order,rc,medals;if(top.length>=3){order=[top[1],top[0],top[2]];rc=['p2','p1','p3'];medals=['🥈','🥇','🥉'];}else if(top.length===2){order=[top[1],top[0]];rc=['p2','p1'];medals=['🥈','🥇'];}else{order=[top[0]];rc=['p1'];medals=['\🥇'];}pw.innerHTML='<div class="podium" style="grid-template-columns:repeat('+order.length+',1fr)">'+order.map(function(m,i){return'<div class="p-item '+rc[i]+'"><span class="p-medal">'+medals[i]+'</span><div class="p-name">'+m.name+'</div><div class="p-pts">'+m.pts+'</div><div class="p-sub">pts - '+m.count+'x</div></div>';}).join('')+'</div>';rows.innerHTML=stats.map(function(m,i){var rnk=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1);return'<div class="brow"><div class="brow-rank">'+rnk+'</div><div><div class="brow-name">'+m.name+'</div><div class="brow-sub">'+m.count+' session'+(m.count!==1?'s':'')+' - '+(boardMode==='week'?'this week':'all time')+'</div></div>'+(m.count>0?'<div class="brow-badge">'+m.count+'x</div>':'<div></div>')+'<div><div class="brow-pts">'+m.pts+'</div><div class="brow-ptslabel">PTS</div></div></div>';}).join('');}
-function getStatusBadge(st){if(st==='live')return'<span class="status-live">LIVE</span>';if(st==='testing')return'<span class="status-testing">TESTING</span>';if(st==='paused')return'<span class="status-paused">PAUSED</span>';if(st==='ended')return'<span class="status-ended">ENDED</span>';return'<span class="status-idle">NOT STARTED</span>';}
-function renderStepathonHeader(){var st=S.stepathon;var t=document.getElementById('sTitle'),b=document.getElementById('sStatusBadge'),d=document.getElementById('sDates'),tb=document.getElementById('testingBanner');if(t)t.textContent=(st.name||'Stepathon');if(b)b.innerHTML=getStatusBadge(st.status);if(d){if(st.status==='testing'&&st.testStart){var ts=new Date(st.testStart),te=new Date(ts.getTime()+5*86400000);d.textContent='Testing: '+ts.toLocaleDateString('en-IN',{day:'numeric',month:'short'})+' to '+te.toLocaleDateString('en-IN',{day:'numeric',month:'short'});}else if(st.startDate){d.textContent='Started: '+new Date(st.startDate).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});}else{d.textContent='Admin will start this soon';}}if(tb)tb.style.display=st.status==='testing'?'block':'none';}
-function renderStepsPage(){renderStepathonHeader();var st=S.stepathon.status;var mf=document.getElementById('memberStepForm'),lb=document.getElementById('stepLockedBox'),af=document.getElementById('adminStepForm');if(isAdmin){mf.style.display='none';lb.style.display='none';af.style.display='block';renderAdminStepGrid();}else{af.style.display='none';if(st==='live'||st==='testing'){mf.style.display='block';lb.style.display='none';populateMemberDropdown();}else{mf.style.display='none';lb.style.display='block';var msgs={idle:'<span style="font-size:2.5rem;display:block;margin-bottom:0.75rem;">&#9200;</span><div style="font-size:1rem;font-weight:600;margin-bottom:0.4rem;">Stepathon has not started yet</div><div style="font-size:0.82rem;color:var(--muted);">Your admin will kick it off soon!</div>',paused:'<span style="font-size:2.5rem;display:block;margin-bottom:0.75rem;">&#9208;</span><div style="font-size:1rem;font-weight:600;margin-bottom:0.4rem;">Stepathon is paused</div><div style="font-size:0.82rem;color:var(--muted);">Check back soon.</div>',ended:'<span style="font-size:2.5rem;display:block;margin-bottom:0.75rem;">&#127937;</span><div style="font-size:1rem;font-weight:600;margin-bottom:0.4rem;">Stepathon has ended</div><div style="font-size:0.82rem;color:var(--muted);">Thanks for participating! Check the leaderboard.</div>'};lb.innerHTML=msgs[st]||msgs.idle;}}renderStepsBoard();renderStepsStats();}
-function renderStepsStats(){var today=new Date().toISOString().slice(0,10),tot=0,dates={};S.steps.forEach(function(s){if(s.date.slice(0,10)===today)tot+=s.steps;dates[s.date.slice(0,10)]=1;});var e1=document.getElementById('statToday'),e2=document.getElementById('statDays');if(e1)e1.textContent=tot.toLocaleString();if(e2)e2.textContent=Object.keys(dates).length;}
-document.getElementById('sWeekBtn').addEventListener('click',function(){stepsMode='week';this.classList.add('on');document.getElementById('sAllBtn').classList.remove('on');document.getElementById('sSecTitle').textContent='THIS WEEK';renderStepsBoard();});
-document.getElementById('sAllBtn').addEventListener('click',function(){stepsMode='all';this.classList.add('on');document.getElementById('sWeekBtn').classList.remove('on');document.getElementById('sSecTitle').textContent='ALL TIME';renderStepsBoard();});
-function renderStepsBoard(){var board=document.getElementById('stepsBoard');if(!board)return;var stats=getSStats(stepsMode==='all'?S.steps:undefined);var has=stats.some(function(s){return s.total>0;});if(!has){board.innerHTML='<div class="empty"><span class="eicon">\📊</span>No steps logged yet!</div>';return;}var mx=stats[0].total||1,rc=['var(--gold)','var(--silver)','var(--bronze)','var(--green)','var(--green)','var(--green)','var(--green)','var(--green)'];board.innerHTML=stats.map(function(m,i){var km=(m.total*0.0008).toFixed(1),pct=Math.max((m.total/mx)*100,2),col=rc[i]||'var(--green)';var srnk=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1);return'<div class="step-row"><div class="brow-rank">'+srnk+'</div><div><div class="brow-name">'+m.name+'</div><div class="bar-wrap"><div class="bar-fill" style="width:'+pct+'%;background:'+col+'"></div></div><div class="brow-sub">'+m.days+' day'+(m.days!==1?'s':'')+' - best '+m.best.toLocaleString()+'/day</div></div><div style="text-align:right;"><div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.1rem;color:'+col+';">'+Math.round(m.total/1000)+'k</div><div style="font-size:0.6rem;color:var(--muted);">STEPS</div></div><div style="text-align:right;"><div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.1rem;color:var(--muted);">'+km+'</div><div style="font-size:0.6rem;color:var(--muted);">KM</div></div></div>';}).join('');}
-var mSteps=5000,mMember=null,mVerify='unverified',mB64=null;
-function populateMemberDropdown(){var sel=document.getElementById('memberNameSelect');if(!sel)return;var prev=sel.value;sel.innerHTML='<option value="">-- Tap to select your name --</option>';S.members.forEach(function(m){var o=document.createElement('option');o.value=m;o.textContent=m;sel.appendChild(o);});if(prev&&S.members.indexOf(prev)>=0){sel.value=prev;mMember=prev;}updateMSum();}
-document.getElementById('memberNameSelect').addEventListener('change',function(){mMember=this.value||null;updateMSum();});
-document.getElementById('mStepsSlider').addEventListener('input',function(){mSteps=parseInt(this.value);document.getElementById('mStepsNum').textContent=mSteps.toLocaleString();document.getElementById('mStepsKm').textContent=(mSteps*0.0008).toFixed(1);document.getElementById('mStepsManual').value='';updateMSum();});
-document.getElementById('mStepsManual').addEventListener('input',function(){var v=parseInt(this.value);if(v>0){mSteps=v;document.getElementById('mStepsNum').textContent=v.toLocaleString();document.getElementById('mStepsKm').textContent=(v*0.0008).toFixed(1);document.getElementById('mStepsSlider').value=Math.min(v,30000);updateMSum();}});
-document.querySelectorAll('.preset[data-ms]').forEach(function(b){b.addEventListener('click',function(){mSteps=parseInt(this.dataset.ms);document.getElementById('mStepsNum').textContent=mSteps.toLocaleString();document.getElementById('mStepsKm').textContent=(mSteps*0.0008).toFixed(1);document.getElementById('mStepsSlider').value=mSteps;document.getElementById('mStepsManual').value='';updateMSum();});});
-function updateMSum(){var sum=document.getElementById('mStepsSummary'),btn=document.getElementById('mStepsLogBtn');if(!sum||!btn)return;if(mMember){sum.innerHTML='<strong>'+mMember+'</strong> - '+mSteps.toLocaleString()+' steps - '+(mSteps*0.0008).toFixed(1)+' km';btn.disabled=false;}else{sum.textContent='Select your name above';btn.disabled=true;}}
-document.getElementById('mStepsLogBtn').addEventListener('click',function(){if(!mMember)return;logSteps(mMember,mSteps,mVerify);clearVerify();});
-document.getElementById('verifyFile').addEventListener('change',function(){var file=this.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(e){mB64=e.target.result.split(',')[1];document.getElementById('verifyImgPreview').src=e.target.result;document.getElementById('verifyImgWrap').classList.add('show');document.getElementById('verifyZone').style.display='none';scanImage();};reader.readAsDataURL(file);});
-document.getElementById('verifyImgRemove').addEventListener('click',clearVerify);
-function clearVerify(){mB64=null;mVerify='unverified';document.getElementById('verifyFile').value='';document.getElementById('verifyImgWrap').classList.remove('show');document.getElementById('verifyZone').style.display='block';document.getElementById('verifyBox').classList.remove('show');document.getElementById('scanBar').classList.remove('show');}
-async function scanImage(){if(!mB64)return;document.getElementById('scanBar').classList.add('show');document.getElementById('verifyBox').classList.remove('show');try{var res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:mB64}},{type:'text',text:'Fitness tracker screenshot. Find total step count for today. Return ONLY JSON: {"steps":number_or_null,"source":"app name"}'}]}]})});var data=await res.json();var raw=data.content[0].text.replace(/```json|```/g,'').trim();var parsed=JSON.parse(raw);document.getElementById('scanBar').classList.remove('show');if(!parsed.steps){showVBox('warn','No steps detected','Could not read steps. You can still log manually.');mVerify='image-no-steps';return;}var diff=Math.abs(parsed.steps-mSteps),pct=mSteps>0?(diff/mSteps)*100:100;if(pct<=15){showVBox('ok','Verified! Screenshot matches','Image shows '+parsed.steps.toLocaleString()+' steps from '+parsed.source+'.');mVerify='verified';setMSteps(parsed.steps);}else{showVBox('err','Mismatch! Steps corrected','You entered '+mSteps.toLocaleString()+' but screenshot shows '+parsed.steps.toLocaleString()+'. Updated to match.');mVerify='verified';setMSteps(parsed.steps);}}catch(e){document.getElementById('scanBar').classList.remove('show');showVBox('warn','Could not read image','Try a clearer screenshot or log manually.');mVerify='image-unreadable';}}
-function setMSteps(v){mSteps=v;document.getElementById('mStepsNum').textContent=v.toLocaleString();document.getElementById('mStepsKm').textContent=(v*0.0008).toFixed(1);document.getElementById('mStepsSlider').value=Math.min(v,30000);document.getElementById('mStepsManual').value='';updateMSum();}
-function showVBox(type,title,detail){var box=document.getElementById('verifyBox');box.innerHTML='<div class="verify-'+type+'">'+title+'</div><div class="verify-detail">'+detail+'</div>';box.classList.add('show');}
+function getWS(list){var wl=list!==undefined?list:weekW();var map={};S.members.forEach(function(m){map[m]={name:m,pts:0,count:0};});wl.forEach(function(w){if(!map[w.member])map[w.member]={name:w.member,pts:0,count:0};map[w.member].pts+=w.points;map[w.member].count+=1;});return Object.values(map).sort(function(a,b){return b.pts-a.pts;});}
+function getSS(list){var sl=list!==undefined?list:weekSt();var map={};S.members.forEach(function(m){map[m]={name:m,total:0,days:0,best:0};});sl.forEach(function(s){if(!map[s.member])map[s.member]={name:s.member,total:0,days:0,best:0};map[s.member].total+=s.steps;map[s.member].days+=1;if(s.steps>map[s.member].best)map[s.member].best=s.steps;});return Object.values(map).sort(function(a,b){return b.total-a.total;});}
+function getMWP(m){return weekW().filter(function(w){return w.member===m;}).reduce(function(a,w){return a+w.points;},0);}
+function tAgo(d){var s=(Date.now()-d)/1000;if(s<60)return"Just now";if(s<3600)return Math.floor(s/60)+"m ago";if(s<86400)return Math.floor(s/3600)+"h ago";return Math.floor(s/86400)+"d ago";}
+
+var pe="";
+function uDots(){for(var i=0;i<4;i++){var d=document.getElementById("d"+i);if(d)d.className="pin-dot"+(i<pe.length?" filled":"");}}
+document.querySelectorAll(".pin-key").forEach(function(k){k.addEventListener("click",function(){var v=this.dataset.k;if(v==="del")pe=pe.slice(0,-1);else if(v==="ok")tryPin();else if(pe.length<4)pe+=v;uDots();if(pe.length===4&&v!=="ok")tryPin();});});
+function tryPin(){if(pe===S.pin){enterAdmin();}else{document.getElementById("pinError").textContent="Wrong PIN. Try again.";pe="";uDots();setTimeout(function(){document.getElementById("pinError").textContent="";},2000);}}
+function enterAdmin(){isAdmin=true;document.getElementById("lockScreen").style.display="none";document.getElementById("appWrap").style.display="block";document.getElementById("modeBadge").textContent="ADMIN";document.getElementById("modeBadge").className="badge badge-admin";document.getElementById("newWeekBtn").style.display="block";document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("hidden");});goPage("board");renderBoard();updateBinDisplay();}
+document.getElementById("memberBtn").addEventListener("click",function(){enterMember();});
+function enterMember(){isAdmin=false;document.getElementById("lockScreen").style.display="none";document.getElementById("appWrap").style.display="block";document.getElementById("modeBadge").textContent="MEMBER";document.getElementById("modeBadge").className="badge badge-member";document.getElementById("newWeekBtn").style.display="none";["board","log","history","share","settings"].forEach(function(p){var t=document.querySelector(".tab[data-page=\""+p+"\"]");if(t)t.classList.add("hidden");});fillMemberDrop();goPage("steps");renderStepsPage();}
+document.getElementById("syncBtn").addEventListener("click",function(){var e=document.getElementById("syncEntry");e.style.display=e.style.display==="none"?"block":"none";});
+async function doSync(){var id=document.getElementById("syncInput").value.trim();if(!id){showToast("Paste the Sync ID first");return;}setSyncBar(true);var ok=await connectBin(id);setSyncBar(false);if(ok){document.getElementById("syncEntry").style.display="none";showToast("Connected!");setTimeout(function(){enterMember();},400);}else{showToast("Could not connect. Check Sync ID.");}}
+function relockApp(){document.getElementById("appWrap").style.display="none";document.getElementById("lockScreen").style.display="flex";pe="";uDots();}
+document.getElementById("lockBtn").addEventListener("click",relockApp);
+
+function goPage(name){document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("active");});document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");});var t=document.querySelector(".tab[data-page=\""+name+"\"]");var p=document.getElementById("page-"+name);if(t&&!t.classList.contains("hidden"))t.classList.add("active");if(p)p.classList.add("active");}
+document.querySelectorAll(".tab").forEach(function(tab){tab.addEventListener("click",function(){if(this.classList.contains("hidden"))return;goPage(this.dataset.page);if(this.dataset.page==="board")renderBoard();if(this.dataset.page==="steps")renderStepsPage();if(this.dataset.page==="history")renderHistory();if(this.dataset.page==="share")renderShare();if(this.dataset.page==="settings")renderSettings();});});
+
+document.getElementById("bWk").addEventListener("click",function(){boardMode="week";this.classList.add("on");document.getElementById("bAll").classList.remove("on");document.getElementById("bSec").textContent="THIS WEEK";renderBoard();});
+document.getElementById("bAll").addEventListener("click",function(){boardMode="all";this.classList.add("on");document.getElementById("bWk").classList.remove("on");document.getElementById("bSec").textContent="ALL TIME";renderBoard();});
+function renderBoard(){
+  var stats=getWS(boardMode==="all"?S.workouts:undefined);
+  var pw=document.getElementById("podWrap"),rows=document.getElementById("boardRows");
+  if(stats.length===0){pw.innerHTML="";rows.innerHTML="<div class=\"empty\"><span class=\"ei\">&#127947;</span>No data yet!</div>";return;}
+  var top=stats.slice(0,3),order,rc,mp;
+  if(top.length>=3){order=[top[1],top[0],top[2]];rc=["p2","p1","p3"];mp=[MPOD[1],MPOD[0],MPOD[2]];}
+  else if(top.length===2){order=[top[1],top[0]];rc=["p2","p1"];mp=[MPOD[1],MPOD[0]];}
+  else{order=[top[0]];rc=["p1"];mp=[MPOD[0]];}
+  pw.innerHTML="<div class=\"podium\" style=\"grid-template-columns:repeat("+order.length+",1fr)\">"+order.map(function(m,i){return"<div class=\"pitem "+rc[i]+"\"><span class=\"pmedal\">"+mp[i]+"</span><div class=\"pname\">"+m.name+"</div><div class=\"ppts\">"+m.pts+"</div><div class=\"psub\">pts - "+m.count+"x</div></div>";}).join("")+"</div>";
+  rows.innerHTML=stats.map(function(m,i){var rnk=i<3?MPOD[i]:(i+1);return"<div class=\"brow\"><div class=\"brank\">"+rnk+"</div><div><div class=\"bname\">"+m.name+"</div><div class=\"bsub\">"+m.count+" session"+(m.count!==1?"s":"")+" - "+(boardMode==="week"?"this week":"all time")+"</div></div>"+(m.count>0?"<div class=\"bbadge\">"+m.count+"x</div>":"<div></div>")+"<div><div class=\"bpts\">"+m.pts+"</div><div class=\"bptsl\">PTS</div></div></div>";}).join("");
+}
+
+function sBadgeHTML(st){if(st==="live")return"<span class=\"sbadge sb-live\">LIVE</span>";if(st==="testing")return"<span class=\"sbadge sb-test\">TESTING</span>";if(st==="paused")return"<span class=\"sbadge sb-pause\">PAUSED</span>";if(st==="ended")return"<span class=\"sbadge sb-end\">ENDED</span>";return"<span class=\"sbadge sb-idle\">NOT STARTED</span>";}
+function renderSHead(){var st=S.stepathon;var t=document.getElementById("sTitle"),b=document.getElementById("sBadge"),d=document.getElementById("sDates"),tb=document.getElementById("testBan");if(t)t.textContent=st.name||"Stepathon";if(b)b.innerHTML=sBadgeHTML(st.status);if(d){if(st.status==="testing"&&st.testStart){var ts=new Date(st.testStart),te=new Date(ts.getTime()+5*86400000);d.textContent="Testing: "+ts.toLocaleDateString("en-IN",{day:"numeric",month:"short"})+" to "+te.toLocaleDateString("en-IN",{day:"numeric",month:"short"});}else if(st.startDate){d.textContent="Started: "+new Date(st.startDate).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"});}else{d.textContent="Admin will start this soon";}}if(tb)tb.style.display=st.status==="testing"?"block":"none";}
+function renderStatsBar(){var today=new Date().toISOString().slice(0,10),tot=0,dates={};S.steps.forEach(function(s){if(s.date.slice(0,10)===today)tot+=s.steps;dates[s.date.slice(0,10)]=1;});var e1=document.getElementById("statToday"),e2=document.getElementById("statDays");if(e1)e1.textContent=tot.toLocaleString();if(e2)e2.textContent=Object.keys(dates).length;}
+
+function renderStepsPage(){
+  renderSHead();
+  var st=S.stepathon.status;
+  var mf=document.getElementById("mForm"),lb=document.getElementById("lockBox"),af=document.getElementById("aForm");
+  if(isAdmin){mf.style.display="none";lb.style.display="none";af.style.display="block";renderAGrid();}
+  else{af.style.display="none";
+    if(st==="live"||st==="testing"){mf.style.display="block";lb.style.display="none";fillMemberDrop();}
+    else{mf.style.display="none";lb.style.display="block";
+      var msgs={idle:"<span style=\"font-size:2.5rem;display:block;margin-bottom:0.75rem;\">&#9200;</span><div style=\"font-size:1rem;font-weight:600;margin-bottom:0.4rem;\">Stepathon not started yet</div><div style=\"font-size:0.82rem;color:var(--muted);\">Your admin will kick it off soon!</div>",paused:"<span style=\"font-size:2.5rem;display:block;margin-bottom:0.75rem;\">&#9208;</span><div style=\"font-size:1rem;font-weight:600;margin-bottom:0.4rem;\">Stepathon is paused</div><div style=\"font-size:0.82rem;color:var(--muted);\">Check back soon.</div>",ended:"<span style=\"font-size:2.5rem;display:block;margin-bottom:0.75rem;\">&#127937;</span><div style=\"font-size:1rem;font-weight:600;margin-bottom:0.4rem;\">Stepathon has ended</div><div style=\"font-size:0.82rem;color:var(--muted);\">Check the leaderboard for final rankings!</div>"};
+      lb.innerHTML=msgs[st]||msgs.idle;
+    }
+  }
+  renderStepsBoard();renderStatsBar();
+}
+
+document.getElementById("sWk").addEventListener("click",function(){stepsMode="week";this.classList.add("on");document.getElementById("sAll").classList.remove("on");document.getElementById("sSec").textContent="THIS WEEK";renderStepsBoard();});
+document.getElementById("sAll").addEventListener("click",function(){stepsMode="all";this.classList.add("on");document.getElementById("sWk").classList.remove("on");document.getElementById("sSec").textContent="ALL TIME";renderStepsBoard();});
+function renderStepsBoard(){
+  var board=document.getElementById("stepsBoard");if(!board)return;
+  var stats=getSS(stepsMode==="all"?S.steps:undefined);
+  var has=stats.some(function(s){return s.total>0;});
+  if(!has){board.innerHTML="<div class=\"empty\"><span class=\"ei\">&#128249;</span>No steps logged yet!</div>";return;}
+  var mx=stats[0].total||1;
+  var rc=["var(--gold)","var(--silver)","var(--bronze)","var(--green)","var(--green)","var(--green)","var(--green)","var(--green)"];
+  board.innerHTML=stats.map(function(m,i){
+    var km=(m.total*0.0008).toFixed(1),pct=Math.max((m.total/mx)*100,2),col=rc[i]||"var(--green)";
+    var rnk=i<3?MPOD[i]:(i+1);
+    return "<div class=\"srow\"><div class=\"brank\">"+rnk+"</div><div><div class=\"bname\">"+m.name+"</div><div class=\"barwrap\"><div class=\"barfill\" style=\"width:"+pct+"%;background:"+col+"\"></div></div><div class=\"bsub\">"+m.days+" day"+(m.days!==1?"s":"")+" - best "+m.best.toLocaleString()+"/day</div></div><div style=\"text-align:right;\"><div style=\"font-size:1.1rem;color:"+col+";\">"+(m.total/1000).toFixed(1)+"k</div><div style=\"font-size:0.6rem;color:var(--muted)\">STEPS</div></div><div style=\"text-align:right;\"><div style=\"font-size:1.1rem;color:var(--muted);\" >"+km+"</div><div style=\"font-size:0.6rem;color:var(--muted)\">KM</div></div></div>";
+  }).join("");
+}
+
+var mSteps=5000,mMember=null,mVerify="unverified",mB64=null;
+function fillMemberDrop(){var sel=document.getElementById("mNameSel");if(!sel)return;var prev=sel.value;sel.innerHTML="<option value=\"\">-- Select your name --</option>";S.members.forEach(function(m){var o=document.createElement("option");o.value=m;o.textContent=m;sel.appendChild(o);});if(prev&&S.members.indexOf(prev)>=0){sel.value=prev;mMember=prev;}updateMSum();}
+document.getElementById("mNameSel").addEventListener("change",function(){mMember=this.value||null;updateMSum();});
+document.getElementById("mSlider").addEventListener("input",function(){mSteps=parseInt(this.value);document.getElementById("mStepsNum").textContent=mSteps.toLocaleString();document.getElementById("mStepsKm").textContent=(mSteps*0.0008).toFixed(1);document.getElementById("mManual").value="";updateMSum();});
+document.getElementById("mManual").addEventListener("input",function(){var v=parseInt(this.value);if(v>0){mSteps=v;document.getElementById("mStepsNum").textContent=v.toLocaleString();document.getElementById("mStepsKm").textContent=(v*0.0008).toFixed(1);document.getElementById("mSlider").value=Math.min(v,30000);updateMSum();}});
+document.querySelectorAll(".preset[data-ms]").forEach(function(b){b.addEventListener("click",function(){mSteps=parseInt(this.dataset.ms);document.getElementById("mStepsNum").textContent=mSteps.toLocaleString();document.getElementById("mStepsKm").textContent=(mSteps*0.0008).toFixed(1);document.getElementById("mSlider").value=mSteps;document.getElementById("mManual").value="";updateMSum();});});
+function updateMSum(){var s=document.getElementById("mSum"),b=document.getElementById("mLogBtn");if(!s||!b)return;if(mMember){s.innerHTML="<strong>"+mMember+"</strong> - "+mSteps.toLocaleString()+" steps - "+(mSteps*0.0008).toFixed(1)+" km";b.disabled=false;}else{s.textContent="Select your name above";b.disabled=true;}}
+document.getElementById("mLogBtn").addEventListener("click",function(){if(!mMember)return;doLogSteps(mMember,mSteps,mVerify);clearVerify();});
+
+document.getElementById("uFile").addEventListener("change",function(){var file=this.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(e){mB64=e.target.result.split(",")[1];document.getElementById("imgPrev").src=e.target.result;document.getElementById("imgWrap").classList.add("show");document.getElementById("uZone").style.display="none";doScan();};reader.readAsDataURL(file);});
+document.getElementById("imgRem").addEventListener("click",clearVerify);
+function clearVerify(){mB64=null;mVerify="unverified";document.getElementById("uFile").value="";document.getElementById("imgWrap").classList.remove("show");document.getElementById("uZone").style.display="block";document.getElementById("vBox").classList.remove("show");document.getElementById("scanBar").classList.remove("show");}
+async function doScan(){
+  if(!mB64)return;
+  document.getElementById("scanBar").classList.add("show");
+  document.getElementById("vBox").classList.remove("show");
+  try{
+    var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:200,messages:[{role:"user",content:[{type:"image",source:{type:"base64",media_type:"image/jpeg",data:mB64}},{type:"text",text:"Fitness tracker screenshot. Find total step count for today. Return ONLY valid JSON: {steps:number_or_null,source:app_name_string}"}]}]})});
+    var data=await res.json();
+    var raw=data.content[0].text.trim();
+    var parsed=JSON.parse(raw);
+    document.getElementById("scanBar").classList.remove("show");
+    if(!parsed.steps){showVBox("warn","No steps detected","Could not read steps. You can still log manually.");mVerify="image-no-steps";return;}
+    var diff=Math.abs(parsed.steps-mSteps),pct=mSteps>0?(diff/mSteps)*100:100;
+    if(pct<=15){showVBox("ok","Verified! Screenshot matches","Image shows "+parsed.steps.toLocaleString()+" steps.");mVerify="verified";setMSteps(parsed.steps);}
+    else{showVBox("err","Mismatch! Steps corrected","You entered "+mSteps.toLocaleString()+" but screenshot shows "+parsed.steps.toLocaleString()+". Updated.");mVerify="verified";setMSteps(parsed.steps);}
+  }catch(e){document.getElementById("scanBar").classList.remove("show");showVBox("warn","Could not read image","Try a clearer screenshot or log manually.");mVerify="image-unreadable";}
+}
+function setMSteps(v){mSteps=v;document.getElementById("mStepsNum").textContent=v.toLocaleString();document.getElementById("mStepsKm").textContent=(v*0.0008).toFixed(1);document.getElementById("mSlider").value=Math.min(v,30000);document.getElementById("mManual").value="";updateMSum();}
+function showVBox(type,title,detail){var b=document.getElementById("vBox");b.innerHTML="<div class=\"v"+type+"\">"+title+"</div><div class=\"vdetail\">"+detail+"</div>";b.classList.add("show");}
+
 var aMember=null,aSteps=5000;
-function renderAdminStepGrid(){var g=document.getElementById('adminStepGrid');if(!g)return;if(S.members.length===0){g.innerHTML='<div style="font-size:0.8rem;color:var(--muted);">Add members in Log tab first</div>';return;}g.innerHTML=S.members.map(function(m){return'<div class="m-chip'+(m===aMember?' sel-g':'')+'" data-ag="'+m+'">'+m+'</div>';}).join('');g.querySelectorAll('.m-chip').forEach(function(c){c.addEventListener('click',function(){aMember=this.dataset.ag;renderAdminStepGrid();updateASum();});});}
-function updateASum(){var sum=document.getElementById('aStepsSummary'),btn=document.getElementById('aStepsLogBtn');if(!sum||!btn)return;if(aMember){sum.innerHTML='<strong>'+aMember+'</strong> - '+aSteps.toLocaleString()+' steps';btn.disabled=false;}else{sum.textContent='Select a member above';btn.disabled=true;}}
-document.getElementById('aStepsSlider').addEventListener('input',function(){aSteps=parseInt(this.value);document.getElementById('aStepsNum').textContent=aSteps.toLocaleString();document.getElementById('aStepsKm').textContent=(aSteps*0.0008).toFixed(1);document.getElementById('aStepsManual').value='';updateASum();});
-document.getElementById('aStepsManual').addEventListener('input',function(){var v=parseInt(this.value);if(v>0){aSteps=v;document.getElementById('aStepsNum').textContent=v.toLocaleString();document.getElementById('aStepsKm').textContent=(v*0.0008).toFixed(1);document.getElementById('aStepsSlider').value=Math.min(v,30000);updateASum();}});
-document.querySelectorAll('.preset[data-as]').forEach(function(b){b.addEventListener('click',function(){aSteps=parseInt(this.dataset.as);document.getElementById('aStepsNum').textContent=aSteps.toLocaleString();document.getElementById('aStepsKm').textContent=(aSteps*0.0008).toFixed(1);document.getElementById('aStepsSlider').value=aSteps;document.getElementById('aStepsManual').value='';updateASum();});});
-document.getElementById('aStepsLogBtn').addEventListener('click',function(){if(!aMember)return;logSteps(aMember,aSteps,'admin');});
-function logSteps(member,steps,verified){
-  if(!isAdmin&&S.stepathon.status!=='live'&&S.stepathon.status!=='testing'){showToast('Stepathon is not active.');return;}
+function renderAGrid(){var g=document.getElementById("aGrid");if(!g)return;if(S.members.length===0){g.innerHTML="<div style=\"font-size:0.8rem;color:var(--muted)\">Add members in Log tab first</div>";return;}g.innerHTML=S.members.map(function(m){return"<div class=\"mchip"+(m===aMember?" sg":"")+"\" data-ag=\""+m+"\">"+m+"</div>";}).join("");g.querySelectorAll(".mchip").forEach(function(c){c.addEventListener("click",function(){aMember=this.dataset.ag;renderAGrid();updateASum();});});}
+function updateASum(){var s=document.getElementById("aSum"),b=document.getElementById("aLogBtn");if(!s||!b)return;if(aMember){s.innerHTML="<strong>"+aMember+"</strong> - "+aSteps.toLocaleString()+" steps";b.disabled=false;}else{s.textContent="Select a member above";b.disabled=true;}}
+document.getElementById("aSlider").addEventListener("input",function(){aSteps=parseInt(this.value);document.getElementById("aStepsNum").textContent=aSteps.toLocaleString();document.getElementById("aStepsKm").textContent=(aSteps*0.0008).toFixed(1);document.getElementById("aManual").value="";updateASum();});
+document.getElementById("aManual").addEventListener("input",function(){var v=parseInt(this.value);if(v>0){aSteps=v;document.getElementById("aStepsNum").textContent=v.toLocaleString();document.getElementById("aStepsKm").textContent=(v*0.0008).toFixed(1);document.getElementById("aSlider").value=Math.min(v,30000);updateASum();}});
+document.querySelectorAll(".preset[data-as]").forEach(function(b){b.addEventListener("click",function(){aSteps=parseInt(this.dataset.as);document.getElementById("aStepsNum").textContent=aSteps.toLocaleString();document.getElementById("aStepsKm").textContent=(aSteps*0.0008).toFixed(1);document.getElementById("aSlider").value=aSteps;document.getElementById("aManual").value="";updateASum();});});
+document.getElementById("aLogBtn").addEventListener("click",function(){if(!aMember)return;doLogSteps(aMember,aSteps,"admin");});
+
+function doLogSteps(member,steps,verified){
+  if(!isAdmin&&S.stepathon.status!=="live"&&S.stepathon.status!=="testing"){showToast("Stepathon is not active.");return;}
   var today=new Date().toISOString().slice(0,10),idx=-1;
   for(var i=0;i<S.steps.length;i++){if(S.steps[i].member===member&&S.steps[i].date.slice(0,10)===today){idx=i;break;}}
-  // points: 1pt per 1000 steps, min 5
   var pts=Math.max(Math.round(steps/1000),5);
   if(idx>=0){
-    var oldPts=S.steps[idx].points||0;
-    S.steps[idx].steps=steps;
-    S.steps[idx].km=parseFloat((steps*0.0008).toFixed(1));
-    S.steps[idx].verified=verified||'unverified';
-    S.steps[idx].points=pts;
-    // update existing workout entry for this day's steps
-    var wIdx=-1;
-    for(var j=0;j<S.workouts.length;j++){if(S.workouts[j].member===member&&S.workouts[j].stepDate===today){wIdx=j;break;}}
-    if(wIdx>=0){S.workouts[wIdx].points=pts;}
-    else{S.workouts.push({member:member,type:'Walking',duration:Math.round(steps/100),distance:parseFloat((steps*0.0008).toFixed(1)),calories:0,notes:'Steps: '+steps.toLocaleString(),points:pts,date:new Date().toISOString(),loggedBy:'steps',stepDate:today});}
-    showToast('Updated '+steps.toLocaleString()+' steps (+'+pts+' pts)!');
-  } else {
-    S.steps.push({member:member,steps:steps,km:parseFloat((steps*0.0008).toFixed(1)),verified:verified||'unverified',points:pts,date:new Date().toISOString()});
-    S.workouts.push({member:member,type:'Walking',duration:Math.round(steps/100),distance:parseFloat((steps*0.0008).toFixed(1)),calories:0,notes:'Steps: '+steps.toLocaleString(),points:pts,date:new Date().toISOString(),loggedBy:'steps',stepDate:today});
-    showToast(steps.toLocaleString()+' steps logged (+'+pts+' pts)!');
+    S.steps[idx].steps=steps;S.steps[idx].km=parseFloat((steps*0.0008).toFixed(1));S.steps[idx].verified=verified||"unverified";S.steps[idx].points=pts;
+    var wi=-1;for(var j=0;j<S.workouts.length;j++){if(S.workouts[j].member===member&&S.workouts[j].stepDate===today){wi=j;break;}}
+    if(wi>=0){S.workouts[wi].points=pts;}else{S.workouts.push({member:member,type:"Walking",duration:Math.round(steps/100),distance:parseFloat((steps*0.0008).toFixed(1)),calories:0,notes:"Steps: "+steps.toLocaleString(),points:pts,date:new Date().toISOString(),loggedBy:"steps",stepDate:today});}
+    showToast("Updated! "+steps.toLocaleString()+" steps (+"+pts+" pts)");
+  }else{
+    S.steps.push({member:member,steps:steps,km:parseFloat((steps*0.0008).toFixed(1)),verified:verified||"unverified",points:pts,date:new Date().toISOString()});
+    S.workouts.push({member:member,type:"Walking",duration:Math.round(steps/100),distance:parseFloat((steps*0.0008).toFixed(1)),calories:0,notes:"Steps: "+steps.toLocaleString(),points:pts,date:new Date().toISOString(),loggedBy:"steps",stepDate:today});
+    showToast(steps.toLocaleString()+" steps logged (+"+pts+" pts)!");
   }
-  save();renderStepsBoard();renderStepsStats();
+  save();renderStepsBoard();renderStatsBar();
 }
+
 var selM=null,selT=null,selD=30;
-function renderLogGrid(){var g=document.getElementById('logMemberGrid');if(!g)return;if(S.members.length===0){g.innerHTML='<div style="font-size:0.8rem;color:var(--muted);">Add a member below</div>';return;}g.innerHTML=S.members.map(function(m){return'<div class="m-chip'+(m===selM?' sel-p':'')+'" data-lm="'+m+'">'+m+'</div>';}).join('');g.querySelectorAll('.m-chip').forEach(function(c){c.addEventListener('click',function(){selM=this.dataset.lm;renderLogGrid();updateLogSum();});});}
-document.querySelectorAll('.t-chip').forEach(function(chip){chip.addEventListener('click',function(){document.querySelectorAll('.t-chip').forEach(function(c){c.classList.remove('sel');});chip.classList.add('sel');selT=chip.dataset.type;updateLogSum();});});
-var durSlider=document.getElementById('durSlider');
-durSlider.addEventListener('input',function(){selD=parseInt(this.value);document.getElementById('durNum').textContent=selD;updateLogSum();});
-document.querySelectorAll('.preset[data-dur]').forEach(function(b){b.addEventListener('click',function(){selD=parseInt(this.dataset.dur);durSlider.value=selD;document.getElementById('durNum').textContent=selD;updateLogSum();});});
-function updateLogSum(){var sum=document.getElementById('logSummary'),btn=document.getElementById('logBtn'),cw=document.getElementById('capWarn');if(selM&&selT){var pts=calcPts(selT,selD,0),wp=getMWPts(selM),cap=parseInt(S.weekCap)||0;if(cap>0&&wp>=cap){cw.style.display='block';cw.textContent='Weekly cap of '+cap+' pts reached for '+selM;sum.innerHTML='<strong>'+selM+'</strong> - '+selT+' - '+selD+' min - capped';btn.disabled=true;}else{cw.style.display='none';sum.innerHTML='<strong>'+selM+'</strong> - '+selT+' - '+selD+' min - <strong style="color:var(--accent)">+'+pts+' pts</strong>'+(cap>0?' ('+wp+'/'+cap+')':'');btn.disabled=false;}}else if(selM){sum.textContent='Pick a workout type';btn.disabled=true;if(cw)cw.style.display='none';}else{sum.textContent='Select member and workout above';btn.disabled=true;if(cw)cw.style.display='none';}}
-document.getElementById('logBtn').addEventListener('click',function(){if(!selM||!selT)return;var points=calcPts(selT,selD,0);S.workouts.push({member:selM,type:selT,duration:selD,distance:0,calories:0,notes:'',points:points,date:new Date().toISOString(),loggedBy:'admin'});save();checkBackup();showToast('+'+points+' pts for '+selM+'!');document.querySelectorAll('.t-chip').forEach(function(c){c.classList.remove('sel');});selT=null;updateLogSum();});
-document.getElementById('addMemberBtn').addEventListener('click',addMember);
-document.getElementById('newMemberInput').addEventListener('keydown',function(e){if(e.key==='Enter')addMember();});
-function addMember(){var name=document.getElementById('newMemberInput').value.trim();if(!name){showToast('Enter a name');return;}if(S.members.indexOf(name)>=0){showToast('Already in squad');return;}S.members.push(name);save();document.getElementById('newMemberInput').value='';selM=name;renderLogGrid();renderAdminStepGrid();updateLogSum();populateMemberDropdown();showToast(name+' added!');}
-document.getElementById('hWorkoutBtn').addEventListener('click',function(){histMode='workouts';this.classList.add('on');document.getElementById('hStepsBtn').classList.remove('on');renderHistory();});
-document.getElementById('hStepsBtn').addEventListener('click',function(){histMode='steps';this.classList.add('on');document.getElementById('hWorkoutBtn').classList.remove('on');renderHistory();});
-document.getElementById('histFilter').addEventListener('change',function(){renderHistory();});
-function vBadge(v){if(v==='verified')return'<span style="font-size:0.7rem;background:rgba(6,214,160,0.12);color:var(--green);border:1px solid rgba(6,214,160,0.3);border-radius:20px;padding:0.15rem 0.55rem;">Verified</span>';if(v==='admin')return'<span style="font-size:0.7rem;background:rgba(200,241,53,0.1);color:var(--accent);border:1px solid rgba(200,241,53,0.3);border-radius:20px;padding:0.15rem 0.55rem;">Admin logged</span>';return'<span style="font-size:0.7rem;background:rgba(107,107,128,0.1);color:var(--muted);border:1px solid var(--border);border-radius:20px;padding:0.15rem 0.55rem;">No screenshot</span>';}
-function renderHistory(){var sel=document.getElementById('histFilter'),fm=sel.value;sel.innerHTML='<option value="">All members</option>'+S.members.map(function(m){return'<option value="'+m+'">'+m+'</option>';}).join('');sel.value=fm;var list=document.getElementById('histList');if(histMode==='workouts'){var items=S.workouts.slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);});if(fm)items=items.filter(function(w){return w.member===fm;});if(items.length===0){list.innerHTML='<div class="empty"><span class="eicon">\📋</span>No workouts logged.</div>';return;}list.innerHTML=items.map(function(w){var ri=S.workouts.indexOf(w);return'<div class="hist-item"><div style="display:flex;justify-content:space-between;align-items:center;"><div style="font-weight:600;font-size:0.875rem;">'+w.member+'</div><div style="color:var(--accent);font-weight:700;font-size:0.85rem;">+'+w.points+' pts</div></div><div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">'+w.type+' - '+w.duration+' min</div><div style="font-size:0.68rem;color:var(--muted);margin-top:0.15rem;">'+new Date(w.date).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})+'</div><button class="hist-del" onclick="delW('+ri+')">Delete</button></div>';}).join('');}else{var sitems=S.steps.slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);});if(fm)sitems=sitems.filter(function(s){return s.member===fm;});if(sitems.length===0){list.innerHTML='<div class="empty"><span class="eicon">\👣</span>No steps logged.</div>';return;}list.innerHTML=sitems.map(function(s){var ri=S.steps.indexOf(s);return'<div class="hist-item"><div style="display:flex;justify-content:space-between;align-items:center;"><div style="font-weight:600;font-size:0.875rem;">'+s.member+'</div><div style="color:var(--green);font-weight:700;font-size:0.85rem;">'+s.steps.toLocaleString()+' steps</div></div><div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">'+s.km+' km</div><div style="font-size:0.68rem;color:var(--muted);margin-top:0.15rem;">'+new Date(s.date).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})+'</div><div style="margin-top:0.35rem;">'+vBadge(s.verified)+'</div><button class="hist-del" onclick="delSt('+ri+')">Delete</button></div>';}).join('');}}
-function delW(i){if(!confirm('Delete this entry?'))return;S.workouts.splice(i,1);save();renderHistory();renderBoard();showToast('Deleted.');}
-function delSt(i){if(!confirm('Delete this step entry?'))return;S.steps.splice(i,1);save();renderHistory();renderStepsBoard();renderStepsStats();showToast('Deleted.');}
-function renderShare(){var prev=S.prevStats||{},curr=getWStats(),best=null,bd=-Infinity;curr.forEach(function(m){var d=m.pts-(prev[m.name]||0);if(d>bd){bd=d;best={name:m.name,diff:d,pts:m.pts};}});var row=document.getElementById('improvedRow');if(best&&bd>0){row.style.display='flex';document.getElementById('improvedName').textContent=best.name;document.getElementById('improvedStat').textContent='+'+best.diff+' pts this week';}else{row.style.display='none';}}
-document.getElementById('genPostBtn').addEventListener('click',async function(){var stats=getWStats();if(stats.length===0){showToast('Log some workouts first!');return;}this.disabled=true;this.innerHTML='<span class="spinner"></span>Generating...';var gname=S.groupName||'SquadFit',wnum=S.weekNum||1;var wtxt=stats.map(function(m,i){return(i+1)+'. '+m.name+' - '+m.pts+' pts ('+m.count+' sessions)';}).join('\n');var prev=S.prevStats||{},imp=null,bd=-Infinity;stats.forEach(function(m){var d=m.pts-(prev[m.name]||0);if(d>bd){bd=d;imp={name:m.name,diff:d};}});var stTop=getSStats(S.steps).slice(0,3).filter(function(s){return s.total>0;});var stxt=stTop.length>0?'\n\nStepathon Top 3:\n'+stTop.map(function(m,i){return(i+1)+'. '+m.name+' - '+Math.round(m.total/1000)+'k steps';}).join('\n'):'';try{var res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:'Write a hype WhatsApp message for fitness group "'+gname+'" Week '+wnum+' results. Fun, motivating, emojis, max 200 words. Plain text only.\n\nWorkout Rankings:\n'+wtxt+(imp&&bd>0?'\nMost Improved: '+imp.name+' (+'+bd+' pts)':'')+stxt+'\n\nEnd with motivation for next week.'}]})});var data=await res.json();document.getElementById('waPreview').textContent=data.content[0].text;}catch(e){var t=gname+' - Week '+wnum+' Results\n\n';stats.forEach(function(m,i){t+=(i+1)+'. '+m.name+' - '+m.pts+' pts ('+m.count+' sessions)\n';});if(imp&&bd>0)t+='\nMost Improved: '+imp.name+' (+'+bd+' pts)';if(stTop.length>0){t+='\n\nStepathon Top 3:\n';stTop.forEach(function(m,i){t+=(i+1)+'. '+m.name+' - '+Math.round(m.total/1000)+'k steps\n';});}t+='\nKeep pushing next week!';document.getElementById('waPreview').textContent=t;}this.disabled=false;this.innerHTML='Generate with AI';});
-document.getElementById('copyBtn').addEventListener('click',function(){var txt=document.getElementById('waPreview').textContent;if(txt==='Tap Generate below...'){showToast('Generate first');return;}navigator.clipboard.writeText(txt).then(function(){showToast('Copied!');}).catch(function(){var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('Copied!');});});
-document.getElementById('waBtn').addEventListener('click',function(){var txt=document.getElementById('waPreview').textContent;if(txt==='Tap Generate below...'){showToast('Generate first');return;}window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');});
-document.getElementById('genImgBtn').addEventListener('click',function(){var stats=getWStats().slice(0,8);if(stats.length===0){showToast('No data yet');return;}var cvs=document.getElementById('cvs'),ctx=cvs.getContext('2d');var W=800,H=Math.max(480,170+stats.length*62+60);cvs.width=W;cvs.height=H;ctx.fillStyle='#0a0a0f';ctx.fillRect(0,0,W,H);var g=ctx.createRadialGradient(160,H/2,20,160,H/2,320);g.addColorStop(0,'rgba(124,92,252,0.15)');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.font='52px "Bebas Neue",sans-serif';ctx.fillStyle='#c8f135';ctx.fillText('SQUAD',44,76);var sw=ctx.measureText('SQUAD').width;ctx.fillStyle='#e8e8f0';ctx.fillText('FIT',44+sw+6,76);ctx.font='500 17px "DM Sans",sans-serif';ctx.fillStyle='#6b6b80';ctx.fillText((S.groupName||'SquadFit')+' - Week '+(S.weekNum||1)+' Leaderboard',44,102);ctx.strokeStyle='#2a2a3a';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(44,118);ctx.lineTo(W-44,118);ctx.stroke();var mp=stats[0].pts||1,rc=['#ffd166','#b0b7c3','#cd7c54','#c8f135','#7c5cfc','#ff4d6d','#06d6a0','#ff9f1c'];stats.forEach(function(m,i){var y=142+i*62;ctx.font='bold 26px "Bebas Neue",sans-serif';ctx.fillStyle=rc[i]||'#6b6b80';ctx.fillText(i<3?['1st','2nd','3rd'][i]:(i+1)+'',44,y+28);ctx.font='600 21px "DM Sans",sans-serif';ctx.fillStyle='#e8e8f0';ctx.fillText(m.name,94,y+28);var bx=290,bw=W-bx-90,bh=13;ctx.fillStyle='#1a1a24';ctx.beginPath();ctx.roundRect(bx,y+14,bw,bh,6);ctx.fill();ctx.fillStyle=rc[i]||'#c8f135';ctx.globalAlpha=0.85;ctx.beginPath();ctx.roundRect(bx,y+14,Math.max((m.pts/mp)*bw,8),bh,6);ctx.fill();ctx.globalAlpha=1;ctx.font='700 21px "DM Sans",sans-serif';ctx.fillStyle=rc[i]||'#c8f135';ctx.textAlign='right';ctx.fillText(m.pts+' pts',W-44,y+28);ctx.textAlign='left';ctx.font='400 12px "DM Sans",sans-serif';ctx.fillStyle='#6b6b80';ctx.fillText(m.count+' session'+(m.count!==1?'s':''),94,y+46);});ctx.fillStyle='#2a2a3a';ctx.fillRect(0,H-40,W,1);ctx.font='400 13px "DM Sans",sans-serif';ctx.fillStyle='#6b6b80';ctx.fillText('SquadFit',44,H-12);ctx.textAlign='right';ctx.fillText(new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}),W-44,H-12);ctx.textAlign='left';var img=document.getElementById('shareImg');img.src=cvs.toDataURL('image/png');img.style.display='block';document.getElementById('saveImgBtn').style.display='inline-block';showToast('Image ready!');});
-document.getElementById('saveImgBtn').addEventListener('click',function(){var a=document.createElement('a');a.download='squadfit-week'+(S.weekNum||1)+'.png';a.href=document.getElementById('shareImg').src;a.click();});
-function renderSettings(){document.getElementById('groupNameInput').value=S.groupName||'';document.getElementById('capInput').value=S.weekCap||0;document.getElementById('stepathonNameInput').value=S.stepathon.name||'';renderStepathonControls();var ml=document.getElementById('memberManageList');if(S.members.length===0){ml.innerHTML='<div style="font-size:0.8rem;color:var(--muted);">No members yet.</div>';return;}ml.innerHTML=S.members.map(function(m){return'<div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border-radius:8px;padding:0.5rem 0.75rem;"><span style="font-size:0.875rem;">'+m+'</span><button onclick="removeM(\''+m+'\')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.8rem;">Remove</button></div>';}).join('');}
-function removeM(name){if(!confirm('Remove '+name+'?'))return;S.members=S.members.filter(function(m){return m!==name;});if(selM===name){selM=null;updateLogSum();}if(aMember===name){aMember=null;updateASum();}save();renderSettings();renderLogGrid();renderAdminStepGrid();populateMemberDropdown();showToast(name+' removed.');}
-document.getElementById('groupNameInput').addEventListener('input',function(){S.groupName=this.value.trim();save();});
-document.getElementById('capInput').addEventListener('input',function(){S.weekCap=parseInt(this.value)||0;save();});
-document.getElementById('stepathonNameInput').addEventListener('input',function(){S.stepathon.name=this.value.trim()||'Stepathon';save();});
-document.getElementById('changePinBtn').addEventListener('click',function(){var np=document.getElementById('newPinInput').value.trim();if(np.length!==4||isNaN(np)){showToast('PIN must be 4 digits');return;}S.pin=np;save();document.getElementById('newPinInput').value='';showToast('PIN changed!');});
-document.getElementById('newWeekBtn').addEventListener('click',function(){if(!confirm('Start Week '+((S.weekNum||1)+1)+'?'))return;var curr=getWStats();S.prevStats={};curr.forEach(function(m){S.prevStats[m.name]=m.pts;});S.weekStart=new Date().toISOString();S.weekNum=(S.weekNum||1)+1;save();updateWeekPill();renderBoard();showToast('Week '+S.weekNum+' started!');});
-document.getElementById('exportBtn').addEventListener('click',function(){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));a.download='squadfit-backup.json';a.click();});
-document.getElementById('restoreBtn').addEventListener('click',function(){document.getElementById('restoreFile').click();});
-document.getElementById('restoreFile').addEventListener('change',function(){var file=this.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(e){try{var r=JSON.parse(e.target.result);if(!r.members||!r.workouts)throw new Error('bad');S=r;if(!S.steps)S.steps=[];if(!S.pin)S.pin=DPIN;if(S.weekCap===undefined)S.weekCap=0;if(!S.stepathon)S.stepathon={status:'idle',name:'Stepathon',startDate:null,testStart:null,endDate:null};save();selM=null;aMember=null;mMember=null;updateWeekPill();renderLogGrid();renderAdminStepGrid();populateMemberDropdown();updateLogSum();renderSettings();renderBoard();showToast('Restored! '+S.workouts.length+' workouts loaded.');}catch(err){showToast('Invalid backup file.');}};reader.readAsText(file);this.value='';});
-document.getElementById('resetWeekBtn').addEventListener('click',function(){autoBackup();if(prompt('Type RESET to confirm:')==='RESET'){var ws=new Date(S.weekStart).getTime();S.workouts=S.workouts.filter(function(w){return new Date(w.date).getTime()<ws;});S.steps=S.steps.filter(function(s){return new Date(s.date).getTime()<ws;});save();renderBoard();renderStepsBoard();showToast('Week reset.');}else{showToast('Cancelled.');}});
-document.getElementById('resetAllBtn').addEventListener('click',function(){autoBackup();if(prompt('Type DELETE to confirm:')==='DELETE'){var pin=S.pin;S={members:[],workouts:[],steps:[],weekStart:new Date().toISOString(),weekNum:1,groupName:'',prevStats:{},pin:pin,weekCap:0,stepathon:{status:'idle',name:'Stepathon',startDate:null,testStart:null,endDate:null}};selM=null;aMember=null;mMember=null;save();updateWeekPill();renderLogGrid();renderAdminStepGrid();populateMemberDropdown();updateLogSum();renderBoard();showToast('All data cleared.');}else{showToast('Cancelled.');}});
-function renderStepathonControls(){var st=S.stepathon,info=document.getElementById('stepathonStatusInfo');if(info){var txt='Status: ';if(st.status==='idle')txt+='Not started yet';else if(st.status==='testing')txt+='Testing phase - '+calcDaysLeft(st.testStart,5)+' days left';else if(st.status==='live')txt+='LIVE since '+new Date(st.startDate).toLocaleDateString('en-IN',{day:'numeric',month:'short'});else if(st.status==='paused')txt+='Paused';else if(st.status==='ended')txt+='Ended';info.textContent=txt;}var show={btnTesting:false,btnStart:false,btnPause:false,btnResume:false,btnEnd:false,btnRestart:false};if(st.status==='idle'){show.btnTesting=true;show.btnStart=true;}else if(st.status==='testing'){show.btnStart=true;show.btnEnd=true;}else if(st.status==='live'){show.btnPause=true;show.btnEnd=true;}else if(st.status==='paused'){show.btnResume=true;show.btnEnd=true;}else if(st.status==='ended'){show.btnRestart=true;}Object.keys(show).forEach(function(id){var el=document.getElementById(id);if(el)el.style.display=show[id]?'block':'none';});}
-function calcDaysLeft(startDate,total){if(!startDate)return total;var diff=Math.ceil((new Date(startDate).getTime()+total*86400000-Date.now())/86400000);return Math.max(diff,0);}
-document.getElementById('btnTesting').addEventListener('click',function(){if(!confirm('Start 5-day testing phase? Members can try logging steps. This data will be cleared when you go live.'))return;S.stepathon.status='testing';S.stepathon.testStart=new Date().toISOString();S.stepathon.startDate=null;save();renderStepathonControls();renderStepathonHeader();showToast('Testing phase started! 5 days.');});
-document.getElementById('btnStart').addEventListener('click',function(){if(!confirm('Go LIVE? This clears all test data and starts the real stepathon.'))return;S.steps=[];S.stepathon.status='live';S.stepathon.startDate=new Date().toISOString();S.stepathon.testStart=null;save();renderStepathonControls();renderStepathonHeader();renderStepsBoard();renderStepsStats();showToast('Stepathon is LIVE!');});
-document.getElementById('btnPause').addEventListener('click',function(){if(!confirm('Pause the stepathon?'))return;S.stepathon.status='paused';save();renderStepathonControls();renderStepathonHeader();showToast('Stepathon paused.');});
-document.getElementById('btnResume').addEventListener('click',function(){S.stepathon.status='live';save();renderStepathonControls();renderStepathonHeader();showToast('Stepathon resumed!');});
-document.getElementById('btnEnd').addEventListener('click',function(){if(!confirm('End the stepathon? Members cannot log after this.'))return;S.stepathon.status='ended';S.stepathon.endDate=new Date().toISOString();save();renderStepathonControls();renderStepathonHeader();showToast('Stepathon ended!');});
-document.getElementById('btnRestart').addEventListener('click',function(){if(!confirm('Start a new stepathon? This clears all step data.'))return;S.steps=[];S.stepathon={status:'idle',name:S.stepathon.name||'Stepathon',startDate:null,testStart:null,endDate:null};save();renderStepathonControls();renderStepathonHeader();renderStepsBoard();renderStepsStats();showToast('Ready for new stepathon!');});
-function autoBackup(){try{var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));a.download='squadfit-AUTO-'+Date.now()+'.json';a.click();}catch(e){}}
-function checkBackup(){var n=S.workouts.length,last=parseInt(localStorage.getItem('sf8_lb')||'0');if(n>0&&n%10===0&&n!==last){localStorage.setItem('sf8_lb',n);autoBackup();showToast('Auto-backup saved!');}}
-function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2600);}
-function updateWeekPill(){document.getElementById('weekPill').textContent='Week '+(S.weekNum||1);}
-updateWeekPill();
+function renderLogGrid(){var g=document.getElementById("logGrid");if(!g)return;if(S.members.length===0){g.innerHTML="<div style=\"font-size:0.8rem;color:var(--muted)\">Add a member below</div>";return;}g.innerHTML=S.members.map(function(m){return"<div class=\"mchip"+(m===selM?" sp":"")+"\" data-lm=\""+m+"\">"+m+"</div>";}).join("");g.querySelectorAll(".mchip").forEach(function(c){c.addEventListener("click",function(){selM=this.dataset.lm;renderLogGrid();updateLogSum();});});}
+document.querySelectorAll(".tchip").forEach(function(chip){chip.addEventListener("click",function(){document.querySelectorAll(".tchip").forEach(function(c){c.classList.remove("sel");});chip.classList.add("sel");selT=chip.dataset.type;updateLogSum();});});
+var durSlider=document.getElementById("durSlider");
+durSlider.addEventListener("input",function(){selD=parseInt(this.value);document.getElementById("durNum").textContent=selD;updateLogSum();});
+document.querySelectorAll(".preset[data-dur]").forEach(function(b){b.addEventListener("click",function(){selD=parseInt(this.dataset.dur);durSlider.value=selD;document.getElementById("durNum").textContent=selD;updateLogSum();});});
+function updateLogSum(){var s=document.getElementById("logSum"),b=document.getElementById("logBtn"),cw=document.getElementById("capWarn");if(selM&&selT){var pts=calcPts(selT,selD,0),wp=getMWP(selM),cap=parseInt(S.weekCap)||0;if(cap>0&&wp>=cap){cw.style.display="block";cw.textContent="Weekly cap of "+cap+" pts reached for "+selM;s.innerHTML="<strong>"+selM+"</strong> - "+selT+" - "+selD+" min - capped";b.disabled=true;}else{cw.style.display="none";s.innerHTML="<strong>"+selM+"</strong> - "+selT+" - "+selD+" min - <strong style=\"color:var(--accent)\">+"+pts+" pts</strong>"+(cap>0?" ("+wp+"/"+cap+")":"");b.disabled=false;}}else if(selM){s.textContent="Pick a workout type";b.disabled=true;if(cw)cw.style.display="none";}else{s.textContent="Select member and workout above";b.disabled=true;if(cw)cw.style.display="none";}}
+document.getElementById("logBtn").addEventListener("click",function(){if(!selM||!selT)return;var points=calcPts(selT,selD,0);S.workouts.push({member:selM,type:selT,duration:selD,distance:0,calories:0,notes:"",points:points,date:new Date().toISOString(),loggedBy:"admin"});save();chkBackup();showToast("+"+points+" pts for "+selM+"!");document.querySelectorAll(".tchip").forEach(function(c){c.classList.remove("sel");});selT=null;updateLogSum();});
+document.getElementById("addMemBtn").addEventListener("click",addMem);
+document.getElementById("newMem").addEventListener("keydown",function(e){if(e.key==="Enter")addMem();});
+function addMem(){var name=document.getElementById("newMem").value.trim();if(!name){showToast("Enter a name");return;}if(S.members.indexOf(name)>=0){showToast("Already in squad");return;}S.members.push(name);save();document.getElementById("newMem").value="";selM=name;renderLogGrid();renderAGrid();updateLogSum();fillMemberDrop();showToast(name+" added!");}
+
+document.getElementById("hWBtn").addEventListener("click",function(){histMode="w";this.classList.add("on");document.getElementById("hSBtn").classList.remove("on");renderHistory();});
+document.getElementById("hSBtn").addEventListener("click",function(){histMode="s";this.classList.add("on");document.getElementById("hWBtn").classList.remove("on");renderHistory();});
+document.getElementById("hFilter").addEventListener("change",function(){renderHistory();});
+function vBadge(v){if(v==="verified")return"<span style=\"font-size:0.7rem;background:rgba(6,214,160,0.12);color:var(--green);border:1px solid rgba(6,214,160,0.3);border-radius:20px;padding:0.15rem 0.55rem\">Verified</span>";if(v==="admin")return"<span style=\"font-size:0.7rem;background:rgba(200,241,53,0.1);color:var(--accent);border:1px solid rgba(200,241,53,0.3);border-radius:20px;padding:0.15rem 0.55rem\">Admin logged</span>";return"<span style=\"font-size:0.7rem;background:rgba(107,107,128,0.1);color:var(--muted);border:1px solid var(--border);border-radius:20px;padding:0.15rem 0.55rem\">No screenshot</span>";}
+function renderHistory(){var sel=document.getElementById("hFilter"),fm=sel.value;sel.innerHTML="<option value=\"\">All members</option>"+S.members.map(function(m){return"<option value=\""+m+"\">"+m+"</option>";}).join("");sel.value=fm;var list=document.getElementById("histList");if(histMode==="w"){var items=S.workouts.filter(function(w){return w.loggedBy!=="steps";}).slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);});if(fm)items=items.filter(function(w){return w.member===fm;});if(items.length===0){list.innerHTML="<div class=\"empty\"><span class=\"ei\">&#128203;</span>No workouts logged.</div>";return;}list.innerHTML=items.map(function(w){var ri=S.workouts.indexOf(w);return"<div class=\"hitem\"><div style=\"display:flex;justify-content:space-between;align-items:center\"><div style=\"font-weight:600;font-size:0.875rem\">"+w.member+"</div><div style=\"color:var(--accent);font-weight:700;font-size:0.85rem\">+"+w.points+" pts</div></div><div style=\"font-size:0.75rem;color:var(--muted);margin-top:0.2rem\">"+w.type+" - "+w.duration+" min</div><div style=\"font-size:0.68rem;color:var(--muted);margin-top:0.15rem\">"+new Date(w.date).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})+"</div><button class=\"hdel\" onclick=\"delW("+ri+")\">Delete</button></div>";}).join("");}else{var sitems=S.steps.slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);});if(fm)sitems=sitems.filter(function(s){return s.member===fm;});if(sitems.length===0){list.innerHTML="<div class=\"empty\"><span class=\"ei\">&#128249;</span>No steps logged.</div>";return;}list.innerHTML=sitems.map(function(s){var ri=S.steps.indexOf(s);return"<div class=\"hitem\"><div style=\"display:flex;justify-content:space-between;align-items:center\"><div style=\"font-weight:600;font-size:0.875rem\">"+s.member+"</div><div style=\"color:var(--green);font-weight:700;font-size:0.85rem\">"+s.steps.toLocaleString()+" steps</div></div><div style=\"font-size:0.75rem;color:var(--muted);margin-top:0.2rem\">"+s.km+" km</div><div style=\"font-size:0.68rem;color:var(--muted);margin-top:0.15rem\">"+new Date(s.date).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})+"</div><div style=\"margin-top:0.35rem\">"+vBadge(s.verified)+"</div><button class=\"hdel\" onclick=\"delSt("+ri+")\">Delete</button></div>";}).join("");}}
+function delW(i){if(!confirm("Delete this entry?"))return;S.workouts.splice(i,1);save();renderHistory();renderBoard();showToast("Deleted.");}
+function delSt(i){if(!confirm("Delete this step entry?"))return;S.steps.splice(i,1);save();renderHistory();renderStepsBoard();renderStatsBar();showToast("Deleted.");}
+
+function renderShare(){var prev=S.prevStats||{},curr=getWS(),best=null,bd=-Infinity;curr.forEach(function(m){var d=m.pts-(prev[m.name]||0);if(d>bd){bd=d;best={name:m.name,diff:d,pts:m.pts};}});var row=document.getElementById("impRow");if(best&&bd>0){row.style.display="flex";document.getElementById("impName").textContent=best.name;document.getElementById("impStat").textContent="+"+best.diff+" pts this week";}else{row.style.display="none";}}
+document.getElementById("genBtn").addEventListener("click",async function(){
+  var stats=getWS();if(stats.length===0){showToast("Log some workouts first!");return;}
+  this.disabled=true;this.innerHTML="<span class=\"spinner\"></span>Generating...";
+  var gname=S.groupName||"SquadFit",wnum=S.weekNum||1;
+  var lines=[];stats.forEach(function(m,i){lines.push((i+1)+". "+m.name+" - "+m.pts+" pts ("+m.count+" sessions)");});
+  var wtxt=lines.join("\n");
+  var prev=S.prevStats||{},imp=null,bd=-Infinity;
+  stats.forEach(function(m){var d=m.pts-(prev[m.name]||0);if(d>bd){bd=d;imp={name:m.name,diff:d};}});
+  var stTop=getSS(S.steps).slice(0,3).filter(function(s){return s.total>0;});
+  var stLines=[];stTop.forEach(function(m,i){stLines.push((i+1)+". "+m.name+" - "+Math.round(m.total/1000)+"k steps");});
+  var stxt=stTop.length>0?"\n\nStepathon Top 3:\n"+stLines.join("\n"):"";
+  var impLine=imp&&bd>0?"\nMost Improved: "+imp.name+" (+"+bd+" pts)":"";
+  var prompt="Write a hype WhatsApp message for fitness group "+gname+" Week "+wnum+" results. Fun, motivating, emojis, max 200 words. Plain text only.\n\nWorkout Rankings:\n"+wtxt+impLine+stxt+"\n\nEnd with motivation for next week.";
+  try{
+    var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:600,messages:[{role:"user",content:prompt}]})});
+    var data=await res.json();document.getElementById("waBox").textContent=data.content[0].text;
+  }catch(e){
+    var t=gname+" - Week "+wnum+" Results\n\n";
+    stats.forEach(function(m,i){t+=(i+1)+". "+m.name+" - "+m.pts+" pts ("+m.count+" sessions)\n";});
+    if(imp&&bd>0)t+="\nMost Improved: "+imp.name+" (+"+bd+" pts)";
+    if(stTop.length>0){t+="\n\nStepathon Top 3:\n";stTop.forEach(function(m,i){t+=(i+1)+". "+m.name+" - "+Math.round(m.total/1000)+"k steps\n";});}
+    t+="\nKeep pushing next week!";
+    document.getElementById("waBox").textContent=t;
+  }
+  this.disabled=false;this.innerHTML="Generate with AI";
+});
+document.getElementById("copyBtn").addEventListener("click",function(){var txt=document.getElementById("waBox").textContent;if(txt==="Tap Generate below..."){showToast("Generate first");return;}navigator.clipboard.writeText(txt).then(function(){showToast("Copied!");}).catch(function(){var ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);showToast("Copied!");});});
+document.getElementById("waBtn").addEventListener("click",function(){var txt=document.getElementById("waBox").textContent;if(txt==="Tap Generate below..."){showToast("Generate first");return;}window.open("https://wa.me/?text="+encodeURIComponent(txt),"_blank");});
+document.getElementById("genImgBtn").addEventListener("click",function(){
+  var stats=getWS().slice(0,8);if(stats.length===0){showToast("No data yet");return;}
+  var cvs=document.getElementById("cvs"),ctx=cvs.getContext("2d");
+  var W=800,H=Math.max(480,170+stats.length*62+60);cvs.width=W;cvs.height=H;
+  ctx.fillStyle="#0a0a0f";ctx.fillRect(0,0,W,H);
+  var g=ctx.createRadialGradient(160,H/2,20,160,H/2,320);g.addColorStop(0,"rgba(124,92,252,0.15)");g.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  ctx.font="bold 52px serif";ctx.fillStyle="#c8f135";ctx.fillText("SQUAD",44,76);var sw=ctx.measureText("SQUAD").width;ctx.fillStyle="#e8e8f0";ctx.fillText("FIT",44+sw+6,76);
+  ctx.font="16px sans-serif";ctx.fillStyle="#6b6b80";ctx.fillText((S.groupName||"SquadFit")+" - Week "+(S.weekNum||1)+" Leaderboard",44,102);
+  ctx.strokeStyle="#2a2a3a";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(44,118);ctx.lineTo(W-44,118);ctx.stroke();
+  var mp=stats[0].pts||1,rc=["#ffd166","#b0b7c3","#cd7c54","#c8f135","#7c5cfc","#ff4d6d","#06d6a0","#ff9f1c"];
+  stats.forEach(function(m,i){
+    var y=142+i*62;
+    ctx.font="bold 24px serif";ctx.fillStyle=rc[i]||"#6b6b80";ctx.fillText(i<3?["1st","2nd","3rd"][i]:(i+1)+"",44,y+28);
+    ctx.font="bold 20px sans-serif";ctx.fillStyle="#e8e8f0";ctx.fillText(m.name,94,y+28);
+    var bx=290,bw=W-bx-90,bh=13;ctx.fillStyle="#1a1a24";ctx.beginPath();ctx.roundRect(bx,y+14,bw,bh,6);ctx.fill();
+    ctx.fillStyle=rc[i]||"#c8f135";ctx.globalAlpha=0.85;ctx.beginPath();ctx.roundRect(bx,y+14,Math.max((m.pts/mp)*bw,8),bh,6);ctx.fill();ctx.globalAlpha=1;
+    ctx.font="bold 20px sans-serif";ctx.fillStyle=rc[i]||"#c8f135";ctx.textAlign="right";ctx.fillText(m.pts+" pts",W-44,y+28);ctx.textAlign="left";
+    ctx.font="12px sans-serif";ctx.fillStyle="#6b6b80";ctx.fillText(m.count+" session"+(m.count!==1?"s":""),94,y+46);
+  });
+  ctx.fillStyle="#2a2a3a";ctx.fillRect(0,H-40,W,1);ctx.font="13px sans-serif";ctx.fillStyle="#6b6b80";ctx.fillText("SquadFit",44,H-12);
+  ctx.textAlign="right";ctx.fillText(new Date().toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"}),W-44,H-12);ctx.textAlign="left";
+  var img=document.getElementById("shareImg");img.src=cvs.toDataURL("image/png");img.style.display="block";document.getElementById("saveImgBtn").style.display="inline-block";showToast("Image ready!");
+});
+document.getElementById("saveImgBtn").addEventListener("click",function(){var a=document.createElement("a");a.download="squadfit-week"+(S.weekNum||1)+".png";a.href=document.getElementById("shareImg").src;a.click();});
+
+function renderSettings(){document.getElementById("grpName").value=S.groupName||"";document.getElementById("capInp").value=S.weekCap||0;document.getElementById("sName").value=S.stepathon.name||"";updateBinDisplay();renderSControls();var ml=document.getElementById("memList");if(S.members.length===0){ml.innerHTML="<div style=\"font-size:0.8rem;color:var(--muted)\">No members yet.</div>";return;}ml.innerHTML=S.members.map(function(m){return"<div style=\"display:flex;justify-content:space-between;align-items:center;background:var(--surface);border-radius:8px;padding:0.5rem 0.75rem\"><span style=\"font-size:0.875rem\">"+m+"</span><button onclick=\"remMem('"+m+"')\" style=\"background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.8rem\">Remove</button></div>";}).join("");}
+function remMem(name){if(!confirm("Remove "+name+"?"))return;S.members=S.members.filter(function(m){return m!==name;});if(selM===name){selM=null;updateLogSum();}if(aMember===name){aMember=null;updateASum();}save();renderSettings();renderLogGrid();renderAGrid();fillMemberDrop();showToast(name+" removed.");}
+document.getElementById("grpName").addEventListener("input",function(){S.groupName=this.value.trim();save();});
+document.getElementById("capInp").addEventListener("input",function(){S.weekCap=parseInt(this.value)||0;save();});
+document.getElementById("sName").addEventListener("input",function(){S.stepathon.name=this.value.trim()||"Stepathon";save();});
+document.getElementById("pinBtn").addEventListener("click",function(){var np=document.getElementById("pinInp").value.trim();if(np.length!==4||isNaN(np)){showToast("PIN must be 4 digits");return;}S.pin=np;save();document.getElementById("pinInp").value="";showToast("PIN changed!");});
+document.getElementById("newWeekBtn").addEventListener("click",function(){if(!confirm("Start Week "+((S.weekNum||1)+1)+"?"))return;var curr=getWS();S.prevStats={};curr.forEach(function(m){S.prevStats[m.name]=m.pts;});S.weekStart=new Date().toISOString();S.weekNum=(S.weekNum||1)+1;save();updateWeekPill();renderBoard();showToast("Week "+S.weekNum+" started!");});
+document.getElementById("expBtn").addEventListener("click",function(){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:"application/json"}));a.download="squadfit-backup.json";a.click();});
+document.getElementById("impBtn").addEventListener("click",function(){document.getElementById("impFile").click();});
+document.getElementById("impFile").addEventListener("change",function(){var file=this.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(e){try{var r=JSON.parse(e.target.result);if(!r.members||!r.workouts)throw new Error("bad");S=r;fixState();save();selM=null;aMember=null;mMember=null;updateWeekPill();renderLogGrid();renderAGrid();fillMemberDrop();updateLogSum();renderSettings();renderBoard();showToast("Restored! "+S.workouts.length+" workouts loaded.");}catch(err){showToast("Invalid backup file.");}};reader.readAsText(file);this.value="";});
+document.getElementById("rstWkBtn").addEventListener("click",function(){autoBackup();if(prompt("Type RESET to confirm:")==="RESET"){var ws=new Date(S.weekStart).getTime();S.workouts=S.workouts.filter(function(w){return new Date(w.date).getTime()<ws;});S.steps=S.steps.filter(function(s){return new Date(s.date).getTime()<ws;});save();renderBoard();renderStepsBoard();showToast("Week reset.");}else{showToast("Cancelled.");}});
+document.getElementById("rstAllBtn").addEventListener("click",function(){autoBackup();if(prompt("Type DELETE to confirm:")==="DELETE"){var pin=S.pin;S=defState();S.pin=pin;save();selM=null;aMember=null;mMember=null;updateWeekPill();renderLogGrid();renderAGrid();fillMemberDrop();updateLogSum();renderBoard();showToast("All data cleared.");}else{showToast("Cancelled.");}});
+
+function dLeft(d,t){if(!d)return t;return Math.max(Math.ceil((new Date(d).getTime()+t*86400000-Date.now())/86400000),0);}
+function renderSControls(){var st=S.stepathon,info=document.getElementById("sInfo");if(info){var txt="Status: ";if(st.status==="idle")txt+="Not started";else if(st.status==="testing")txt+="Testing - "+dLeft(st.testStart,5)+" days left";else if(st.status==="live")txt+="LIVE since "+new Date(st.startDate).toLocaleDateString("en-IN",{day:"numeric",month:"short"});else if(st.status==="paused")txt+="Paused";else if(st.status==="ended")txt+="Ended";info.textContent=txt;}var show={btnTest:false,btnGo:false,btnPause:false,btnResume:false,btnEnd:false,btnNew:false};if(st.status==="idle"){show.btnTest=true;show.btnGo=true;}else if(st.status==="testing"){show.btnGo=true;show.btnEnd=true;}else if(st.status==="live"){show.btnPause=true;show.btnEnd=true;}else if(st.status==="paused"){show.btnResume=true;show.btnEnd=true;}else if(st.status==="ended"){show.btnNew=true;}Object.keys(show).forEach(function(id){var el=document.getElementById(id);if(el)el.style.display=show[id]?"block":"none";});}
+document.getElementById("btnTest").addEventListener("click",function(){if(!confirm("Start 5-day testing phase? Members can try logging steps. Data will be cleared when you go live."))return;S.stepathon.status="testing";S.stepathon.testStart=new Date().toISOString();S.stepathon.startDate=null;save();renderSControls();renderSHead();showToast("Testing phase started!");});
+document.getElementById("btnGo").addEventListener("click",function(){if(!confirm("Go LIVE? This clears test data and starts the real stepathon."))return;S.steps=[];S.stepathon.status="live";S.stepathon.startDate=new Date().toISOString();S.stepathon.testStart=null;save();renderSControls();renderSHead();renderStepsBoard();renderStatsBar();showToast("Stepathon is LIVE!");});
+document.getElementById("btnPause").addEventListener("click",function(){if(!confirm("Pause?"))return;S.stepathon.status="paused";save();renderSControls();renderSHead();showToast("Stepathon paused.");});
+document.getElementById("btnResume").addEventListener("click",function(){S.stepathon.status="live";save();renderSControls();renderSHead();showToast("Stepathon resumed!");});
+document.getElementById("btnEnd").addEventListener("click",function(){if(!confirm("End the stepathon? Members cannot log after this."))return;S.stepathon.status="ended";S.stepathon.endDate=new Date().toISOString();save();renderSControls();renderSHead();showToast("Stepathon ended!");});
+document.getElementById("btnNew").addEventListener("click",function(){if(!confirm("Start a new stepathon? This clears all step data."))return;S.steps=[];S.stepathon={status:"idle",name:S.stepathon.name||"Stepathon",startDate:null,testStart:null,endDate:null};save();renderSControls();renderSHead();renderStepsBoard();renderStatsBar();showToast("Ready for new stepathon!");});
+
+function autoBackup(){try{var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:"application/json"}));a.download="squadfit-AUTO-"+Date.now()+".json";a.click();}catch(e){}}
+function chkBackup(){var n=S.workouts.length,last=parseInt(lsGet("sf8_lb")||"0");if(n>0&&n%10===0&&n!==last){lsSet("sf8_lb",String(n));autoBackup();showToast("Auto-backup saved!");}}
+function showToast(msg){var t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(function(){t.classList.remove("show");},2600);}
+function updateWeekPill(){document.getElementById("weekPill").textContent="Week "+(S.weekNum||1);}
+
+(async function init(){
+  updateWeekPill();
+  if(binId){setSyncBar(true);var ok=await cloudPull();setSyncBar(false);if(ok)updateWeekPill();}
+})();
 </script>
 </body>
 </html>
