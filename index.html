@@ -386,11 +386,13 @@ canvas{display:none;}
   </div>
   <div class="card" style="border-top:3px solid var(--purple);">
     <div class="card-title" style="color:var(--purple);">Cloud Sync ID</div>
-    <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.65rem;">Share this ID with your group so everyone sees live data.</div>
+    <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.65rem;">Share this ID with your group so everyone sees live data on their phone.</div>
     <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
-      <input type="text" id="binDisplay" readonly style="flex:1;font-size:0.75rem;" placeholder="Log something to generate Sync ID">
+      <input type="text" id="binDisplay" readonly style="flex:1;font-size:0.75rem;" placeholder="Tap Generate below">
       <button class="addbtn" onclick="copySyncId()">Copy</button>
     </div>
+    <button class="ctrlbtn c-test" id="genSyncBtn" style="margin-bottom:0;">Generate / Refresh Sync ID</button>
+    <div id="syncStatus" style="font-size:0.75rem;color:var(--muted);margin-top:0.5rem;text-align:center;min-height:1rem;"></div>
   </div>
   <div class="card">
     <div class="card-title">Manage Members</div>
@@ -418,9 +420,10 @@ var MEDALS=["1st","2nd","3rd"];
 var MPOD=["&#127945;","&#127946;","&#127947;"];
 var COLORS=["#c8f135","#7c5cfc","#ff4d6d","#ffd166","#06d6a0","#ff9f1c","#a8dadc","#e9c46a"];
 var DPIN="1234";
-var BIN_URL="https://api.jsonbin.io/v3/b";
-var BIN_KEY="squadfit2026";
-var binId=localStorage.getItem("sf_binid")||"";
+var GIST_TOKEN="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";
+var GIST_API="https://api.github.com/gists";
+var GIST_FILE="squadfit_data.json";
+var gistId=localStorage.getItem("sf_gistid")||"";
 var syncing=false;
 
 function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
@@ -439,31 +442,45 @@ function save(){saveLocal();cloudPush();}
 async function cloudPush(){
   if(syncing)return;syncing=true;setSyncBar(true);
   try{
-    if(!binId){
-      var r=await fetch(BIN_URL,{method:"POST",headers:{"Content-Type":"application/json","X-Master-Key":BIN_KEY,"X-Bin-Name":"squadfit","X-Bin-Private":"false"},body:JSON.stringify(S)});
+    var body={files:{}};
+    body.files[GIST_FILE]={content:JSON.stringify(S)};
+    if(!gistId){
+      body.description="SquadFit Data";
+      body.public=false;
+      var r=await fetch(GIST_API,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"token "+GIST_TOKEN},body:JSON.stringify(body)});
       var d=await r.json();
-      if(d.metadata&&d.metadata.id){binId=d.metadata.id;lsSet("sf_binid",binId);updateBinDisplay();}
+      if(d.id){gistId=d.id;lsSet("sf_gistid",gistId);updateBinDisplay();}
     }else{
-      await fetch(BIN_URL+"/"+binId,{method:"PUT",headers:{"Content-Type":"application/json","X-Master-Key":BIN_KEY},body:JSON.stringify(S)});
+      await fetch(GIST_API+"/"+gistId,{method:"PATCH",headers:{"Content-Type":"application/json","Authorization":"token "+GIST_TOKEN},body:JSON.stringify(body)});
     }
-  }catch(e){}
+  }catch(e){console.log("sync error",e);}
   syncing=false;setSyncBar(false);
 }
 
 async function cloudPull(){
-  if(!binId)return false;setSyncBar(true);
+  if(!gistId)return false;setSyncBar(true);
   try{
-    var r=await fetch(BIN_URL+"/"+binId+"/latest",{headers:{"X-Master-Key":BIN_KEY}});
+    var r=await fetch(GIST_API+"/"+gistId,{headers:{"Authorization":"token "+GIST_TOKEN}});
     var d=await r.json();
-    if(d.record){S=d.record;fixState();saveLocal();setSyncBar(false);return true;}
-  }catch(e){}
+    if(d.files&&d.files[GIST_FILE]){
+      var raw=d.files[GIST_FILE].content;
+      var parsed=JSON.parse(raw);
+      S=parsed;fixState();saveLocal();setSyncBar(false);return true;
+    }
+  }catch(e){console.log("pull error",e);}
   setSyncBar(false);return false;
 }
 
-async function connectBin(id){binId=id.trim();lsSet("sf_binid",binId);return await cloudPull();}
+async function connectBin(id){
+  gistId=id.trim();lsSet("sf_gistid",gistId);
+  return await cloudPull();
+}
 function setSyncBar(on){var el=document.getElementById("syncBar");if(el)el.className="syncbar"+(on?" show":"");}
-function updateBinDisplay(){var el=document.getElementById("binDisplay");if(el)el.value=binId||"";}
-function copySyncId(){if(!binId){showToast("No Sync ID yet. Log something first.");return;}navigator.clipboard.writeText(binId).then(function(){showToast("Sync ID copied!");}).catch(function(){showToast("Your Sync ID: "+binId);});}
+function updateBinDisplay(){var el=document.getElementById("binDisplay");if(el)el.value=gistId||"";}
+function copySyncId(){
+  if(!gistId){showToast("No Sync ID yet — saving now...");cloudPush();return;}
+  navigator.clipboard.writeText(gistId).then(function(){showToast("Sync ID copied!");}).catch(function(){showToast("Sync ID: "+gistId);});
+}
 
 var isAdmin=false,boardMode="week",stepsMode="week",histMode="w";
 
@@ -694,6 +711,48 @@ document.getElementById("btnNew").addEventListener("click",function(){if(!confir
 
 function autoBackup(){try{var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:"application/json"}));a.download="squadfit-AUTO-"+Date.now()+".json";a.click();}catch(e){}}
 function chkBackup(){var n=S.workouts.length,last=parseInt(lsGet("sf8_lb")||"0");if(n>0&&n%10===0&&n!==last){lsSet("sf8_lb",String(n));autoBackup();showToast("Auto-backup saved!");}}
+document.getElementById("genSyncBtn").addEventListener("click",async function(){
+  this.textContent="Saving to cloud...";
+  this.disabled=true;
+  setSyncBar(true);
+  try{
+    var body={files:{}};
+    body.files[GIST_FILE]={content:JSON.stringify(S)};
+    var headers={"Content-Type":"application/json","Authorization":"token "+GIST_TOKEN};
+    var r,d;
+    if(!gistId){
+      body.description="SquadFit Data";
+      body.public=false;
+      r=await fetch(GIST_API,{method:"POST",headers:headers,body:JSON.stringify(body)});
+      d=await r.json();
+      if(d.id){
+        gistId=d.id;
+        lsSet("sf_gistid",gistId);
+        updateBinDisplay();
+        document.getElementById("syncStatus").textContent="Sync ID generated!";
+        showToast("Sync ID ready! Tap Copy to share it.");
+      } else {
+        document.getElementById("syncStatus").textContent="Error: "+JSON.stringify(d).slice(0,80);
+      }
+    } else {
+      r=await fetch(GIST_API+"/"+gistId,{method:"PATCH",headers:headers,body:JSON.stringify(body)});
+      d=await r.json();
+      if(d.id){
+        updateBinDisplay();
+        document.getElementById("syncStatus").textContent="Sync updated!";
+        showToast("Cloud sync updated!");
+      } else {
+        document.getElementById("syncStatus").textContent="Error: "+JSON.stringify(d).slice(0,80);
+      }
+    }
+  } catch(e){
+    document.getElementById("syncStatus").textContent="Error: "+e.message;
+  }
+  setSyncBar(false);
+  this.textContent="Generate / Refresh Sync ID";
+  this.disabled=false;
+});
+
 function showToast(msg){var t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(function(){t.classList.remove("show");},2600);}
 function updateWeekPill(){document.getElementById("weekPill").textContent="Week "+(S.weekNum||1);}
 
