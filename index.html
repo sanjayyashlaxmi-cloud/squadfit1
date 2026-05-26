@@ -421,7 +421,7 @@ function updateDots(){for(var i=0;i<4;i++){var d=document.getElementById('d'+i);
 document.querySelectorAll('.pin-key').forEach(function(k){k.addEventListener('click',function(){var v=this.dataset.k;if(v==='del')pinEntry=pinEntry.slice(0,-1);else if(v==='ok')tryPin();else if(pinEntry.length<4)pinEntry+=v;updateDots();if(pinEntry.length===4&&v!=='ok')tryPin();});});
 function tryPin(){if(pinEntry===S.pin){enterAdmin();}else{document.getElementById('pinError').textContent='Wrong PIN. Try again.';pinEntry='';updateDots();setTimeout(function(){document.getElementById('pinError').textContent='';},2000);}}
 function enterAdmin(){isAdmin=true;document.getElementById('lockScreen').style.display='none';document.getElementById('appWrap').style.display='block';document.getElementById('modeBadge').textContent='ADMIN';document.getElementById('modeBadge').className='admin-badge';document.getElementById('newWeekBtn').style.display='block';document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('hidden');});updateWeekPill();renderBoard();}
-document.getElementById('viewOnlyBtn').addEventListener('click',function(){isAdmin=false;document.getElementById('lockScreen').style.display='none';document.getElementById('appWrap').style.display='block';document.getElementById('modeBadge').textContent='MEMBER';document.getElementById('modeBadge').className='member-badge';document.getElementById('newWeekBtn').style.display='none';['log','history','share','settings'].forEach(function(p){var t=document.querySelector('.tab[data-page="'+p+'"]');if(t)t.classList.add('hidden');});populateMemberDropdown();switchPage('steps');renderStepsPage();});
+document.getElementById('viewOnlyBtn').addEventListener('click',function(){isAdmin=false;document.getElementById('lockScreen').style.display='none';document.getElementById('appWrap').style.display='block';document.getElementById('modeBadge').textContent='MEMBER';document.getElementById('modeBadge').className='member-badge';document.getElementById('newWeekBtn').style.display='none';['board','log','history','share','settings'].forEach(function(p){var t=document.querySelector('.tab[data-page="'+p+'"]');if(t)t.classList.add('hidden');});populateMemberDropdown();switchPage('steps');renderStepsPage();});
 function relockApp(){document.getElementById('appWrap').style.display='none';document.getElementById('lockScreen').style.display='flex';pinEntry='';updateDots();}
 document.getElementById('lockBtn').addEventListener('click',relockApp);
 function switchPage(name){document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});var t=document.querySelector('.tab[data-page="'+name+'"]');var p=document.getElementById('page-'+name);if(t&&!t.classList.contains('hidden'))t.classList.add('active');if(p)p.classList.add('active');}
@@ -457,7 +457,31 @@ document.getElementById('aStepsSlider').addEventListener('input',function(){aSte
 document.getElementById('aStepsManual').addEventListener('input',function(){var v=parseInt(this.value);if(v>0){aSteps=v;document.getElementById('aStepsNum').textContent=v.toLocaleString();document.getElementById('aStepsKm').textContent=(v*0.0008).toFixed(1);document.getElementById('aStepsSlider').value=Math.min(v,30000);updateASum();}});
 document.querySelectorAll('.preset[data-as]').forEach(function(b){b.addEventListener('click',function(){aSteps=parseInt(this.dataset.as);document.getElementById('aStepsNum').textContent=aSteps.toLocaleString();document.getElementById('aStepsKm').textContent=(aSteps*0.0008).toFixed(1);document.getElementById('aStepsSlider').value=aSteps;document.getElementById('aStepsManual').value='';updateASum();});});
 document.getElementById('aStepsLogBtn').addEventListener('click',function(){if(!aMember)return;logSteps(aMember,aSteps,'admin');});
-function logSteps(member,steps,verified){if(!isAdmin&&S.stepathon.status!=='live'&&S.stepathon.status!=='testing'){showToast('Stepathon is not active.');return;}var today=new Date().toISOString().slice(0,10),idx=-1;for(var i=0;i<S.steps.length;i++){if(S.steps[i].member===member&&S.steps[i].date.slice(0,10)===today){idx=i;break;}}if(idx>=0){S.steps[idx].steps=steps;S.steps[idx].km=parseFloat((steps*0.0008).toFixed(1));S.steps[idx].verified=verified||'unverified';showToast('Updated '+steps.toLocaleString()+' steps!');}else{S.steps.push({member:member,steps:steps,km:parseFloat((steps*0.0008).toFixed(1)),verified:verified||'unverified',date:new Date().toISOString()});showToast(steps.toLocaleString()+' steps logged!');}save();renderStepsBoard();renderStepsStats();}
+function logSteps(member,steps,verified){
+  if(!isAdmin&&S.stepathon.status!=='live'&&S.stepathon.status!=='testing'){showToast('Stepathon is not active.');return;}
+  var today=new Date().toISOString().slice(0,10),idx=-1;
+  for(var i=0;i<S.steps.length;i++){if(S.steps[i].member===member&&S.steps[i].date.slice(0,10)===today){idx=i;break;}}
+  // points: 1pt per 1000 steps, min 5
+  var pts=Math.max(Math.round(steps/1000),5);
+  if(idx>=0){
+    var oldPts=S.steps[idx].points||0;
+    S.steps[idx].steps=steps;
+    S.steps[idx].km=parseFloat((steps*0.0008).toFixed(1));
+    S.steps[idx].verified=verified||'unverified';
+    S.steps[idx].points=pts;
+    // update existing workout entry for this day's steps
+    var wIdx=-1;
+    for(var j=0;j<S.workouts.length;j++){if(S.workouts[j].member===member&&S.workouts[j].stepDate===today){wIdx=j;break;}}
+    if(wIdx>=0){S.workouts[wIdx].points=pts;}
+    else{S.workouts.push({member:member,type:'Walking',duration:Math.round(steps/100),distance:parseFloat((steps*0.0008).toFixed(1)),calories:0,notes:'Steps: '+steps.toLocaleString(),points:pts,date:new Date().toISOString(),loggedBy:'steps',stepDate:today});}
+    showToast('Updated '+steps.toLocaleString()+' steps (+'+pts+' pts)!');
+  } else {
+    S.steps.push({member:member,steps:steps,km:parseFloat((steps*0.0008).toFixed(1)),verified:verified||'unverified',points:pts,date:new Date().toISOString()});
+    S.workouts.push({member:member,type:'Walking',duration:Math.round(steps/100),distance:parseFloat((steps*0.0008).toFixed(1)),calories:0,notes:'Steps: '+steps.toLocaleString(),points:pts,date:new Date().toISOString(),loggedBy:'steps',stepDate:today});
+    showToast(steps.toLocaleString()+' steps logged (+'+pts+' pts)!');
+  }
+  save();renderStepsBoard();renderStepsStats();
+}
 var selM=null,selT=null,selD=30;
 function renderLogGrid(){var g=document.getElementById('logMemberGrid');if(!g)return;if(S.members.length===0){g.innerHTML='<div style="font-size:0.8rem;color:var(--muted);">Add a member below</div>';return;}g.innerHTML=S.members.map(function(m){return'<div class="m-chip'+(m===selM?' sel-p':'')+'" data-lm="'+m+'">'+m+'</div>';}).join('');g.querySelectorAll('.m-chip').forEach(function(c){c.addEventListener('click',function(){selM=this.dataset.lm;renderLogGrid();updateLogSum();});});}
 document.querySelectorAll('.t-chip').forEach(function(chip){chip.addEventListener('click',function(){document.querySelectorAll('.t-chip').forEach(function(c){c.classList.remove('sel');});chip.classList.add('sel');selT=chip.dataset.type;updateLogSum();});});
