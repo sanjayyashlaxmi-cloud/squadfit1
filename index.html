@@ -440,31 +440,55 @@ function save(){saveLocal();cloudPush();}
 async function cloudPush(){
   if(syncing)return;syncing=true;setSyncBar(true);
   try{
-    if(!binId){
-      var r=await fetch(BIN_URL,{method:"POST",headers:{"Content-Type":"application/json","X-Master-Key":BIN_KEY,"X-Bin-Name":"squadfit","X-Bin-Private":"false"},body:JSON.stringify(S)});
-      var d=await r.json();
-      if(d.metadata&&d.metadata.id){binId=d.metadata.id;lsSet("sf_binid",binId);updateBinDisplay();}
-    }else{
-      await fetch(BIN_URL+"/"+binId,{method:"PUT",headers:{"Content-Type":"application/json","X-Master-Key":BIN_KEY},body:JSON.stringify(S)});
-    }
-  }catch(e){}
+    var doc={fields:{
+      members:{stringValue:JSON.stringify(S.members)},
+      workouts:{stringValue:JSON.stringify(S.workouts)},
+      steps:{stringValue:JSON.stringify(S.steps)},
+      weekStart:{stringValue:S.weekStart||new Date().toISOString()},
+      weekNum:{integerValue:String(S.weekNum||1)},
+      groupName:{stringValue:S.groupName||""},
+      prevStats:{stringValue:JSON.stringify(S.prevStats||{})},
+      pin:{stringValue:S.pin||DPIN},
+      weekCap:{integerValue:String(S.weekCap||0)},
+      stepathon:{stringValue:JSON.stringify(S.stepathon||{})}
+    }};
+    await fetch(FB_API+"/squaddata/main?key="+FB_KEY,{
+      method:"PATCH",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(doc)
+    });
+  }catch(e){console.log("push error",e);}
   syncing=false;setSyncBar(false);
 }
 
 async function cloudPull(){
-  if(!binId)return false;setSyncBar(true);
+  setSyncBar(true);
   try{
-    var r=await fetch(BIN_URL+"/"+binId+"/latest",{headers:{"X-Master-Key":BIN_KEY}});
+    var r=await fetch(FB_API+"/squaddata/main?key="+FB_KEY);
     var d=await r.json();
-    if(d.record){S=d.record;fixState();saveLocal();setSyncBar(false);return true;}
-  }catch(e){}
+    if(d.fields){
+      var f=d.fields;
+      S={
+        members:JSON.parse(f.members&&f.members.stringValue||"[]"),
+        workouts:JSON.parse(f.workouts&&f.workouts.stringValue||"[]"),
+        steps:JSON.parse(f.steps&&f.steps.stringValue||"[]"),
+        weekStart:(f.weekStart&&f.weekStart.stringValue)||new Date().toISOString(),
+        weekNum:parseInt((f.weekNum&&f.weekNum.integerValue)||"1"),
+        groupName:(f.groupName&&f.groupName.stringValue)||"",
+        prevStats:JSON.parse(f.prevStats&&f.prevStats.stringValue||"{}"),
+        pin:(f.pin&&f.pin.stringValue)||DPIN,
+        weekCap:parseInt((f.weekCap&&f.weekCap.integerValue)||"0"),
+        stepathon:JSON.parse(f.stepathon&&f.stepathon.stringValue||"{}")
+      };
+      fixState();saveLocal();setSyncBar(false);return true;
+    }
+  }catch(e){console.log("pull error",e);}
   setSyncBar(false);return false;
 }
 
-async function connectBin(id){binId=id.trim();lsSet("sf_binid",binId);return await cloudPull();}
 function setSyncBar(on){var el=document.getElementById("syncBar");if(el)el.className="syncbar"+(on?" show":"");}
-function updateBinDisplay(){var el=document.getElementById("binDisplay");if(el)el.value=binId||"";}
-function copySyncId(){if(!binId){showToast("No Sync ID yet. Log something first.");return;}navigator.clipboard.writeText(binId).then(function(){showToast("Sync ID copied!");}).catch(function(){showToast("Your Sync ID: "+binId);});}
+function updateBinDisplay(){var el=document.getElementById("binDisplay");if(el)el.value="squadfit-e39ec";}
+function copySyncId(){navigator.clipboard.writeText("squadfit-e39ec").then(function(){showToast("Sync ID copied!");}).catch(function(){showToast("Sync ID: squadfit-e39ec");});}
 
 var isAdmin=false,boardMode="week",stepsMode="week",histMode="w";
 
@@ -484,7 +508,7 @@ function enterAdmin(){isAdmin=true;document.getElementById("lockScreen").style.d
 document.getElementById("memberBtn").addEventListener("click",function(){enterMember();});
 function enterMember(){isAdmin=false;document.getElementById("lockScreen").style.display="none";document.getElementById("appWrap").style.display="block";document.getElementById("modeBadge").textContent="MEMBER";document.getElementById("modeBadge").className="badge badge-member";document.getElementById("newWeekBtn").style.display="none";["board","log","history","share","settings"].forEach(function(p){var t=document.querySelector(".tab[data-page=\""+p+"\"]");if(t)t.classList.add("hidden");});fillMemberDrop();goPage("steps");renderStepsPage();}
 document.getElementById("syncBtn").addEventListener("click",function(){var e=document.getElementById("syncEntry");e.style.display=e.style.display==="none"?"block":"none";});
-async function doSync(){var id=document.getElementById("syncInput").value.trim();if(!id){showToast("Paste the Sync ID first");return;}setSyncBar(true);var ok=await connectBin(id);setSyncBar(false);if(ok){document.getElementById("syncEntry").style.display="none";showToast("Connected!");setTimeout(function(){enterMember();},400);}else{showToast("Could not connect. Check Sync ID.");}}
+async function doSync(){var id=document.getElementById("syncInput").value.trim();if(!id){showToast("Paste the Sync ID first");return;}if(id.trim()!=="squadfit-e39ec"){showToast("Wrong Sync ID");return;}setSyncBar(true);var ok=await cloudPull();setSyncBar(false);if(ok){document.getElementById("syncEntry").style.display="none";showToast("Connected!");setTimeout(function(){enterMember();},400);}else{showToast("Could not connect. Check Sync ID.");}}
 function relockApp(){document.getElementById("appWrap").style.display="none";document.getElementById("lockScreen").style.display="flex";pe="";uDots();}
 document.getElementById("lockBtn").addEventListener("click",relockApp);
 
@@ -745,7 +769,7 @@ function updateWeekPill(){document.getElementById("weekPill").textContent="Week 
 
 (async function init(){
   updateWeekPill();
-  if(binId){setSyncBar(true);var ok=await cloudPull();setSyncBar(false);if(ok)updateWeekPill();}
+  setSyncBar(true);var ok=await cloudPull();setSyncBar(false);if(ok){updateWeekPill();renderLogGrid();renderAGrid();fillMemberDrop();}
 })();
 </script>
 </body>
