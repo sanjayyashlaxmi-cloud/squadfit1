@@ -385,18 +385,13 @@ canvas{display:none;}
     <button class="ctrlbtn c-grey" id="btnNew" style="display:none;">Start New Stepathon</button>
   </div>
   <div class="card" style="border-top:3px solid var(--purple);">
-    <div class="card-title" style="color:var(--purple);">Cloud Sync Setup</div>
-    <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.65rem;">Step 1: Paste your GitHub token below (saved only on this device, never uploaded).</div>
-    <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;">
-      <input type="password" id="tokenInput" placeholder="Paste GitHub token here" style="flex:1;font-size:0.75rem;">
-      <button class="addbtn" id="saveTokenBtn">Save</button>
-    </div>
-    <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.65rem;">Step 2: Generate your Sync ID to share with the group.</div>
+    <div class="card-title" style="color:var(--purple);">Cloud Sync</div>
+    <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.65rem;">Data syncs via Firebase. Share Sync ID with your group.</div>
     <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
-      <input type="text" id="binDisplay" readonly style="flex:1;font-size:0.75rem;" placeholder="Sync ID appears here">
+      <input type="text" id="binDisplay" readonly style="flex:1;font-size:0.75rem;" value="squadfit-e39ec">
       <button class="addbtn" onclick="copySyncId()">Copy</button>
     </div>
-    <button class="ctrlbtn c-test" id="genSyncBtn" style="margin-bottom:0;">Generate / Refresh Sync ID</button>
+    <button class="ctrlbtn c-test" id="genSyncBtn" style="margin-bottom:0;">Push to cloud now</button>
     <div id="syncStatus" style="font-size:0.75rem;color:var(--muted);margin-top:0.5rem;text-align:center;min-height:1rem;"></div>
   </div>
   <div class="card">
@@ -425,10 +420,8 @@ var MEDALS=["1st","2nd","3rd"];
 var MPOD=["&#127945;","&#127946;","&#127947;"];
 var COLORS=["#c8f135","#7c5cfc","#ff4d6d","#ffd166","#06d6a0","#ff9f1c","#a8dadc","#e9c46a"];
 var DPIN="1234";
-var GIST_TOKEN=localStorage.getItem("sf_tok")||"";
-var GIST_API="https://api.github.com/gists";
-var GIST_FILE="squadfit_data.json";
-var gistId=localStorage.getItem("sf_gistid")||"";
+var FB_API="https://firestore.googleapis.com/v1/projects/squadfit-e39ec/databases/(default)/documents";
+var FB_KEY="AIzaSyDbmqcFbs0IYT-xndePbBFQ9kKTTOaCJic";
 var syncing=false;
 
 function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
@@ -447,45 +440,31 @@ function save(){saveLocal();cloudPush();}
 async function cloudPush(){
   if(syncing)return;syncing=true;setSyncBar(true);
   try{
-    var body={files:{}};
-    body.files[GIST_FILE]={content:JSON.stringify(S)};
-    if(!gistId){
-      body.description="SquadFit Data";
-      body.public=false;
-      var r=await fetch(GIST_API,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"token "+GIST_TOKEN},body:JSON.stringify(body)});
+    if(!binId){
+      var r=await fetch(BIN_URL,{method:"POST",headers:{"Content-Type":"application/json","X-Master-Key":BIN_KEY,"X-Bin-Name":"squadfit","X-Bin-Private":"false"},body:JSON.stringify(S)});
       var d=await r.json();
-      if(d.id){gistId=d.id;lsSet("sf_gistid",gistId);updateBinDisplay();}
+      if(d.metadata&&d.metadata.id){binId=d.metadata.id;lsSet("sf_binid",binId);updateBinDisplay();}
     }else{
-      await fetch(GIST_API+"/"+gistId,{method:"PATCH",headers:{"Content-Type":"application/json","Authorization":"token "+GIST_TOKEN},body:JSON.stringify(body)});
+      await fetch(BIN_URL+"/"+binId,{method:"PUT",headers:{"Content-Type":"application/json","X-Master-Key":BIN_KEY},body:JSON.stringify(S)});
     }
-  }catch(e){console.log("sync error",e);}
+  }catch(e){}
   syncing=false;setSyncBar(false);
 }
 
 async function cloudPull(){
-  if(!gistId||!GIST_TOKEN)return false;setSyncBar(true);
+  if(!binId)return false;setSyncBar(true);
   try{
-    var r=await fetch(GIST_API+"/"+gistId,{headers:{"Authorization":"token "+GIST_TOKEN}});
+    var r=await fetch(BIN_URL+"/"+binId+"/latest",{headers:{"X-Master-Key":BIN_KEY}});
     var d=await r.json();
-    if(d.files&&d.files[GIST_FILE]){
-      var raw=d.files[GIST_FILE].content;
-      var parsed=JSON.parse(raw);
-      S=parsed;fixState();saveLocal();setSyncBar(false);return true;
-    }
-  }catch(e){console.log("pull error",e);}
+    if(d.record){S=d.record;fixState();saveLocal();setSyncBar(false);return true;}
+  }catch(e){}
   setSyncBar(false);return false;
 }
 
-async function connectBin(id){
-  gistId=id.trim();lsSet("sf_gistid",gistId);
-  return await cloudPull();
-}
+async function connectBin(id){binId=id.trim();lsSet("sf_binid",binId);return await cloudPull();}
 function setSyncBar(on){var el=document.getElementById("syncBar");if(el)el.className="syncbar"+(on?" show":"");}
-function updateBinDisplay(){var el=document.getElementById("binDisplay");if(el)el.value=gistId||"";}
-function copySyncId(){
-  if(!gistId){showToast("No Sync ID yet — saving now...");cloudPush();return;}
-  navigator.clipboard.writeText(gistId).then(function(){showToast("Sync ID copied!");}).catch(function(){showToast("Sync ID: "+gistId);});
-}
+function updateBinDisplay(){var el=document.getElementById("binDisplay");if(el)el.value=binId||"";}
+function copySyncId(){if(!binId){showToast("No Sync ID yet. Log something first.");return;}navigator.clipboard.writeText(binId).then(function(){showToast("Sync ID copied!");}).catch(function(){showToast("Your Sync ID: "+binId);});}
 
 var isAdmin=false,boardMode="week",stepsMode="week",histMode="w";
 
@@ -510,7 +489,7 @@ function relockApp(){document.getElementById("appWrap").style.display="none";doc
 document.getElementById("lockBtn").addEventListener("click",relockApp);
 
 function goPage(name){document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("active");});document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");});var t=document.querySelector(".tab[data-page=\""+name+"\"]");var p=document.getElementById("page-"+name);if(t&&!t.classList.contains("hidden"))t.classList.add("active");if(p)p.classList.add("active");}
-document.querySelectorAll(".tab").forEach(function(tab){tab.addEventListener("click",function(){if(this.classList.contains("hidden"))return;goPage(this.dataset.page);if(this.dataset.page==="board")renderBoard();if(this.dataset.page==="steps")renderStepsPage();if(this.dataset.page==="log"){renderLogGrid();updateLogSum();}if(this.dataset.page==="history")renderHistory();if(this.dataset.page==="share")renderShare();if(this.dataset.page==="settings")renderSettings();});});
+document.querySelectorAll(".tab").forEach(function(tab){tab.addEventListener("click",function(){if(this.classList.contains("hidden"))return;goPage(this.dataset.page);if(this.dataset.page==="board")renderBoard();if(this.dataset.page==="steps")renderStepsPage();if(this.dataset.page==="history")renderHistory();if(this.dataset.page==="share")renderShare();if(this.dataset.page==="settings")renderSettings();});});
 
 document.getElementById("bWk").addEventListener("click",function(){boardMode="week";this.classList.add("on");document.getElementById("bAll").classList.remove("on");document.getElementById("bSec").textContent="THIS WEEK";renderBoard();});
 document.getElementById("bAll").addEventListener("click",function(){boardMode="all";this.classList.add("on");document.getElementById("bWk").classList.remove("on");document.getElementById("bSec").textContent="ALL TIME";renderBoard();});
@@ -692,14 +671,7 @@ document.getElementById("genImgBtn").addEventListener("click",function(){
 });
 document.getElementById("saveImgBtn").addEventListener("click",function(){var a=document.createElement("a");a.download="squadfit-week"+(S.weekNum||1)+".png";a.href=document.getElementById("shareImg").src;a.click();});
 
-function renderSettings(){
-  document.getElementById("grpName").value=S.groupName||"";
-  var tok=localStorage.getItem("sf_tok")||"";
-  var status=document.getElementById("syncStatus");
-  if(status){
-    if(tok){status.textContent="Token saved on this device. Tap Generate Sync ID.";}
-    else{status.textContent="No token yet. Paste your GitHub token above.";}
-  }document.getElementById("capInp").value=S.weekCap||0;document.getElementById("sName").value=S.stepathon.name||"";updateBinDisplay();renderSControls();var ml=document.getElementById("memList");if(S.members.length===0){ml.innerHTML="<div style=\"font-size:0.8rem;color:var(--muted)\">No members yet.</div>";return;}ml.innerHTML=S.members.map(function(m){return"<div style=\"display:flex;justify-content:space-between;align-items:center;background:var(--surface);border-radius:8px;padding:0.5rem 0.75rem\"><span style=\"font-size:0.875rem\">"+m+"</span><button onclick=\"remMem('"+m+"')\" style=\"background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.8rem\">Remove</button></div>";}).join("");}
+function renderSettings(){document.getElementById("grpName").value=S.groupName||"";document.getElementById("capInp").value=S.weekCap||0;document.getElementById("sName").value=S.stepathon.name||"";updateBinDisplay();renderSControls();var ml=document.getElementById("memList");if(S.members.length===0){ml.innerHTML="<div style=\"font-size:0.8rem;color:var(--muted)\">No members yet.</div>";return;}ml.innerHTML=S.members.map(function(m){return"<div style=\"display:flex;justify-content:space-between;align-items:center;background:var(--surface);border-radius:8px;padding:0.5rem 0.75rem\"><span style=\"font-size:0.875rem\">"+m+"</span><button onclick=\"remMem('"+m+"')\" style=\"background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.8rem\">Remove</button></div>";}).join("");}
 function remMem(name){if(!confirm("Remove "+name+"?"))return;S.members=S.members.filter(function(m){return m!==name;});if(selM===name){selM=null;updateLogSum();}if(aMember===name){aMember=null;updateASum();}save();renderSettings();renderLogGrid();renderAGrid();fillMemberDrop();showToast(name+" removed.");}
 document.getElementById("grpName").addEventListener("input",function(){S.groupName=this.value.trim();save();});
 document.getElementById("capInp").addEventListener("input",function(){S.weekCap=parseInt(this.value)||0;save();});
@@ -708,7 +680,7 @@ document.getElementById("pinBtn").addEventListener("click",function(){var np=doc
 document.getElementById("newWeekBtn").addEventListener("click",function(){if(!confirm("Start Week "+((S.weekNum||1)+1)+"?"))return;var curr=getWS();S.prevStats={};curr.forEach(function(m){S.prevStats[m.name]=m.pts;});S.weekStart=new Date().toISOString();S.weekNum=(S.weekNum||1)+1;save();updateWeekPill();renderBoard();showToast("Week "+S.weekNum+" started!");});
 document.getElementById("expBtn").addEventListener("click",function(){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:"application/json"}));a.download="squadfit-backup.json";a.click();});
 document.getElementById("impBtn").addEventListener("click",function(){document.getElementById("impFile").click();});
-document.getElementById("impFile").addEventListener("change",function(){var file=this.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(e){try{var r=JSON.parse(e.target.result);if(!r.members||!r.workouts)throw new Error("bad");S=r;fixState();save();selM=null;aMember=null;mMember=null;updateWeekPill();renderLogGrid();renderAGrid();fillMemberDrop();updateLogSum();renderSettings();renderBoard();renderLogGrid();renderAGrid();fillMemberDrop();showToast("Restored! "+S.workouts.length+" workouts loaded.");}catch(err){showToast("Invalid backup file.");}};reader.readAsText(file);this.value="";});
+document.getElementById("impFile").addEventListener("change",function(){var file=this.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(e){try{var r=JSON.parse(e.target.result);if(!r.members||!r.workouts)throw new Error("bad");S=r;fixState();save();selM=null;aMember=null;mMember=null;updateWeekPill();renderLogGrid();renderAGrid();fillMemberDrop();updateLogSum();renderSettings();renderBoard();showToast("Restored! "+S.workouts.length+" workouts loaded.");}catch(err){showToast("Invalid backup file.");}};reader.readAsText(file);this.value="";});
 document.getElementById("rstWkBtn").addEventListener("click",function(){autoBackup();if(prompt("Type RESET to confirm:")==="RESET"){var ws=new Date(S.weekStart).getTime();S.workouts=S.workouts.filter(function(w){return new Date(w.date).getTime()<ws;});S.steps=S.steps.filter(function(s){return new Date(s.date).getTime()<ws;});save();renderBoard();renderStepsBoard();showToast("Week reset.");}else{showToast("Cancelled.");}});
 document.getElementById("rstAllBtn").addEventListener("click",function(){autoBackup();if(prompt("Type DELETE to confirm:")==="DELETE"){var pin=S.pin;S=defState();S.pin=pin;save();selM=null;aMember=null;mMember=null;updateWeekPill();renderLogGrid();renderAGrid();fillMemberDrop();updateLogSum();renderBoard();showToast("All data cleared.");}else{showToast("Cancelled.");}});
 
@@ -723,69 +695,13 @@ document.getElementById("btnNew").addEventListener("click",function(){if(!confir
 
 function autoBackup(){try{var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:"application/json"}));a.download="squadfit-AUTO-"+Date.now()+".json";a.click();}catch(e){}}
 function chkBackup(){var n=S.workouts.length,last=parseInt(lsGet("sf8_lb")||"0");if(n>0&&n%10===0&&n!==last){lsSet("sf8_lb",String(n));autoBackup();showToast("Auto-backup saved!");}}
-document.getElementById("saveTokenBtn").addEventListener("click",function(){
-  var tok=document.getElementById("tokenInput").value.trim();
-  if(!tok){showToast("Paste your token first");return;}
-  localStorage.setItem("sf_tok",tok);
-  GIST_TOKEN=tok;
-  document.getElementById("tokenInput").value="";
-  document.getElementById("syncStatus").textContent="Token saved on this device only.";
-  showToast("Token saved! Now tap Generate Sync ID.");
-});
-
-document.getElementById("saveTokenBtn").addEventListener("click",function(){
-  var t=document.getElementById("tokenInput").value.trim();
-  if(!t){showToast("Paste your token first");return;}
-  GIST_TOKEN=t;
-  lsSet("sf_gtoken",t);
-  document.getElementById("tokenInput").value="";
-  document.getElementById("tokenStatus").textContent="Token saved on this device.";
-  document.getElementById("tokenStatus").style.color="var(--green)";
-  showToast("Token saved! Now tap Generate Sync ID.");
-});
-
 document.getElementById("genSyncBtn").addEventListener("click",async function(){
-  this.textContent="Saving to cloud...";
-  this.disabled=true;
-  setSyncBar(true);
-  try{
-    var body={files:{}};
-    body.files[GIST_FILE]={content:JSON.stringify(S)};
-    var headers={"Content-Type":"application/json","Authorization":"token "+GIST_TOKEN};
-    var r,d;
-    if(!gistId){
-      body.description="SquadFit Data";
-      body.public=false;
-      r=await fetch(GIST_API,{method:"POST",headers:headers,body:JSON.stringify(body)});
-      d=await r.json();
-      if(d.id){
-        gistId=d.id;
-        lsSet("sf_gistid",gistId);
-        updateBinDisplay();
-        document.getElementById("syncStatus").textContent="Sync ID generated!";
-        showToast("Sync ID ready! Tap Copy to share it.");
-      } else {
-        document.getElementById("syncStatus").textContent="Error: "+JSON.stringify(d).slice(0,80);
-      }
-    } else {
-      r=await fetch(GIST_API+"/"+gistId,{method:"PATCH",headers:headers,body:JSON.stringify(body)});
-      d=await r.json();
-      if(d.id){
-        updateBinDisplay();
-        document.getElementById("syncStatus").textContent="Sync updated!";
-        showToast("Cloud sync updated!");
-      } else {
-        document.getElementById("syncStatus").textContent="Error: "+JSON.stringify(d).slice(0,80);
-      }
-    }
-  } catch(e){
-    document.getElementById("syncStatus").textContent="Error: "+e.message;
-  }
-  setSyncBar(false);
-  this.textContent="Generate / Refresh Sync ID";
-  this.disabled=false;
+  this.textContent="Pushing...";this.disabled=true;
+  await cloudPush();
+  document.getElementById("syncStatus").textContent="Done! Data is live.";
+  showToast("Synced to cloud!");
+  this.textContent="Push to cloud now";this.disabled=false;
 });
-
 function showToast(msg){var t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(function(){t.classList.remove("show");},2600);}
 function updateWeekPill(){document.getElementById("weekPill").textContent="Week "+(S.weekNum||1);}
 
