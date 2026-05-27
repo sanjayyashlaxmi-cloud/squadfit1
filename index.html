@@ -601,16 +601,22 @@ async function doScan(){
   document.getElementById("scanBar").classList.add("show");
   document.getElementById("vBox").classList.remove("show");
   try{
-    var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:200,messages:[{role:"user",content:[{type:"image",source:{type:"base64",media_type:"image/jpeg",data:mB64}},{type:"text",text:"Fitness tracker screenshot. Find total step count for today. Return ONLY valid JSON: {steps:number_or_null,source:app_name_string}"}]}]})});
+    var imgType=mB64.charAt(0)==="/" ? "image/jpeg" : mB64.charAt(0)==="i" ? "image/png" : "image/jpeg";
+    var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:300,messages:[{role:"user",content:[{type:"image",source:{type:"base64",media_type:imgType,data:mB64}},{type:"text",text:"This is a fitness tracker or health app screenshot. Find the TOTAL step count for today. Look for numbers next to step icons or the word Steps. Return ONLY this JSON with no other text: {steps:number_or_null,source:app_name_string}"}]}]})});
     var data=await res.json();
     var raw=data.content[0].text.trim();
+    // Clean up response - remove markdown if present
+    raw=raw.replace(/```json|```/g,"").trim();
+    // Extract JSON object if wrapped in text
+    var jmatch=raw.match(/\{[^}]+\}/);
+    if(jmatch)raw=jmatch[0];
     var parsed=JSON.parse(raw);
     document.getElementById("scanBar").classList.remove("show");
     if(!parsed.steps){showVBox("warn","No steps detected","Could not read steps. You can still log manually.");mVerify="image-no-steps";return;}
     var diff=Math.abs(parsed.steps-mSteps),pct=mSteps>0?(diff/mSteps)*100:100;
     if(pct<=15){showVBox("ok","Verified! Screenshot matches","Image shows "+parsed.steps.toLocaleString()+" steps.");mVerify="verified";setMSteps(parsed.steps);}
     else{showVBox("err","Mismatch! Steps corrected","You entered "+mSteps.toLocaleString()+" but screenshot shows "+parsed.steps.toLocaleString()+". Updated.");mVerify="verified";setMSteps(parsed.steps);}
-  }catch(e){document.getElementById("scanBar").classList.remove("show");showVBox("warn","Could not read image","Try a clearer screenshot or log manually.");mVerify="image-unreadable";}
+  }catch(e){document.getElementById("scanBar").classList.remove("show");showVBox("warn","Could not read image","Try a clearer screenshot showing your step count, or enter steps manually below.");mVerify="image-unreadable";console.log("Scan error:",e);}
 }
 function setMSteps(v){mSteps=v;document.getElementById("mStepsNum").textContent=v.toLocaleString();document.getElementById("mStepsKm").textContent=(v*0.0008).toFixed(1);document.getElementById("mSlider").value=Math.min(v,30000);document.getElementById("mManual").value="";updateMSum();}
 function showVBox(type,title,detail){var b=document.getElementById("vBox");b.innerHTML="<div class=\"v"+type+"\">"+title+"</div><div class=\"vdetail\">"+detail+"</div>";b.classList.add("show");}
