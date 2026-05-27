@@ -507,9 +507,28 @@ document.querySelectorAll(".pin-key").forEach(function(k){k.addEventListener("cl
 function tryPin(){if(pe===S.pin){enterAdmin();}else{document.getElementById("pinError").textContent="Wrong PIN. Try again.";pe="";uDots();setTimeout(function(){document.getElementById("pinError").textContent="";},2000);}}
 function enterAdmin(){isAdmin=true;document.getElementById("lockScreen").style.display="none";document.getElementById("appWrap").style.display="block";document.getElementById("modeBadge").textContent="ADMIN";document.getElementById("modeBadge").className="badge badge-admin";document.getElementById("newWeekBtn").style.display="block";document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("hidden");});goPage("board");renderBoard();updateBinDisplay();}
 document.getElementById("memberBtn").addEventListener("click",function(){enterMember();});
-function enterMember(){isAdmin=false;document.getElementById("lockScreen").style.display="none";document.getElementById("appWrap").style.display="block";document.getElementById("modeBadge").textContent="MEMBER";document.getElementById("modeBadge").className="badge badge-member";document.getElementById("newWeekBtn").style.display="none";["board","log","history","share","settings"].forEach(function(p){var t=document.querySelector(".tab[data-page=\""+p+"\"]");if(t)t.classList.add("hidden");});fillMemberDrop();goPage("steps");renderStepsPage();}
+async function enterMember(){
+  isAdmin=false;
+  // Show app first with loading state
+  document.getElementById("lockScreen").style.display="none";
+  document.getElementById("appWrap").style.display="block";
+  document.getElementById("modeBadge").textContent="MEMBER";
+  document.getElementById("modeBadge").className="badge badge-member";
+  document.getElementById("newWeekBtn").style.display="none";
+  ["board","log","history","share","settings"].forEach(function(p){
+    var t=document.querySelector(".tab[data-page=\""+p+"\"]");
+    if(t)t.classList.add("hidden");
+  });
+  goPage("steps");
+  // Pull fresh data from Firebase BEFORE filling dropdown
+  setSyncBar(true);
+  await cloudPull();
+  setSyncBar(false);
+  fillMemberDrop();
+  renderStepsPage();
+}
 document.getElementById("syncBtn").addEventListener("click",function(){var e=document.getElementById("syncEntry");e.style.display=e.style.display==="none"?"block":"none";});
-async function doSync(){var id=document.getElementById("syncInput").value.trim();if(!id){showToast("Paste the Sync ID first");return;}if(id.trim()!=="squadfit-e39ec"){showToast("Wrong Sync ID");return;}setSyncBar(true);var ok=await cloudPull();setSyncBar(false);if(ok){document.getElementById("syncEntry").style.display="none";showToast("Connected!");setTimeout(function(){enterMember();},400);}else{showToast("Could not connect. Check Sync ID.");}}
+async function doSync(){var id=document.getElementById("syncInput").value.trim();if(!id){showToast("Paste the Sync ID first");return;}if(id.trim()!=="squadfit-e39ec"){showToast("Wrong Sync ID");return;}setSyncBar(true);var ok=await cloudPull();setSyncBar(false);if(ok){document.getElementById("syncEntry").style.display="none";showToast("Connected! Loading members...");setTimeout(function(){enterMember();},400);}else{showToast("Could not connect. Check Sync ID.");}}
 function relockApp(){document.getElementById("appWrap").style.display="none";document.getElementById("lockScreen").style.display="flex";pe="";uDots();}
 document.getElementById("lockBtn").addEventListener("click",relockApp);
 
