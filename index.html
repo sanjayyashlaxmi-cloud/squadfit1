@@ -184,10 +184,10 @@ canvas{display:none;}
     <div class="pin-key" data-k="ok" style="background:rgba(200,241,53,0.1);color:var(--accent);">OK</div>
   </div>
   <div class="pin-error" id="pinError"></div>
-  <button class="lock-btn" id="memberBtn">Log my steps / View Stepathon</button>
-  <button class="lock-btn purple" id="syncBtn">Enter Sync ID (first time)</button>
-  <div class="sync-entry" id="syncEntry">
-    <input type="text" id="syncInput" placeholder="Paste Sync ID here">
+  <button class="lock-btn" id="memberBtn">View Stepathon / Log Steps</button>
+  <div id="syncEntry" style="display:none;margin-top:0.5rem;width:240px;">
+    <div style="font-size:0.75rem;color:var(--muted);text-align:center;margin-bottom:0.4rem;">First time? Enter Sync ID</div>
+    <input type="text" id="syncInput" placeholder="Paste Sync ID: squadfit-e39ec" style="width:100%;text-align:center;font-size:0.82rem;margin-bottom:0.4rem;background:var(--surface);border:1px solid var(--purple);border-radius:8px;color:var(--text);font-family:DM Sans,sans-serif;padding:0.6rem;outline:none;">
     <button class="lock-btn purple" onclick="doSync()" style="width:100%;margin-top:0;">Connect</button>
   </div>
 </div>
@@ -506,10 +506,22 @@ function uDots(){for(var i=0;i<4;i++){var d=document.getElementById("d"+i);if(d)
 document.querySelectorAll(".pin-key").forEach(function(k){k.addEventListener("click",function(){var v=this.dataset.k;if(v==="del")pe=pe.slice(0,-1);else if(v==="ok")tryPin();else if(pe.length<4)pe+=v;uDots();if(pe.length===4&&v!=="ok")tryPin();});});
 function tryPin(){if(pe===S.pin){enterAdmin();}else{document.getElementById("pinError").textContent="Wrong PIN. Try again.";pe="";uDots();setTimeout(function(){document.getElementById("pinError").textContent="";},2000);}}
 function enterAdmin(){isAdmin=true;document.getElementById("lockScreen").style.display="none";document.getElementById("appWrap").style.display="block";document.getElementById("modeBadge").textContent="ADMIN";document.getElementById("modeBadge").className="badge badge-admin";document.getElementById("newWeekBtn").style.display="block";document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("hidden");});goPage("board");renderBoard();updateBinDisplay();}
-document.getElementById("memberBtn").addEventListener("click",function(){enterMember();});
+document.getElementById("memberBtn").addEventListener("click",function(){
+  // If we have data already (members loaded), go straight in
+  if(S.members&&S.members.length>0){
+    enterMember();
+  } else {
+    // Show sync ID entry for first time users
+    var e=document.getElementById("syncEntry");
+    if(e.style.display==="none"||e.style.display===""){
+      e.style.display="block";
+    } else {
+      enterMember();
+    }
+  }
+});
 async function enterMember(){
   isAdmin=false;
-  // Show app first with loading state
   document.getElementById("lockScreen").style.display="none";
   document.getElementById("appWrap").style.display="block";
   document.getElementById("modeBadge").textContent="MEMBER";
@@ -520,15 +532,20 @@ async function enterMember(){
     if(t)t.classList.add("hidden");
   });
   goPage("steps");
-  // Pull fresh data from Firebase BEFORE filling dropdown
-  setSyncBar(true);
-  await cloudPull();
-  setSyncBar(false);
+  // First show whatever we have locally
   fillMemberDrop();
   renderStepsPage();
+  // Then pull fresh from Firebase and refresh
+  setSyncBar(true);
+  var ok=await cloudPull();
+  setSyncBar(false);
+  if(ok){
+    fillMemberDrop();
+    renderStepsPage();
+  }
 }
-document.getElementById("syncBtn").addEventListener("click",function(){var e=document.getElementById("syncEntry");e.style.display=e.style.display==="none"?"block":"none";});
-async function doSync(){var id=document.getElementById("syncInput").value.trim();if(!id){showToast("Paste the Sync ID first");return;}if(id.trim()!=="squadfit-e39ec"){showToast("Wrong Sync ID");return;}setSyncBar(true);var ok=await cloudPull();setSyncBar(false);if(ok){document.getElementById("syncEntry").style.display="none";showToast("Connected! Loading members...");setTimeout(function(){enterMember();},400);}else{showToast("Could not connect. Check Sync ID.");}}
+
+async function doSync(){var id=document.getElementById("syncInput").value.trim();if(!id){showToast("Paste the Sync ID first");return;}if(id.trim()!=="squadfit-e39ec"){showToast("Wrong Sync ID");return;}setSyncBar(true);var ok=await cloudPull();setSyncBar(false);if(ok){document.getElementById("syncEntry").style.display="none";showToast("Connected!");setTimeout(function(){enterMember();},400);}else{showToast("Could not connect. Check Sync ID.");}}
 function relockApp(){document.getElementById("appWrap").style.display="none";document.getElementById("lockScreen").style.display="flex";pe="";uDots();}
 document.getElementById("lockBtn").addEventListener("click",relockApp);
 
