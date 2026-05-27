@@ -680,7 +680,25 @@ document.getElementById("pinBtn").addEventListener("click",function(){var np=doc
 document.getElementById("newWeekBtn").addEventListener("click",function(){if(!confirm("Start Week "+((S.weekNum||1)+1)+"?"))return;var curr=getWS();S.prevStats={};curr.forEach(function(m){S.prevStats[m.name]=m.pts;});S.weekStart=new Date().toISOString();S.weekNum=(S.weekNum||1)+1;save();updateWeekPill();renderBoard();showToast("Week "+S.weekNum+" started!");});
 document.getElementById("expBtn").addEventListener("click",function(){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:"application/json"}));a.download="squadfit-backup.json";a.click();});
 document.getElementById("impBtn").addEventListener("click",function(){document.getElementById("impFile").click();});
-document.getElementById("impFile").addEventListener("change",function(){var file=this.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(e){try{var r=JSON.parse(e.target.result);if(!r.members||!r.workouts)throw new Error("bad");S=r;fixState();save();selM=null;aMember=null;mMember=null;updateWeekPill();renderLogGrid();renderAGrid();fillMemberDrop();updateLogSum();renderSettings();renderBoard();showToast("Restored! "+S.workouts.length+" workouts loaded.");}catch(err){showToast("Invalid backup file.");}};reader.readAsText(file);this.value="";});
+document.getElementById("impFile").addEventListener("change",function(){var file=this.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(e){try{var r=JSON.parse(e.target.result);
+// Accept any version of backup - members or workouts array is enough
+if(!r.members&&!r.workouts)throw new Error("bad");
+// Build a clean state from whatever we have
+S=defState();
+if(r.members)S.members=r.members;
+if(r.workouts)S.workouts=r.workouts;
+if(r.steps)S.steps=r.steps;
+if(r.weekStart)S.weekStart=r.weekStart;
+if(r.weekNum)S.weekNum=r.weekNum;
+if(r.groupName)S.groupName=r.groupName;
+if(r.prevStats)S.prevStats=r.prevStats;
+if(r.pin)S.pin=r.pin;
+if(r.weekCap!==undefined)S.weekCap=r.weekCap;
+if(r.stepathon)S.stepathon=r.stepathon;
+fixState();save();
+selM=null;aMember=null;mMember=null;
+updateWeekPill();renderLogGrid();renderAGrid();fillMemberDrop();updateLogSum();renderSettings();renderBoard();
+showToast("Restored! "+S.workouts.length+" workouts, "+S.members.length+" members loaded.");}catch(err){showToast("Could not read file: "+err.message);}};reader.readAsText(file);this.value="";});
 document.getElementById("rstWkBtn").addEventListener("click",function(){autoBackup();if(prompt("Type RESET to confirm:")==="RESET"){var ws=new Date(S.weekStart).getTime();S.workouts=S.workouts.filter(function(w){return new Date(w.date).getTime()<ws;});S.steps=S.steps.filter(function(s){return new Date(s.date).getTime()<ws;});save();renderBoard();renderStepsBoard();showToast("Week reset.");}else{showToast("Cancelled.");}});
 document.getElementById("rstAllBtn").addEventListener("click",function(){autoBackup();if(prompt("Type DELETE to confirm:")==="DELETE"){var pin=S.pin;S=defState();S.pin=pin;save();selM=null;aMember=null;mMember=null;updateWeekPill();renderLogGrid();renderAGrid();fillMemberDrop();updateLogSum();renderBoard();showToast("All data cleared.");}else{showToast("Cancelled.");}});
 
